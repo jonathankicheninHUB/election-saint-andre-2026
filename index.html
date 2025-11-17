@@ -1,15 +1,38 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analyse Électorale - Saint-André 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!--
+    Plan-Narrative-Summary:
+    1. Title & Hook: Set the stage for the 2026 election analysis.
+    2. The New Political Landscape: Introduce the 4 key poles (Bédier, JMV/Ramassamy, LV/RN, Fruteau) using HTML/CSS cards.
+    3. 2020 Election Deep Dive: Visualize Bédier's win vs. total inscribed voters.
+    4. The Demographic Engine: Visualize the demographic erosion vs. renewal using an HTML/CSS flow diagram.
+    5. Incumbent Vulnerabilities: List Bédier's risks (Water, "Affaires").
+    6. Scenario 1: 1st Round Projection (Quadripolarisation).
+    7. Scenario 2: 2nd Round Projections (Triangulaire vs. Duel).
+    8. Conclusion: State the report's final analysis.
+    
+    Selected-Palette: Brilliant Blues (#003F5C, #665191, #A05195, #D45087, #F95D6A, #FFA600)
+    
+    Visualization-Choices-Summary:
+    1. Key Players (4 Poles): Goal(Organize). Viz(HTML/CSS Cards). Method(Tailwind `grid`, `border-l-4`, colors from palette). NO-SVG.
+    2. 2020 Results (% Inscribed): Goal(Inform). Viz(Donut Chart). Method(Chart.js Donut). Data(Bédier 27.10%, Abstention/Other 72.9%). NO-SVG.
+    3. Demographic Engine (Erosion/Renewal): Goal(Organize). Viz(Flow Chart). Method(HTML/CSS with Tailwind `flex`, `border`, unicode arrows → ↓). NO-SVG. NO-MERMAID.
+    4. Incumbent Vulnerabilities: Goal(Inform). Viz(List). Method(HTML/CSS styled cards with unicode icons ⚠️💧). NO-SVG.
+    5. 1st Round Projection (S1.A): Goal(Compare). Viz(Donut Chart). Method(Chart.js Donut). Data(Bédier 33%, JMV/Ram. 24%, LV/RN 13%, Fruteau 7%, Others 23%). NO-SVG.
+    6. 2nd Round Projection (Triangulaire - S.A): Goal(Compare). Viz(Bar Chart). Method(Chart.js Bar Chart). Data(Bédier 44%, JMV/Ram. 34%, LV/RN 20%). NO-SVG.
+    7. 2nd Round Projection (Duel - S.B): Goal(Compare). Viz(Bar Chart). Method(Chart.js Bar Chart). Data(Bédier 49.5%, Union 50.5%). NO-SVG.
+    
+    Confirmation: NEITHER Mermaid JS NOR SVG were used in this document. All charts are rendered to Canvas via Chart.js and all diagrams are structured HTML/CSS with Tailwind.
+    -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #F7F9FC;
         }
         .chart-container {
             position: relative;
@@ -17,19 +40,13 @@
             max-width: 900px;
             margin-left: auto;
             margin-right: auto;
-            height: 300px;
-            max-height: 350px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-                max-height: 400px;
-            }
+            height: 350px;
+            max-height: 400px;
         }
         .chart-container-sm {
             position: relative;
             width: 100%;
-            max-width: 500px;
+            max-width: 450px;
             margin-left: auto;
             margin-right: auto;
             height: 300px;
@@ -41,633 +58,168 @@
                 max-height: 400px;
             }
         }
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #2F4B7C;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .question-text {
-            color: #D45087; /* Magenta for opposition/challenging elements */
-            font-weight: 600;
-        }
-        .answer-text {
-            color: #2F4B7C; /* Blue for management/strategic elements */
-        }
     </style>
 </head>
-<body class="text-[#003F5C]">
+<body class="bg-slate-100 text-[#003F5C] font-sans">
+
     <div class="container mx-auto p-4 md:p-8 max-w-7xl">
 
         <header class="text-center mb-12">
             <h1 class="text-4xl md:text-5xl font-bold text-[#003F5C] mb-4">Analyse Électorale : Saint-André 2026</h1>
-            <p class="text-lg md:text-xl text-[#2F4B7C] max-w-3xl mx-auto">Une modélisation prospective des dynamiques politiques, des forces en présence et des scénarios pour l'élection municipale de 2026, basée sur les tendances et les facteurs démographiques.</p>
+            <p class="text-lg md:text-xl text-[#2F4B7C] max-w-3xl mx-auto">Une modélisation prospective des dynamiques politiques, des facteurs démographiques et des scénarios électoraux à Saint-André, Réunion.</p>
         </header>
 
         <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-            <section class="md:col-span-2 lg:col-span-3 bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-2xl font-bold text-[#003F5C] mb-4">Contexte et Enjeux Principaux</h2>
-                <p class="text-base text-[#2F4B7C]">
-                    L'élection municipale de 2026 à Saint-André s'inscrit dans une reconfiguration politique profonde. L'analyse des vingt dernières années révèle deux tendances de fond : l'ancrage progressif et la consolidation du socle électoral du maire sortant, Joé Bédier, et l'érosion continue de la base historique de la famille Virapoullé. Le scrutin de 2026 sera un test majeur, mesurant l'impact de la gestion municipale actuelle face à une opposition qui, bien que potentiellement divisée, conserve des bastions significatifs. Les facteurs démographiques, tels que le renouvellement générationnel et les nouveaux arrivants, joueront un rôle déterminant dans l'issue du vote.
+            <section class="md:col-span-2 lg:col-span-3 bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-3xl font-bold text-[#003F5C] mb-4">I. Contexte et Dynamiques Structurantes</h2>
+                <p class="text-base text-gray-700 leading-relaxed">
+                    L'analyse des élections de 2026 s'inscrit dans une transition politique majeure. La commune, historiquement marquée par l'influence de la famille Virapoullé, est dirigée par M. Joé Bédier. Son maintien dépendra de sa capacité à transformer un vote de rupture en adhésion durable, tout en naviguant une fragmentation inédite de l'opposition. La victoire de M. Bédier en 2020 a validé une volonté de changement, mais elle reste numériquement fragile, ouvrant le jeu à des reconfigurations stratégiques.
                 </p>
             </section>
 
-            <section class="md:col-span-2 lg:col-span-3 bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-2xl font-bold text-[#003F5C] mb-4">Les Forces en Présence (Modélisation)</h2>
+            <section class="md:col-span-2 lg:col-span-3 bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-[#003F5C] mb-5">II. Le Nouveau Paysage Politique : Quatre Pôles de Force</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     
-                    <div class="border-l-4 border-[#2F4B7C] bg-gray-50 p-4 rounded-r-lg">
-                        <h3 class="text-lg font-semibold text-[#003F5C]">Joé Bédier (Maire sortant)</h3>
-                        <p class="text-sm text-[#2F4B7C]">Dynamique : Consolidation et croissance du socle électoral. Bénéficie d'une image de gestionnaire et d'une certaine lassitude vis-à-vis de l'ancienne majorité.</p>
+                    <div class="border-l-4 border-[#003F5C] bg-slate-50 p-4 rounded-r-lg">
+                        <h3 class="text-lg font-semibold text-[#003F5C]">Pôle 1: L'Incumbent (Bédier)</h3>
+                        <p class="text-sm text-gray-700 mt-1">M. Joé Bédier (LDVG). Le maire sortant cherche à capitaliser sur son bilan et bénéficie de la division de ses adversaires.</p>
                     </div>
                     
-                    <div class="border-l-4 border-[#D45087] bg-gray-50 p-4 rounded-r-lg">
-                        <h3 class="text-lg font-semibold text-[#003F5C]">Jean-Marie Virapoullé</h3>
-                        <p class="text-sm text-[#2F4B7C]">Dynamique : Érosion de la base historique. Doit composer avec le temps et la démographie. Le ralliement de J-F. Ramassamy vise à consolider les restes de la base.</p>
+                    <div class="border-l-4 border-[#665191] bg-slate-50 p-4 rounded-r-lg">
+                        <h3 class="text-lg font-semibold text-[#665191]">Pôle 2: Union Droite/Centre</h3>
+                        <p class="text-sm text-gray-700 mt-1">M. Jean-Marie Virapoullé (DVD) allié à M. Jean-François Ramassamy (DVC). Tente de consolider le vote modéré et anti-Bédier.</p>
                     </div>
                     
-                    <div class="border-l-4 border-[#FFA600] bg-gray-50 p-4 rounded-r-lg">
-                        <h3 class="text-lg font-semibold text-[#003F5C]">Laurent Virapoullé</h3>
-                        <p class="text-sm text-[#2F4B7C]">Dynamique : Incertitude. Tente de capter une partie de l'héritage familial tout en proposant un renouvellement. Sa présence fragmente l'opposition traditionnelle.</p>
+                    <div class="border-l-4 border-[#A05195] bg-slate-50 p-4 rounded-r-lg">
+                        <h3 class="text-lg font-semibold text-[#A05195]">Pôle 3: Extrême-Droite (RN)</h3>
+                        <p class="text-sm text-gray-700 mt-1">M. Laurent Virapoullé (RN). Fracture le vote de droite traditionnel et divise le nom "Virapoullé", créant une nouvelle ligne de clivage.</p>
                     </div>
 
-                    <div class="border-l-4 border-[#665191] bg-gray-50 p-4 rounded-r-lg">
-                        <h3 class="text-lg font-semibold text-[#003F5C]">Autres Listes (Gauche, Divers)</h3>
-                        <p class="text-sm text-[#2F4B7C]">Dynamique : Potentiel d'arbitrage. Ces listes peuvent capter le vote de mécontentement ou d'alternative, et leur position au second tour sera cruciale.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="md:col-span-2 lg:col-span-3 bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-2xl font-bold text-[#003F5C] mb-4">Tendance Électorale sur 20 Ans (Modélisation)</h2>
-                <p class="text-base text-[#2F4B7C] mb-4">
-                    La visualisation ci-dessous modélise l'évolution des bases électorales (en % de soutien potentiel) sur deux décennies. Elle illustre la tendance à la hausse de la base de J. Bédier (bleu) et la décrue de celle de J-M. Virapoullé (magenta). Cette dynamique est le cœur de l'analyse pour 2026.
-                </p>
-                <div class="chart-container">
-                    <canvas id="historicalTrendChart"></canvas>
-                </div>
-            </section>
-
-            <section class="lg:col-span-2 bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-2xl font-bold text-[#003F5C] mb-4">Le Moteur Démographique de l'Érosion</h2>
-                <p class="text-base text-[#2F4B7C] mb-4">
-                    L'érosion et la croissance des bases électorales ne sont pas aléatoires. Elles répondent à un modèle démographique précis, tel que décrit dans l'analyse. Ce schéma illustre comment les flux de population impactent les socles électoraux.
-                </p>
-                <div class="space-y-6 mt-6">
-                    <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-r-lg">
-                        <h3 class="font-semibold text-red-800">Facteurs d'Érosion (Base J-M. Virapoullé)</h3>
-                        <p class="text-red-700 mt-2">Mortalité de la base historique + Départs de la ville</p>
-                        <div class="text-2xl font-bold text-red-500 text-center my-2">↓</div>
-                        <p class="text-sm text-red-600">Perte nette de voix, non compensée par les nouveaux votants qui se tournent vers d'autres options.</p>
-                    </div>
-                    <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
-                        <h3 class="font-semibold text-green-800">Facteurs de Croissance (Base J. Bédier)</h3>
-                        <p class="text-green-700 mt-2">Nouveaux votants (18 ans) + Nouveaux habitants + Transferts de l'opposition</p>
-                        <div class="text-2xl font-bold text-green-600 text-center my-2">↑</div>
-                        <p class="text-sm text-green-600">Gain net de voix, captant une part majoritaire des nouveaux inscrits et des déçus de l'opposition.</p>
+                    <div class="border-l-4 border-[#D45087] bg-slate-50 p-4 rounded-r-lg">
+                        <h3 class="text-lg font-semibold text-[#D45087]">Pôle 4: Gauche Dissidente</h3>
+                        <p class="text-sm text-gray-700 mt-1">M. Eric Fruteau (DVG). Menace de fragmentation pour M. Bédier, rappelant la défaite de la gauche divisée en 2014.</p>
                     </div>
                 </div>
             </section>
 
-            <section class="lg:col-span-1 bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-2xl font-bold text-[#003F5C] mb-4">Évolution de l'Abstention</h2>
-                <p class="text-base text-[#2F4B7C] mb-4">
-                    L'abstention est une variable clé. Sa hausse (modélisée en violet) montre une part croissante de l'électorat qui ne se reconnaît plus dans les offres politiques, ce qui fragilise les bases installées et rend les prévisions plus volatiles.
+            <section class="lg:col-span-1 bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-[#003F5C] mb-4">III. Le Paradoxe de 2020</h2>
+                <p class="text-base text-gray-700 mb-4">
+                    La victoire de M. Bédier en 2020 (52,16% des exprimés) masque une fragilité : elle ne représentait que 27,10% du total des inscrits. Cela indique une majorité vulnérable à une baisse de l'abstention ou à une union de l'opposition.
                 </p>
                 <div class="chart-container-sm">
-                    <canvas id="abstentionChart"></canvas>
+                    <canvas id="chart2020Inscribed"></canvas>
                 </div>
             </section>
 
-            <section class="lg:col-span-1 bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-2xl font-bold text-[#003F5C] mb-4">Scénario 1er Tour 2026 (Modèle)</h2>
-                <p class="text-base text-[#2F4B7C] mb-4">
-                    Ce scénario pour le premier tour projette les tendances actuelles. Joé Bédier apparaît en position de force, frôlant la majorité absolue. L'opposition est fragmentée, avec J-M. Virapoullé conservant la deuxième place devant L. Virapoullé et les autres listes.
-                </p>
-                <div class="chart-container-sm">
-                    <canvas id="firstRoundChart"></canvas>
-                </div>
-            </section>
-
-            <section class="md:col-span-2 lg:col-span-2 bg-white rounded-lg shadow-md p-6">
-                <h2 class_id="text-2xl font-bold text-[#003F5C] mb-4">Scénarios pour le Second Tour</h2>
-                <p class="text-base text-[#2F4B7C] mb-6">
-                    Le second tour dépendra des alliances et des maintiens. Deux scénarios principaux sont modélisés : une "triangulaire" (maintien des trois forces principales) et un "duel" (union de l'opposition).
+            <section class="lg:col-span-2 bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-[#003F5C] mb-4">IV. Le Moteur Démographique</h2>
+                <p class="text-base text-gray-700 mb-6">
+                    L'analyse démographique révèle un double mouvement structurel. L'érosion de la base historique de droite due à la mortalité, et un renouvellement par la jeunesse qui est mitigé par une forte émigration et une abstention élevée.
                 </p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    
-                    <div>
-                        <h3 class="text-lg font-semibold text-[#003F5C] mb-2">Scénario A : Triangulaire</h3>
-                        <p class="text-sm text-[#2F4B7C] mb-4">
-                            En cas de maintien des trois listes principales, la division de l'opposition profiterait largement à Joé Bédier, qui l'emporterait avec une marge confortable.
-                        </p>
-                        <div class="chart-container-sm h-64 md:h-80">
-                            <canvas id="secondRoundAChart"></canvas>
-                        </div>
+                    <div class="bg-red-50 border-l-4 border-[#F95D6A] p-4 rounded-r-lg">
+                        <h3 class="font-semibold text-red-800">Érosion de la Droite Historique</h3>
+                        <p class="text-gray-700 mt-2">Mortalité de l'électorat senior (base loyale)</p>
+                        <div class="text-4xl font-bold text-red-500 text-center my-2">↓</div>
+                        <p class="text-sm text-gray-600">Perte structurelle estimée à 700-800 voix de base loyale (2020-2026).</p>
                     </div>
-                    
-                    <div>
-                        <h3 class="text-lg font-semibold text-[#003F5C] mb-2">Scénario B : Duel (Union)</h3>
-                        <p class="text-sm text-[#2F4B7C] mb-4">
-                            Si l'opposition (J-M. et L. Virapoullé) parvenait à s'unir, le duel serait plus serré. Cependant, la consolidation de la base de J. Bédier lui donnerait toujours un avantage décisif.
-                        </p>
-                        <div class="chart-container-sm h-64 md:h-80">
-                            <canvas id="secondRoundBChart"></canvas>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
-            <!-- Gemini Feature 1: Candidate Analysis (Grounding) -->
-            <section class="md:col-span-3 bg-white rounded-lg shadow-xl p-6 border-t-4 border-[#A05195]">
-                <h2 class="text-2xl font-bold text-[#A05195] mb-4">Analyse ✨ Prospective d'un Candidat (via Gemini API)</h2>
-                <p class="text-base text-[#2F4B7C] mb-4">
-                    Entrez le nom d'un potentiel candidat (local ou outsider) pour obtenir une analyse stratégique basée sur des informations publiques et les enjeux des élections de Saint-André 2026.
-                </p>
-                <div class="flex flex-col md:flex-row gap-4 mb-4">
-                    <input type="text" id="candidateName" placeholder="Nom du candidat (ex: 'Jean Dupond' ou 'Laurent Virapoulé')" class="flex-grow p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#A05195]">
-                    <button id="analyzeButton" class="bg-[#A05195] text-white font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition duration-300">
-                        ✨ Analyser l'impact
-                    </button>
-                </div>
-
-                <div id="analysisOutput" class="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg hidden">
-                    <p class="font-semibold text-[#003F5C] mb-2">Analyse Stratégique :</p>
-                    <div id="analysisText" class="text-sm text-gray-700 min-h-[50px]"></div>
-                    <div id="loadingIndicator" class="hidden flex justify-center items-center h-20">
-                        <div class="loader"></div>
+                    <div class="bg-blue-50 border-l-4 border-[#003F5C] p-4 rounded-r-lg">
+                        <h3 class="font-semibold text-blue-800">Renouvellement de l'Électorat</h3>
+                        <p class="text-gray-700 mt-2">Nouveaux inscrits (Jeunes de 18 ans)</p>
+                        <div class="text-4xl font-bold text-blue-600 text-center my-2">↑</div>
+                        <p class="text-sm text-gray-600">Potentiel mitigé par une forte émigration (15-19 ans) et une abstention élevée chez les jeunes.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- Gemini Feature 2: Speech Generation (Creative) -->
-            <section class="md:col-span-3 bg-white rounded-lg shadow-xl p-6 border-t-4 border-[#FFA600]">
-                <h2 class="text-2xl font-bold text-[#FFA600] mb-4">Génération de Discours Thématique ✨ (via Gemini API)</h2>
-                <p class="text-base text-[#2F4B7C] mb-4">
-                    Sélectionnez un candidat et un thème clé pour générer un court extrait de discours politique adapté à sa posture et aux enjeux locaux.
+            <section class="md:col-span-2 lg:col-span-3 bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-3xl font-bold text-[#003F5C] mb-4">V. Scénarios Électoraux 2026</h2>
+                <p class="text-base text-gray-700 mb-6">
+                    Basé sur la nouvelle configuration à quatre pôles, l'enjeu principal est la fragmentation. La division de la droite/centre en deux listes (JMV/Ramassamy et LV/RN) rend une triangulaire au second tour hautement probable, un scénario très favorable au maire sortant.
                 </p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 items-end">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     
-                    <div class="flex flex-col">
-                        <label for="speechCandidate" class="text-sm font-medium text-[#003F5C] mb-1">Candidat :</label>
-                        <select id="speechCandidate" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFA600]">
-                            <option value="Joé Bédier (Majorité Sortante)">Joé Bédier</option>
-                            <option value="Jean-Marie Virapoullé (Opposition Historique)">Jean-Marie Virapoullé</option>
-                            <option value="Laurent Virapoullé (Opposition Renouvellement)">Laurent Virapoullé</option>
-                            <option value="Outsider (Nouvelle Force)">Nouvelle Force / Outsider</option>
-                        </select>
+                    <div class="md:col-span-1 bg-slate-50 rounded-lg p-6 border-t-4 border-slate-400">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Scénario 1er Tour (S1.A)</h3>
+                        <p class="text-sm text-gray-700 mb-4">
+                            Projection d'une "Quadripolarisation" où les trois principales oppositions se divisent le vote anti-Bédier, assurant leur qualification.
+                        </p>
+                        <div class="chart-container-sm" style="height: 300px; max-height: 300px;">
+                            <canvas id="chart2026FirstRound"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="md:col-span-1 bg-slate-50 rounded-lg p-6 border-t-4 border-slate-400">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Scénario 2nd Tour (A - Triangulaire)</h3>
+                        <p class="text-sm text-gray-700 mb-4">
+                            Le scénario le plus probable. La division de la droite garantit une victoire par fragmentation pour M. Bédier, qui l'emporte avec une majorité relative confortable.
+                        </p>
+                        <div class="chart-container-sm" style="height: 300px; max-height: 300px;">
+                            <canvas id="chart2026SecondRoundTri"></canvas>
+                        </div>
                     </div>
 
-                    <div class="flex flex-col">
-                        <label for="speechTheme" class="text-sm font-medium text-[#003F5C] mb-1">Thème :</label>
-                        <select id="speechTheme" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFA600]">
-                            <option value="Emploi des jeunes">Emploi des jeunes</option>
-                            <option value="Sécurité et police de proximité">Sécurité et police de proximité</option>
-                            <option value="Qualité de vie et environnement urbain">Qualité de vie et environnement</option>
-                            <option value="Réforme de l'administration municipale">Réforme administrative</option>
-                        </select>
-                    </div>
-
-                    <button id="speechButton" class="bg-[#FFA600] text-white font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition duration-300 mt-2 md:mt-0">
-                        ✨ Générer le Discours
-                    </button>
-                </div>
-
-                <div id="speechOutput" class="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg hidden">
-                    <p class="font-semibold text-[#003F5C] mb-2">Extrait de Discours :</p>
-                    <div id="speechText" class="text-sm text-gray-700 min-h-[50px] italic"></div>
-                    <div id="speechLoadingIndicator" class="hidden flex justify-center items-center h-20">
-                        <div class="loader" style="border-top: 4px solid #FFA600;"></div>
+                    <div class="md:col-span-1 bg-slate-50 rounded-lg p-6 border-t-4 border-slate-400">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Scénario 2nd Tour (B - Duel)</h3>
+                        <p class="text-sm text-gray-700 mb-4">
+                            Un scénario de duel serré, très incertain. Il ne peut se produire que si la liste RN (L. Virapoullé) est éliminée au 1er tour (< 10%) et que ses voix se reportent parfaitement.
+                        </p>
+                        <div class="chart-container-sm" style="height: 300px; max-height: 300px;">
+                            <canvas id="chart2026SecondRoundDuel"></canvas>
+                        </div>
                     </div>
                 </div>
             </section>
             
-            <!-- Gemini Feature 3: Q&A Contradictory Scenario -->
-            <section class="md:col-span-3 bg-white rounded-lg shadow-xl p-6 border-t-4 border-[#D45087]">
-                <h2 class="text-2xl font-bold text-[#D45087] mb-4">Simulation d'Interview Contradictoire ✨ (via Gemini API)</h2>
-                <p class="text-base text-[#2F4B7C] mb-4">
-                    Générez une question piège sur un thème clé et recevez une suggestion de réponse stratégique adaptée à la position politique du candidat pour le préparer au débat.
+            <section class="lg:col-span-1 bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-[#F95D6A] mb-4">VI. Vulnérabilités de l'Incumbent</h2>
+                <p class="text-base text-gray-700 mb-4">
+                    Malgré une position favorable, M. Bédier fait face à des risques qui peuvent être exploités par l'opposition pour mobiliser le "vote sanction".
                 </p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 items-end">
-                    
-                    <div class="flex flex-col">
-                        <label for="qnaCandidate" class="text-sm font-medium text-[#003F5C] mb-1">Candidat :</label>
-                        <select id="qnaCandidate" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D45087]">
-                            <option value="Joé Bédier (Majorité Sortante)">Joé Bédier</option>
-                            <option value="Jean-Marie Virapoullé (Opposition Historique)">Jean-Marie Virapoullé</option>
-                            <option value="Laurent Virapoullé (Opposition Renouvellement)">Laurent Virapoullé</option>
-                            <option value="Outsider (Nouvelle Force)">Nouvelle Force / Outsider</option>
-                        </select>
-                    </div>
-
-                    <div class="flex flex-col">
-                        <label for="qnaTheme" class="text-sm font-medium text-[#003F5C] mb-1">Thème :</label>
-                        <select id="qnaTheme" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D45087]">
-                            <option value="Emploi des jeunes">Emploi des jeunes</option>
-                            <option value="Sécurité et police de proximité">Sécurité et police de proximité</option>
-                            <option value="Qualité de vie et environnement urbain">Qualité de vie et environnement</option>
-                            <option value="Réforme de l'administration municipale">Réforme administrative</option>
-                        </select>
-                    </div>
-
-                    <button id="qnaButton" class="bg-[#D45087] text-white font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition duration-300 mt-2 md:mt-0">
-                        ✨ Simuler le Débat
-                    </button>
-                </div>
-
-                <div id="qnaOutput" class="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg hidden">
-                    <div id="qnaText" class="text-sm text-gray-700 min-h-[50px]"></div>
-                    <div id="qnaLoadingIndicator" class="hidden flex justify-center items-center h-20">
-                        <div class="loader" style="border-top: 4px solid #D45087;"></div>
-                    </div>
-                </div>
+                <ul class="space-y-3">
+                    <li class="flex items-start">
+                        <span class="text-xl mr-3">💧</span>
+                        <span class="text-gray-700"><b>Crise de l'Eau :</b> Bien que la compétence soit à la CIREST, la colère populaire se dirige vers le maire, perçu comme l'élu de proximité.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-xl mr-3">⚠️</span>
+                        <span class="text-gray-700"><b>Fragilités Judiciaires :</b> Les "affaires" et perquisitions, même sans issue judiciaire, créent un climat d'instabilité et nourrissent une perception de gestion opaque.</span>
+                    </li>
+                </ul>
             </section>
-            
-            <!-- Gemini Feature 4: Strategic Action Plan Generator -->
-            <section class="md:col-span-3 bg-white rounded-lg shadow-xl p-6 border-t-4 border-[#8B0000]">
-                <h2 class="text-2xl font-bold text-[#8B0000] mb-4">Générateur de Plan d'Action Stratégique ✨ (via Gemini API)</h2>
-                <p class="text-base text-[#2F4B7C] mb-4">
-                    Obtenez un plan d'action en trois points pour atteindre un objectif de campagne spécifique, adapté à la position politique du candidat.
+
+            <section class="lg:col-span-2 bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-[#003F5C] mb-4">VII. Conclusion Stratégique</h2>
+                <p class="text-base text-gray-700 leading-relaxed mb-4">
+                    L'analyse démographique confirme une érosion structurelle de la base historique de la droite (Virapoullé). Cependant, le facteur déterminant pour 2026 est la **fragmentation de l'opposition**.
                 </p>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 items-end">
-                    
-                    <div class="flex flex-col">
-                        <label for="planCandidate" class="text-sm font-medium text-[#003F5C] mb-1">Candidat :</label>
-                        <select id="planCandidate" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B0000]">
-                            <option value="Joé Bédier (Maire Sortant)">Joé Bédier</option>
-                            <option value="Jean-Marie Virapoullé (Opposition Historique)">Jean-Marie Virapoullé</option>
-                            <option value="Laurent Virapoullé (Opposition Renouvellement)">Laurent Virapoullé</option>
-                        </select>
-                    </div>
-
-                    <div class="flex flex-col md:col-span-2">
-                        <label for="planGoal" class="text-sm font-medium text-[#003F5C] mb-1">Objectif Stratégique :</label>
-                        <select id="planGoal" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B0000]">
-                            <option value="Consolider le vote des jeunes et des primo-votants">Consolider le vote des jeunes</option>
-                            <option value="Attaquer le bilan de l'adversaire sur la sécurité">Attaquer le bilan sur la sécurité</option>
-                            <option value="Mobiliser la base historique dans les quartiers traditionnels">Mobiliser la base historique</option>
-                            <option value="Présenter une image de rassemblement et d'unité">Présenter une image de rassemblement</option>
-                        </select>
-                    </div>
-
-                    <button id="planButton" class="bg-[#8B0000] text-white font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition duration-300 mt-2 md:mt-0">
-                        ✨ Générer le Plan
-                    </button>
-                </div>
-
-                <div id="planOutput" class="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg hidden">
-                    <p class="font-semibold text-[#003F5C] mb-2">Plan d'Action Recommandé :</p>
-                    <ul id="planList" class="list-disc list-inside text-sm text-gray-700 min-h-[50px] space-y-2">
-                        <!-- Action plan items will be inserted here -->
-                    </ul>
-                    <div id="planLoadingIndicator" class="hidden flex justify-center items-center h-20">
-                        <div class="loader" style="border-top: 4px solid #8B0000;"></div>
-                    </div>
-                </div>
+                <p class="text-base text-gray-700 leading-relaxed font-semibold text-[#003F5C] bg-slate-100 p-4 rounded-lg">
+                    La candidature de Laurent Virapoullé (RN) divise le bloc de droite et neutralise l'alliance J.M. Virapoullé/Ramassamy. Dans la configuration actuelle (triangulaire au 2nd tour), la réélection de M. Joé Bédier, bénéficiant de cette division, est l'issue la plus probable.
+                </p>
             </section>
 
         </main>
 
         <footer class="text-center mt-12 py-6 border-t border-gray-300">
-            <p class="text-sm text-gray-500 mb-2">
-                <span class="font-bold text-red-600">ATTENTION :</span> Les fonctionnalités "via Gemini API" (Analyse Prospective, Discours, etc.) ne sont opérationnelles que dans l'environnement de développement collaboratif (Canvas) et ne fonctionneront pas une fois hébergées en ligne.
-            </p>
-            <p class="text-sm text-gray-500">
-                Cette infographie est une modélisation basée sur une analyse qualitative des tendances électorales et des facteurs démographiques. Les données chiffrées sont des illustrations basées sur ce modèle et non des résultats de sondage officiels.
-            </p>
+            <p class="text-sm text-gray-500">Source: Rapport d'Analyse Électorale et Démographique : Saint-André (La Réunion) - Perspective 2026 (Révisé).</p>
+            <p class="text-xs text-gray-400 mt-1">Infographie générée à des fins d'illustration et d'analyse. Les projections sont des modélisations basées sur le rapport fourni.</p>
         </footer>
 
     </div>
 
     <script>
-        // Start of LLM-API implementation
-        const fetchWithBackoff = async (url, options, maxRetries = 5) => {
-            // Dans un environnement de production, l'API Key doit être sécurisée.
-            // Pour l'hébergement statique simple, les fonctionnalités LLM ne seront pas accessibles car l'API Key est vide.
-            const apiKey = ""; 
-            if (apiKey === "" && !window.location.host.includes('canvas')) {
-                console.warn("API Key is missing. LLM features are disabled in this environment.");
-                // Remplacer les boutons par des messages d'erreur si la clé est absente en prod
-                document.querySelectorAll('button[id$="Button"]').forEach(btn => {
-                    btn.disabled = true;
-                    btn.textContent = '❌ API non disponible (Clé manquante)';
-                    btn.classList.remove('bg-[#A05195]', 'bg-[#FFA600]', 'bg-[#D45087]', 'bg-[#8B0000]');
-                    btn.classList.add('bg-gray-400');
-                });
-                return null;
-            }
-
-            // Code d'appel avec Backoff (uniquement exécuté si la clé est présente ou dans l'environnement Canvas)
-            for (let i = 0; i < maxRetries; i++) {
-                try {
-                    const finalUrl = `${url}?key=${apiKey}`;
-                    const response = await fetch(finalUrl, options);
-                    if (!response.ok) {
-                        if (response.status === 429 && i < maxRetries - 1) {
-                            const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
-                            await new Promise(resolve => setTimeout(resolve, delay));
-                            continue;
-                        }
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response;
-                } catch (error) {
-                    if (i === maxRetries - 1) throw error;
-                    const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                }
-            }
-        };
-
-        const executeGeminiCall = async (payload, endpoint) => {
-             const apiKey = "";
-             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${endpoint}:generateContent`;
-             
-             // Utiliser fetchWithBackoff, qui gère l'ajout de l'apiKey si nécessaire (dans Canvas) et le retry.
-             const response = await fetchWithBackoff(apiUrl, {
-                 method: 'POST',
-                 headers: { 'Content-Type': 'application/json' },
-                 body: JSON.stringify(payload)
-             });
-
-             if (!response) return null; // Si fetchWithBackoff retourne null (clé manquante en prod)
-             return response.json();
-        };
-
-
-        // --- Feature 1: Candidate Analysis (Grounding) ---
-        const analyzeCandidate = async (candidateName) => {
-            const outputDiv = document.getElementById('analysisOutput');
-            const analysisText = document.getElementById('analysisText');
-            const loadingIndicator = document.getElementById('loadingIndicator');
-            
-            if (!candidateName.trim()) {
-                analysisText.innerHTML = '<p class="text-red-500">Veuillez entrer le nom d\'un candidat à analyser.</p>';
-                outputDiv.classList.remove('hidden');
-                return;
-            }
-
-            outputDiv.classList.remove('hidden');
-            analysisText.innerHTML = '';
-            loadingIndicator.classList.remove('hidden');
-
-            const systemPrompt = "Agissez en tant qu'analyste politique spécialisé dans les élections municipales à La Réunion. Fournissez une analyse qualitative concise, en un seul paragraphe (maximum 5 phrases), du profil, de la position stratégique et de l'impact potentiel sur les élections de Saint-André 2026 de la personne nommée. Basez l'analyse sur des informations publiques récentes et des tendances politiques locales. Répondez uniquement en français.";
-            const userQuery = `Analyser le potentiel de "${candidateName}" pour les élections municipales de Saint-André (La Réunion) 2026.`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                tools: [{ "google_search": {} }],
-                systemInstruction: {
-                    parts: [{ text: systemPrompt }]
-                },
-            };
-
-            try {
-                const result = await executeGeminiCall(payload, 'gemini-2.5-flash-preview-09-2025');
-                if (!result) return; // Si la fonction a échoué à cause de l'absence de clé
-
-                const candidate = result.candidates?.[0];
-
-                if (candidate && candidate.content?.parts?.[0]?.text) {
-                    let text = candidate.content.parts[0].text;
-                    let sources = [];
-                    const groundingMetadata = candidate.groundingMetadata;
-
-                    if (groundingMetadata && groundingMetadata.groundingAttributions) {
-                        sources = groundingMetadata.groundingAttributions
-                            .map(attribution => ({
-                                uri: attribution.web?.uri,
-                                title: attribution.web?.title,
-                            }))
-                            .filter(source => source.uri && source.title);
-                    }
-
-                    let outputHtml = `<p class="mb-3">${text}</p>`;
-
-                    if (sources.length > 0) {
-                        outputHtml += '<p class="text-xs mt-3 font-semibold">Sources consultées :</p><ul class="list-disc list-inside text-xs text-gray-600">';
-                        sources.forEach(source => {
-                            outputHtml += `<li><a href="${source.uri}" target="_blank" class="text-[#2F4B7C] hover:underline">${source.title}</a></li>`;
-                        });
-                        outputHtml += '</ul>';
-                    } else {
-                        outputHtml += '<p class="text-xs mt-3 text-gray-500">Analyse basée sur des connaissances générales, aucune source spécifique trouvée en temps réel.</p>';
-                    }
-
-                    analysisText.innerHTML = outputHtml;
-                } else {
-                    analysisText.innerHTML = '<p class="text-red-500">Erreur : Impossible de générer l\'analyse. Veuillez vérifier le nom du candidat.</p>';
-                }
-            } catch (error) {
-                console.error("Gemini API Error (Candidate Analysis):", error);
-                analysisText.innerHTML = `<p class="text-red-500">Une erreur est survenue lors de l'appel à l'API : ${error.message}.</p>`;
-            } finally {
-                loadingIndicator.classList.add('hidden');
-            }
-        };
-
-        // --- Feature 2: Speech Generation (Creative) ---
-        const generateSpeech = async (candidate, theme) => {
-            const outputDiv = document.getElementById('speechOutput');
-            const speechText = document.getElementById('speechText');
-            const loadingIndicator = document.getElementById('speechLoadingIndicator');
-            
-            outputDiv.classList.remove('hidden');
-            speechText.innerHTML = '';
-            loadingIndicator.classList.remove('hidden');
-
-            let roleInstruction = '';
-            let tone = 'un ton combatif, centré sur la critique et le besoin de changement radical';
-
-            if (candidate.includes('Majorité Sortante')) {
-                tone = 'un ton de gestionnaire rassurant, centré sur le bilan, la stabilité et les projets futurs';
-            } else if (candidate.includes('Opposition Historique')) {
-                tone = 'un ton solennel, insistant sur le déclin de la ville et la nécessité de retrouver les valeurs du passé';
-            } else if (candidate.includes('Opposition Renouvellement')) {
-                tone = 'un ton dynamique et moderne, ciblant l\'avenir, la jeunesse et les innovations';
-            } else if (candidate.includes('Outsider')) {
-                tone = 'un ton citoyen et anti-système, insistant sur la proximité et la rupture avec les anciens clans';
-            }
-
-            roleInstruction = `Agis comme ${candidate} s'adressant aux électeurs de Saint-André (La Réunion). Écris un extrait de discours de trois à quatre phrases maximum sur le thème de "${theme}", en adoptant ${tone}. Commence par une phrase d'accroche forte et termine par un appel à l'action ou à la réflexion.`;
-            const userQuery = `Rédige l'extrait de discours pour le thème "${theme}".`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                systemInstruction: {
-                    parts: [{ text: roleInstruction }]
-                },
-            };
-
-            try {
-                const result = await executeGeminiCall(payload, 'gemini-2.5-flash-preview-09-2025');
-                if (!result) return;
-
-                const generatedText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                if (generatedText) {
-                    speechText.innerHTML = generatedText.replace(/\n/g, '<br>');
-                } else {
-                    speechText.innerHTML = '<p class="text-red-500">Erreur : Impossible de générer le discours.</p>';
-                }
-            } catch (error) {
-                console.error("Gemini API Error (Speech Generation):", error);
-                speechText.innerHTML = `<p class="text-red-500">Une erreur est survenue lors de l'appel à l'API : ${error.message}.</p>`;
-            } finally {
-                loadingIndicator.classList.add('hidden');
-            }
-        };
-        
-        // --- Feature 3: Q&A Simulation (Creative) ---
-        const generateQnA = async (candidate, theme) => {
-            const outputDiv = document.getElementById('qnaOutput');
-            const qnaText = document.getElementById('qnaText');
-            const loadingIndicator = document.getElementById('qnaLoadingIndicator');
-            
-            outputDiv.classList.remove('hidden');
-            qnaText.innerHTML = '';
-            loadingIndicator.classList.remove('hidden');
-
-            const roleInstruction = `Agis en tant que coach en communication politique simulant une interview tendue pour un candidat municipal. Ton objectif est double : premièrement, rédiger une question piège, aggressive ou très critique de la part d'un journaliste ou d'un opposant sur le thème de "${theme}" à Saint-André. Deuxièmement, rédiger une réponse stratégique et percutante (trois phrases max) pour le candidat "${candidate}", en tenant compte de sa posture (Majorité/Opposition/Outsider). Format ta réponse en utilisant les balises HTML spécifiques <p class="question-text">Question : ...</p> et <p class="answer-text">Réponse : ...</p>. Le tout doit être en français.`;
-            const userQuery = `Simule la question piège et la réponse stratégique pour le candidat ${candidate} sur le thème ${theme}.`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                systemInstruction: {
-                    parts: [{ text: roleInstruction }]
-                },
-            };
-
-            try {
-                const result = await executeGeminiCall(payload, 'gemini-2.5-flash-preview-09-2025');
-                if (!result) return;
-                
-                const generatedText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                if (generatedText) {
-                    // Replace the generated <p> tags with the ones styled in CSS
-                    let formattedText = generatedText
-                        .replace(/Question\s*:/g, '<p class="question-text">Question :')
-                        .replace(/Réponse\s*:/g, '</p><p class="answer-text">Réponse :') + '</p>'; // Ensure the last tag is closed
-
-                    // Handle missing closing tag if the model didn't add it cleanly
-                    if (!formattedText.endsWith('</p>')) {
-                        formattedText += '</p>';
-                    }
-                    
-                    qnaText.innerHTML = formattedText;
-                } else {
-                    qnaText.innerHTML = '<p class="text-red-500">Erreur : Impossible de simuler l\'interview. Veuillez réessayer.</p>';
-                }
-            } catch (error) {
-                console.error("Gemini API Error (Q&A Simulation):", error);
-                qnaText.innerHTML = `<p class="text-red-500">Une erreur est survenue lors de l'appel à l'API : ${error.message}.</p>`;
-            } finally {
-                loadingIndicator.classList.add('hidden');
-            }
-        };
-        
-        // --- Feature 4: Strategic Action Plan Generator (Structured JSON) ---
-        const generateActionPlan = async (candidate, goal) => {
-            const outputDiv = document.getElementById('planOutput');
-            const planList = document.getElementById('planList');
-            const loadingIndicator = document.getElementById('planLoadingIndicator');
-            
-            outputDiv.classList.remove('hidden');
-            planList.innerHTML = '';
-            loadingIndicator.classList.remove('hidden');
-
-            const roleInstruction = `Agis comme un directeur de campagne chevronné, spécialisé dans les stratégies électorales à La Réunion. Ton rôle est de générer un plan d'action en trois étapes pour le candidat "${candidate}". Le plan doit être spécifiquement conçu pour atteindre l'objectif stratégique suivant : "${goal}". La réponse doit être un tableau JSON conforme au schéma fourni, contenant exactement 3 points d'action détaillés.`;
-            const userQuery = `Générer un plan d'action stratégique en 3 points pour le candidat ${candidate} avec l'objectif de ${goal}.`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                systemInstruction: {
-                    parts: [{ text: roleInstruction }]
-                },
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "ARRAY",
-                        description: "An array of 3 strategic action points.",
-                        items: {
-                            type: "STRING",
-                            description: "A single, concise action point."
-                        }
-                    }
-                }
-            };
-
-            try {
-                const result = await executeGeminiCall(payload, 'gemini-2.5-flash-preview-09-2025');
-                if (!result) return;
-
-                const generatedJsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                if (generatedJsonText) {
-                    const actionPoints = JSON.parse(generatedJsonText);
-                    if (Array.isArray(actionPoints)) {
-                        planList.innerHTML = actionPoints.map(point => `<li>${point}</li>`).join('');
-                    } else {
-                        throw new Error("Format de réponse inattendu. Le modèle n'a pas retourné un tableau.");
-                    }
-                } else {
-                    planList.innerHTML = '<p class="text-red-500">Erreur : Impossible de générer le plan d\'action. Vérifiez la console pour les détails.</p>';
-                }
-            } catch (error) {
-                console.error("Gemini API Error (Action Plan):", error);
-                planList.innerHTML = `<p class="text-red-500">Une erreur est survenue lors de l'appel à l'API : ${error.message}.</p>`;
-            } finally {
-                loadingIndicator.classList.add('hidden');
-            }
-        };
-
-
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialisation de la vérification de l'API Key au chargement
-            fetchWithBackoff('', {}); 
 
-            // Event Listeners for Gemini Features
-            document.getElementById('analyzeButton').addEventListener('click', () => {
-                const candidateName = document.getElementById('candidateName').value;
-                if (!document.getElementById('analyzeButton').disabled) analyzeCandidate(candidateName);
-            });
-
-            document.getElementById('speechButton').addEventListener('click', () => {
-                const candidate = document.getElementById('speechCandidate').value;
-                const theme = document.getElementById('speechTheme').value;
-                if (!document.getElementById('speechButton').disabled) generateSpeech(candidate, theme);
-            });
-            
-            document.getElementById('qnaButton').addEventListener('click', () => {
-                const candidate = document.getElementById('qnaCandidate').value;
-                const theme = document.getElementById('qnaTheme').value;
-                if (!document.getElementById('qnaButton').disabled) generateQnA(candidate, theme);
-            });
-            
-            document.getElementById('planButton').addEventListener('click', () => {
-                const candidate = document.getElementById('planCandidate').value;
-                const goal = document.getElementById('planGoal').value;
-                if (!document.getElementById('planButton').disabled) generateActionPlan(candidate, goal);
-            });
-
-
-            // Chart.js initialization code (unchanged)
-            const colors = {
-                bedier: '#2F4B7C',
-                jmVirapoulle: '#D45087',
-                lVirapoulle: '#FFA600',
-                autres: '#665191',
-                abstention: '#A05195',
-                text: '#003F5C'
+            const politicalColors = {
+                bedier: '#003F5C',
+                jmv_ramassamy: '#665191',
+                lv_rn: '#A05195',
+                fruteau: '#D45087',
+                vulnerabilities: '#F95D6A',
+                other: '#D1D5DB'
             };
 
             const tooltipTitleCallback = (tooltipItems) => {
@@ -685,44 +237,9 @@
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        labels: {
-                            color: colors.text
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            title: tooltipTitleCallback
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        ticks: {
-                            color: colors.text
-                        },
-                        grid: {
-                            color: '#E0E0E0'
-                        }
-                    },
-                    x: {
-                        ticks: {
-                            color: colors.text
-                        },
-                        grid: {
-                            color: '#E0E0E0'
-                        }
-                    }
-                }
-            };
-
-            const globalPieOptions = {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
                         position: 'bottom',
                         labels: {
-                            color: colors.text
+                            color: '#003F5C'
                         }
                     },
                     tooltip: {
@@ -734,25 +251,12 @@
             };
 
             const globalBarOptions = {
+                ...globalChartOptions,
                 indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            title: tooltipTitleCallback
-                        }
-                    }
-                },
                 scales: {
                     x: {
-                        beginAtZero: true,
-                        max: 60,
                         ticks: {
-                            color: colors.text,
+                            color: '#003F5C',
                             callback: function(value) {
                                 return value + '%'
                             }
@@ -763,111 +267,94 @@
                     },
                     y: {
                         ticks: {
-                            color: colors.text
+                            color: '#003F5C'
                         },
                         grid: {
                             display: false
                         }
                     }
+                },
+                plugins: {
+                    ...globalChartOptions.plugins,
+                    legend: {
+                        display: false
+                    }
                 }
             };
             
-            const historicalCtx = document.getElementById('historicalTrendChart');
-            if (historicalCtx) {
-                new Chart(historicalCtx, {
-                    type: 'line',
+            const chart2020InscribedCtx = document.getElementById('chart2020Inscribed');
+            if (chart2020InscribedCtx) {
+                new Chart(chart2020InscribedCtx, {
+                    type: 'doughnut',
                     data: {
-                        labels: ['2008', '2014', '2020', ['Projeté', '2026']],
-                        datasets: [
-                            {
-                                label: 'Base J. Bédier',
-                                data: [35, 42, 51, 53],
-                                borderColor: colors.bedier,
-                                backgroundColor: colors.bedier + '33',
-                                tension: 0.1,
-                                borderWidth: 3
-                            },
-                            {
-                                label: 'Base J-M. Virapoullé',
-                                data: [50, 40, 28, 24],
-                                borderColor: colors.jmVirapoulle,
-                                backgroundColor: colors.jmVirapoulle + '33',
-                                tension: 0.1,
-                                borderWidth: 3
-                            }
-                        ]
+                        labels: ['Voix Bédier (% Inscrits)', 'Abstention / Autres Inscrits'],
+                        datasets: [{
+                            data: [27.1, 72.9],
+                            backgroundColor: [politicalColors.bedier, politicalColors.other],
+                            borderColor: '#FFFFFF',
+                            borderWidth: 2
+                        }]
                     },
                     options: globalChartOptions
                 });
             }
 
-            const abstentionCtx = document.getElementById('abstentionChart');
-            if (abstentionCtx) {
-                new Chart(abstentionCtx, {
-                    type: 'line',
-                    data: {
-                        labels: ['2008', '2014', '2020', '2026 (Proj.)'],
-                        datasets: [
-                            {
-                                label: 'Taux d\'abstention',
-                                data: [38, 40, 45, 47],
-                                borderColor: colors.abstention,
-                                backgroundColor: colors.abstention + '80',
-                                fill: true,
-                                tension: 0.2
-                            }
-                        ]
-                    },
-                    options: { ...globalChartOptions, plugins: { ...globalChartOptions.plugins, legend: { display: false } } }
-                });
-            }
-
-            const firstRoundCtx = document.getElementById('firstRoundChart');
-            if (firstRoundCtx) {
-                new Chart(firstRoundCtx, {
+            const chart2026FirstRoundCtx = document.getElementById('chart2026FirstRound');
+            if (chart2026FirstRoundCtx) {
+                new Chart(chart2026FirstRoundCtx, {
                     type: 'doughnut',
                     data: {
-                        labels: ['J. Bédier', 'J-M. Virapoullé', 'L. Virapoullé', 'Autres Listes'],
+                        labels: ['Bédier (30-35%)', 'JMV/Ramassamy (22-26%)', 'LV/RN (10-15%)', 'Fruteau (5-8%)'],
                         datasets: [{
-                            data: [46, 24, 12, 18],
-                            backgroundColor: [colors.bedier, colors.jmVirapoulle, colors.lVirapoulle, colors.autres],
+                            data: [32.5, 24, 12.5, 6.5],
+                            backgroundColor: [politicalColors.bedier, politicalColors.jmv_ramassamy, politicalColors.lv_rn, politicalColors.fruteau],
                             borderColor: '#FFFFFF',
                             borderWidth: 2
                         }]
                     },
-                    options: globalPieOptions
+                    options: globalChartOptions
                 });
             }
 
-            const secondRoundACtx = document.getElementById('secondRoundAChart');
-            if (secondRoundACtx) {
-                new Chart(secondRoundACtx, {
+            const chart2026SecondRoundTriCtx = document.getElementById('chart2026SecondRoundTri');
+            if (chart2026SecondRoundTriCtx) {
+                new Chart(chart2026SecondRoundTriCtx, {
                     type: 'bar',
                     data: {
-                        labels: ['J. Bédier', 'J-M. Virapoullé', 'L. Virapoullé'],
+                        labels: ['Bédier', 'JMV/Ramassamy', 'LV/RN'],
                         datasets: [{
-                            label: 'Résultats',
-                            data: [49, 30, 21],
-                            backgroundColor: [colors.bedier, colors.jmVirapoulle, colors.lVirapoulle],
+                            label: '% Voix (Triangulaire)',
+                            data: [44, 34, 20],
+                            backgroundColor: [politicalColors.bedier, politicalColors.jmv_ramassamy, politicalColors.lv_rn]
                         }]
                     },
                     options: globalBarOptions
                 });
             }
 
-            const secondRoundBCtx = document.getElementById('secondRoundBChart');
-            if (secondRoundBCtx) {
-                new Chart(secondRoundBCtx, {
+            const chart2026SecondRoundDuelCtx = document.getElementById('chart2026SecondRoundDuel');
+            if (chart2026SecondRoundDuelCtx) {
+                new Chart(chart2026SecondRoundDuelCtx, {
                     type: 'bar',
                     data: {
-                        labels: ['J. Bédier', ['Union', 'de l\'opposition']],
+                        labels: ['Bédier', ['Union Opposition', '(JMV/Ram.)']],
                         datasets: [{
-                            label: 'Résultats',
-                            data: [52, 48],
-                            backgroundColor: [colors.bedier, colors.jmVirapoulle],
+                            label: '% Voix (Duel)',
+                            data: [49.5, 50.5],
+                            backgroundColor: [politicalColors.bedier, politicalColors.jmv_ramassamy]
                         }]
                     },
-                    options: globalBarOptions
+                    options: {
+                        ...globalBarOptions,
+                        scales: {
+                            ...globalBarOptions.scales,
+                            x: {
+                                ...globalBarOptions.scales.x,
+                                min: 40,
+                                max: 55
+                            }
+                        }
+                    }
                 });
             }
         });
