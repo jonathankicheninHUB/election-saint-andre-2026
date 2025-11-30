@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
-import { TrendingUp, TrendingDown, Users, Award, AlertCircle, Target, Clock } from 'lucide-react';
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, RadarChart, PolarGrid, PolarAngleAxis, Radar } from 'recharts';
+import { TrendingDown, Users, Award, Target, Clock } from 'lucide-react';
 
 const COLORS = ['#06b6d4', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#ef4444', '#3b82f6'];
 const BACKGROUND_COLOR = '#0f172a';
@@ -13,21 +13,16 @@ const electionData = {
 };
 
 const candidats2026 = [
-  { nom: 'Joé Bedier (Maire)', parti: 'DVG / Majorité', statut: 'Maire sortant', projectionT1: 28, projectionT2: 54, force: 85, notoriete: 95, ancrage: 80, dynamique: 70, couleur: '#06b6d4', analyse: 'Maire sortant avec un bilan à défendre. Bénéficie de la prime au sortant mais doit mobiliser face à une opposition fragmentée.' },
-  { nom: 'J.M. Virapoullé (Opposition)', parti: 'DVD / Alliance', statut: 'Opposant principal', projectionT1: 26, projectionT2: 46, force: 75, notoriete: 90, ancrage: 85, dynamique: 60, couleur: '#8b5cf6', analyse: 'Chef de file de la famille historique. Son alliance conditionne sa qualification et sa capacité à rassembler les déçus de la majorité.' },
-  { nom: 'L. Virapoullé (RN)', parti: 'RN / Extrême Droite', statut: 'Candidat émergent', projectionT1: 15, projectionT2: null, force: 50, notoriete: 65, ancrage: 40, dynamique: 80, couleur: '#ef4444', analyse: 'Nouveau pôle d\'attraction autour du Rassemblement National. Son score au T1 est clé pour les alliances au T2.' },
-  { nom: 'Eric Fruteau', parti: 'DVG / Ancien Maire', statut: 'Candidat dissident', projectionT1: 10, projectionT2: null, force: 40, notoriete: 75, ancrage: 60, dynamique: 30, couleur: '#f59e0b', analyse: 'Ancien maire en déclin. Son maintien fragmente le vote DVG et complique la tâche de Joé Bedier.' },
-  { nom: 'Société Civile / Écologie', parti: 'Divers', statut: 'Liste de rupture', projectionT1: 11, projectionT2: null, force: 35, notoriete: 35, ancrage: 30, dynamique: 70, couleur: '#10b981', analyse: 'Capte le vote protestataire et la volatilité jeune. Leur score total (11%) est un facteur X majeur.' },
-  { nom: 'Autres Oppositions', parti: 'Divers', statut: 'Petits candidats', projectionT1: 10, projectionT2: null, force: 20, notoriete: 30, ancrage: 25, dynamique: 40, couleur: '#ec4899', analyse: 'Listes non qualifiantes. Leur report de voix est critique entre les deux blocs principaux.' }
+  { nom: 'Joé Bedier (Maire)', parti: 'DVG / Majorité', statut: 'Maire sortant', projectionT1: 28, projectionT2: 54, force: 85, notoriete: 95, ancrage: 80, dynamique: 70, couleur: '#06b6d4', analyse: 'Maire sortant avec un bilan à défendre.' },
+  { nom: 'J.M. Virapoullé (Opposition)', parti: 'DVD / Alliance', statut: 'Opposant principal', projectionT1: 26, projectionT2: 46, force: 75, notoriete: 90, ancrage: 85, dynamique: 60, couleur: '#8b5cf6', analyse: 'Chef de file de la famille historique.' },
+  { nom: 'L. Virapoullé (RN)', parti: 'RN / Extrême Droite', statut: 'Candidat émergent', projectionT1: 15, projectionT2: null, force: 50, notoriete: 65, ancrage: 40, dynamique: 80, couleur: '#ef4444', analyse: 'Nouveau pôle d\'attraction autour du RN.' },
+  { nom: 'Eric Fruteau', parti: 'DVG / Ancien Maire', statut: 'Candidat dissident', projectionT1: 10, projectionT2: null, force: 40, notoriete: 75, ancrage: 60, dynamique: 30, couleur: '#f59e0b', analyse: 'Ancien maire en déclin. Fragmente le vote DVG.' },
+  { nom: 'Société Civile / Écologie', parti: 'Divers', statut: 'Liste de rupture', projectionT1: 11, projectionT2: null, force: 35, notoriete: 35, ancrage: 30, dynamique: 70, couleur: '#10b981', analyse: 'Capte le vote protestataire et la volatilité jeune.' },
+  { nom: 'Autres Oppositions', parti: 'Divers', statut: 'Petits candidats', projectionT1: 10, projectionT2: null, force: 20, notoriete: 30, ancrage: 25, dynamique: 40, couleur: '#ec4899', analyse: 'Listes non qualifiantes.' }
 ];
 
 const evolutionPolitique = [{ annee: '2008', DVG: 58.30, DVD: 41.70 }, { annee: '2014', DVG: 37.41, DVD: 62.57 }, { annee: '2020', DVG: 52.16, DVD: 47.83 }, { annee: '2026*', DVG: 54, DVD: 46 }];
 const evolutionParticipation = [{ annee: '2008', tour1: 71.07, tour2: 80.45 }, { annee: '2014', tour1: 68.08, tour2: 73.08 }, { annee: '2020', tour1: 48.06, tour2: 54.84 }, { annee: '2026*', tour1: 52, tour2: 58 }];
-const acteursHistorique = [
-  { nom: 'Famille Virapoullé', periodes: [{ annee: 2008, resultat: 41.70, statut: 'Défaite' }, { annee: 2014, resultat: 62.57, statut: 'Victoire' }, { annee: 2020, resultat: 47.83, statut: 'Défaite' }], tendance: 'decline', analyse: 'Après une victoire nette en 2014, perte du pouvoir en 2020. En 2026, l\'alliance est la clé pour revenir.' },
-  { nom: 'Joé Bedier (Maire Sortant)', periodes: [{ annee: 2014, resultat: 14.57, statut: 'Troisième' }, { annee: 2020, resultat: 52.16, statut: 'Victoire' }], tendance: 'rise', analyse: 'Ascension remarquable en 2020. Doit consolider sa majorité et gérer la fragmentation à gauche.' },
-  { nom: 'Base Électorale Démographique', periodes: [{ annee: 2008, resultat: 75, statut: 'Forte' }, { annee: 2014, resultat: 65, statut: 'Moyenne' }, { annee: 2020, resultat: 55, statut: 'Déclin' }, { annee: 2026, resultat: 45, statut: 'Faible' }], tendance: 'decline', analyse: 'Érosion de la base historique (mortalité), forçant les candidats à capter le vote volatil des jeunes et des nouveaux habitants.' }
-];
 const blocsPolitiques2026 = [
     { nom: 'Bloc DVG (Bedier)', pourcentage: 28, couleur: '#06b6d4' },
     { nom: 'Bloc DVD/Alliance (Virapoullé)', pourcentage: 26, couleur: '#8b5cf6' },
@@ -53,6 +48,28 @@ const CustomTooltip = ({ active, payload, label }) => {
   }
   return null;
 };
+
+// Composant Card
+const Card = ({ icon: Icon, title, value, subtitle, color }) => (
+  <div className={`bg-gradient-to-br from-${color}-600 to-${color}-700 p-4 rounded-xl shadow-xl`}>
+    <div className="flex items-center gap-2 mb-2">
+      <Icon className="text-white" size={24} />
+      <h3 className="font-bold text-white text-sm">{title}</h3>
+    </div>
+    <p className="text-2xl font-bold text-white mb-1">{value}</p>
+    <p className={`text-${color}-100 font-semibold text-xs`}>{subtitle}</p>
+  </div>
+);
+
+// Composant ChartCard
+const ChartCard = ({ title, children, borderColor }) => (
+  <div className={`bg-slate-800 p-4 rounded-xl shadow-2xl border-t-4 border-${borderColor}-500`}>
+    <h3 className="text-xl font-bold mb-4 text-white">{title}</h3>
+    <ResponsiveContainer width="100%" height={250}>
+      {children}
+    </ResponsiveContainer>
+  </div>
+);
 
 // Composant principal
 const App = () => {
@@ -94,35 +111,6 @@ const App = () => {
           <Bar dataKey="DVD" fill="#8b5cf6" name="Divers Droite / Allié (%)" radius={[5, 5, 0, 0]} />
         </BarChart>
       </ChartCard>
-    </div>
-  );
-
-  const renderActeurs = () => (
-    <div className="space-y-6 animate-fadeIn">
-      <div className="bg-gradient-to-r from-teal-600 to-cyan-700 text-white p-6 rounded-2xl shadow-xl">
-        <h2 className="text-3xl font-extrabold">👤 Acteurs et Démographie</h2>
-      </div>
-        
-      {acteursHistorique.map((acteur, idx) => (
-        <div key={idx} className={`bg-slate-800 p-6 rounded-xl shadow-xl border-l-4 ${acteur.tendance === 'rise' ? 'border-emerald-500' : 'border-rose-500'}`}>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-white">{acteur.nom}</h3>
-            <span className={`px-3 py-1 text-xs rounded-full font-bold ${acteur.tendance === 'rise' ? 'bg-green-600' : 'bg-red-600'}`}>
-              {acteur.tendance === 'rise' ? '📈 En hausse' : '📉 En déclin'}
-            </span>
-          </div>
-          <ResponsiveContainer width="100%" height={150}>
-            <LineChart data={acteur.periodes}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" />
-              <XAxis dataKey="annee" stroke="#fff" />
-              <YAxis domain={[0, 70]} stroke="#fff" />
-              <Tooltip contentStyle={{backgroundColor: BACKGROUND_COLOR, border: '1px solid #ffffff30', borderRadius: '8px'}} />
-              <Line type="monotone" dataKey="resultat" stroke={acteur.tendance === 'rise' ? '#10b981' : '#ec4899'} name="Résultat / Force (%)" strokeWidth={2} dot={{r: 4}} />
-            </LineChart>
-          </ResponsiveContainer>
-          <p className="text-sm mt-4 text-gray-300"><strong>Analyse :</strong> {acteur.analyse}</p>
-        </div>
-      ))}
     </div>
   );
 
@@ -243,27 +231,7 @@ const App = () => {
     );
   };
   
-  // Composants UI abstraits
-  const Card = ({ icon: Icon, title, value, subtitle, color }) => (
-    <div className={`bg-gradient-to-br from-${color}-600 to-${color}-700 p-4 rounded-xl shadow-xl`}>
-      <div className="flex items-center gap-2 mb-2">
-        <Icon className="text-white" size={24} />
-        <h3 className="font-bold text-white text-sm">{title}</h3>
-      </div>
-      <p className="text-2xl font-bold text-white mb-1">{value}</p>
-      <p className={`text-${color}-100 font-semibold text-xs`}>{subtitle}</p>
-    </div>
-  );
-
-  const ChartCard = ({ title, children, borderColor }) => (
-    <div className={`bg-slate-800 p-4 rounded-xl shadow-2xl border-t-4 border-${borderColor}-500`}>
-      <h3 className="text-xl font-bold mb-4 text-white">{title}</h3>
-      <ResponsiveContainer width="100%" height={250}>
-        {children}
-      </ResponsiveContainer>
-    </div>
-  );
-
+  // Rendu principal
   return (
     <div className="min-h-screen p-4 font-inter" style={{ backgroundColor: BACKGROUND_COLOR }}>
       <div className="max-w-7xl mx-auto">
@@ -275,9 +243,8 @@ const App = () => {
 
         <nav className="flex flex-wrap justify-center gap-3 mb-6">
           {[
-            { id: 'projection2026', label: '🔮 2026' },
+            { id: 'projection2026', label: '🔮 Projection 2026' },
             { id: 'overview', label: '📊 Historique' },
-            { id: 'acteurs', label: '👤 Acteurs' },
             { id: 'detail', label: '📈 Détails' }
           ].map(item => (
             <button
@@ -294,7 +261,6 @@ const App = () => {
 
         <main>
           {viewMode === 'overview' && renderOverview()}
-          {viewMode === 'acteurs' && renderActeurs()}
           {viewMode === 'projection2026' && renderProjection2026()}
           {viewMode === 'detail' && renderDetail()}
         </main>
