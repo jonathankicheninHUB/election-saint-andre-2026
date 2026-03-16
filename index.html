@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de Bord d'Analyse Électorale V5</title>
+    <title>Tableau de Bord d'Analyse Électorale V5 - Multi-Candidats</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
         body { 
             font-family: 'Inter', sans-serif; 
-            background-color: #0f172a; /* Slate 900 - Fond principal très sombre */
-            color: #f1f5f9; /* Text-slate-100 */
+            background-color: #0f172a; 
+            color: #f1f5f9; 
         }
         .container-bg {
-             background-color: #1e293b; /* Slate 800 - Fond du container */
+             background-color: #1e293b; 
              border-radius: 16px;
              box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
         }
         .card { 
-            background-color: #1e293b; /* Slate 800 - Fond des cartes */
+            background-color: #1e293b; 
             border-radius: 12px;
-            border: 1px solid #334155; /* Slate 700 - Bordure sombre */
+            border: 1px solid #334155;
             padding: 1.5rem;
             transition: all 0.3s ease;
         }
@@ -29,7 +29,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
         .header-bg { 
-            background-color: #4f46e5; /* Indigo 600 - En-tête accrocheur */
+            background-color: #4f46e5; 
         }
         .kpi-value {
             font-size: 2.5rem; 
@@ -47,7 +47,7 @@
             width: 100%;
             height: 6px;
             -webkit-appearance: none;
-            background: #475569; /* Slate 600 - Piste de curseur sombre */
+            background: #475569;
             border-radius: 3px;
             cursor: grab;
             outline: none;
@@ -57,7 +57,7 @@
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            background: #6366f1; /* Indigo 500 - Pouce du curseur */
+            background: #6366f1;
             cursor: grab;
             box-shadow: 0 0 5px rgba(99, 102, 241, 0.6);
         }
@@ -69,119 +69,202 @@
             cursor: grab;
             box-shadow: 0 0 5px rgba(99, 102, 241, 0.6);
         }
-        .result-bar-M {
-             background-color: #10b981; /* Vert */
-        }
-        .result-bar-O {
-             background-color: #ef4444; /* Rouge */
-        }
-        /* Suppression de la classe .table-responsive */
+        
+        /* Couleurs des 8 Candidats */
+        .result-bar-M { background-color: #10b981; } /* Vert Bédier */
+        .result-bar-O { background-color: #ef4444; } /* Rouge J.M. Virapoullé */
+        .result-bar-L { background-color: #f59e0b; } /* Orange Laurent Virapoullé */
+        .result-bar-F { background-color: #a855f7; } /* Violet Fruteau */
+        .result-bar-SV { background-color: #ec4899; } /* Rose Settama-Vidon */
+        .result-bar-SOU { background-color: #14b8a6; } /* Teal Soupramanien */
+        .result-bar-SAU { background-color: #06b6d4; } /* Cyan Sautron */
+        .result-bar-C { background-color: #84cc16; } /* Lime Cotaya */
+
+        .text-c-M { color: #10b981; }
+        .text-c-O { color: #ef4444; }
+        .text-c-L { color: #f59e0b; }
+        .text-c-F { color: #a855f7; }
+        .text-c-SV { color: #ec4899; }
+        .text-c-SOU { color: #14b8a6; }
+        .text-c-SAU { color: #06b6d4; }
+        .text-c-C { color: #84cc16; }
     </style>
 </head>
 <body class="p-4 md:p-8 min-h-screen flex items-start justify-center">
 
     <div class="w-full max-w-7xl container-bg p-6 md:p-10">
         
-        <header class="header-bg text-white p-6 md:p-8 rounded-t-xl mb-6 shadow-lg">
-            <h1 class="text-3xl font-extrabold mb-1">TABLEAU DE BORD D'ANALYSE ÉLECTORALE V5</h1>
-            <p class="text-md font-light opacity-90">Modèle Avancé : Intégration de l'Érosion du Ralliement et de l'Incompatibilité Idéologique.</p>
+        <header class="header-bg text-white p-6 md:p-8 rounded-t-xl mb-6 shadow-lg text-center">
+            <h1 class="text-3xl font-extrabold mb-1 uppercase tracking-tighter">Tableau de Bord V5 : Scrutin à 8 Candidats</h1>
+            <p class="text-md font-light opacity-90">Modèle Réaliste : Dynamique complète de l'électorat de Saint-André</p>
         </header>
 
-        <section class="card mb-6">
-            <h2 class="text-xl font-bold text-gray-100 mb-4 pb-2 border-b border-slate-700">I. Historique des Votes & Base Recalculée (Final)</h2>
-            <div id="recalculated-base-table"></div>
-            <p class="mt-4 text-sm text-gray-400">
-                <strong class="text-red-400">Correction V5 :</strong> Le ralliement de 3 300 voix n'est plus un transfert automatique. Il est soumis à une <strong>attrition de 20%</strong> (Taux Fixe) et à un <strong>taux de fidélité</strong> ajustable, reflétant la réalité sociologique.
+        <section class="card mb-6 border-l-4 border-amber-500">
+            <h2 class="text-xl font-bold text-gray-100 mb-4 pb-2 border-b border-slate-700 uppercase tracking-wide">I. Mécanique du Calcul : Le Partage de l'Héritage</h2>
+            <div id="recalculated-base-table" class="overflow-x-auto">
+                <!-- Le tableau sera généré ici dynamiquement par Javascript pour être toujours trié -->
+            </div>
+            <p class="mt-4 text-sm text-gray-400 italic">
+                *Le tableau se trie automatiquement en temps réel. Les voix sont partagées entre les bases historiques, la scission familiale Virapoullé, et la répartition du grand pool des indécis.
             </p>
         </section>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 items-stretch">
             
             <div class="card lg:col-span-2">
-                 <h3 class="text-xl font-bold text-gray-100 mb-6 pb-2 border-b border-slate-700">II. Simulation V2026 : Contrôles & Résultats</h3>
+                 <h3 class="text-xl font-bold text-gray-100 mb-6 pb-2 border-b border-slate-700 uppercase tracking-wide">II. Simulation Interactive</h3>
                  
                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 bg-indigo-900/40 p-4 rounded-xl border border-indigo-900/60">
                     <div>
-                        <label for="fidelityFactor" class="block text-sm font-bold text-indigo-300 mb-2">1. Fidélité du Ralliement</label>
-                        <input type="range" id="fidelityFactor" value="0.45" min="0" max="1.0" step="0.05" class="range-slider" oninput="runSimulation()">
+                        <label for="fidelityFactor" class="block text-sm font-bold text-red-400 mb-2">1. Fidélité au leader (J.M. Virapoullé)</label>
+                        <input type="range" id="fidelityFactor" value="0.50" min="0.10" max="0.90" step="0.01" class="range-slider" oninput="runSimulation()">
                         <div class="flex justify-between text-xs text-indigo-400 mt-1">
-                            <span>0% (Echec total)</span>
-                            <span id="displayLambda" class="font-bold text-lg">45%</span>
-                            <span>100% (Suivisme total)</span>
+                            <span>Rejet Fort (10%)</span>
+                            <span id="displayLambda" class="font-bold text-lg text-white">50%</span>
+                            <span>Clan Uni (90%)</span>
                         </div>
-                        <p class="text-xs text-gray-400 mt-1 italic">Part des 3300 voix qui suivent réellement vers l'Opposition.</p>
+                        <p class="text-[11px] text-gray-400 mt-1">Définit la part du socle JPV (8500 voix) qui reste chez Jean-Marie. Le reste glisse vers Laurent.</p>
                     </div>
                     <div>
-                         <label for="transferFactor" class="block text-sm font-bold text-yellow-400 mb-2">2. Report du Pool Résiduel</label>
-                         <input type="range" id="transferFactor" value="0.75" min="0" max="1.0" step="0.01" class="range-slider" oninput="runSimulation()">
-                         <div class="flex justify-between text-xs text-yellow-400 mt-1">
-                             <span>0% (Vers Majorité)</span>
-                             <span id="displayTau" class="font-bold text-lg">0.75</span>
-                             <span>100% (Vers Opposition)</span>
+                         <label for="transferFactor" class="block text-sm font-bold text-amber-500 mb-2">2. Attractivité de Laurent (sur le Pool)</label>
+                         <input type="range" id="transferFactor" value="0.30" min="0" max="0.80" step="0.01" class="range-slider" oninput="runSimulation()">
+                         <div class="flex justify-between text-xs text-indigo-400 mt-1">
+                             <span>Nulle (0%)</span>
+                             <span id="displayTau" class="font-bold text-lg text-white">30%</span>
+                             <span>Forte (80%)</span>
                          </div>
-                         <p class="text-xs text-gray-400 mt-1 italic">Comportement des voix restantes (Pool + Déçus).</p>
+                         <p class="text-[11px] text-gray-400 mt-1">Capacité de Laurent à capter les indécis face aux 5 autres candidats d'opposition.</p>
                     </div>
                  </div>
 
                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 px-4">
                     <div>
-                        <label for="erosionFactor" class="block text-sm font-medium text-gray-300 mb-2">Volatilité Historique (x 2014-2020) : <span class="font-bold text-indigo-400" id="displayEpsilon">1.00</span></label>
-                        <input type="range" id="erosionFactor" value="1.0" min="0" max="3.0" step="0.01" class="range-slider" oninput="runSimulation()">
+                        <label for="erosionFactor" class="block text-sm font-medium text-gray-300 mb-2">Dynamique Bédier (Usure/Prime) : <span class="font-bold text-green-400" id="displayEpsilon">1.00</span></label>
+                        <input type="range" id="erosionFactor" value="1.0" min="0.7" max="1.3" step="0.01" class="range-slider" oninput="runSimulation()">
                     </div>
                     <div>
-                        <label for="participationFactor" class="block text-sm font-medium text-gray-300 mb-2">Participation (Ratio 2020) : <span class="font-bold text-indigo-400" id="displayPi">1.00</span></label>
-                        <input type="range" id="participationFactor" value="1.0" min="0.8" max="1.4" step="0.01" class="range-slider" oninput="runSimulation()">
+                        <label for="participationFactor" class="block text-sm font-medium text-gray-300 mb-2">Participation Globale : <span class="font-bold text-blue-400" id="displayPi">1.00</span></label>
+                        <input type="range" id="participationFactor" value="1.0" min="0.8" max="1.2" step="0.01" class="range-slider" oninput="runSimulation()">
                     </div>
                  </div>
                  
                  <div class="grid grid-cols-3 gap-4 text-center mb-6">
                       <div class="p-3 bg-slate-700 rounded-lg">
-                         <p class="text-xs text-gray-400 uppercase font-semibold">Total Votants</p>
+                         <p class="text-xs text-gray-400 uppercase font-semibold">Votants Totaux</p>
                          <div id="kpi-total-votes" class="kpi-value text-white text-2xl mt-1">0</div>
                       </div>
                       <div class="p-3 bg-slate-800 border-2 border-slate-700 rounded-lg">
-                         <p class="text-xs text-gray-400 uppercase font-semibold">Écart (Voix)</p>
+                         <p class="text-xs text-gray-400 uppercase font-semibold">Tête vs Second</p>
                          <div id="kpi-vote-gap" class="kpi-value text-white text-2xl mt-1">0</div>
                       </div>
                       <div class="p-3 bg-slate-700 rounded-lg">
-                         <p class="text-xs text-gray-400 uppercase font-semibold">Seuil Victoire</p>
-                         <div id="kpi-seuil" class="kpi-value text-gray-500 text-2xl mt-1">0</div>
+                         <p class="text-xs text-gray-400 uppercase font-semibold">Seuil (50%)</p>
+                         <div id="kpi-seuil" class="kpi-value text-gray-400 text-2xl mt-1">0</div>
                       </div>
                  </div>
                  
-                 <div class="pt-4 space-y-4">
-                     <div>
-                        <div class="flex justify-between text-lg font-semibold text-gray-200">
-                            <span class="text-green-400">Majorité (M)</span>
-                            <span id="percent-M" class="font-extrabold text-green-400">0.00 %</span>
+                 <!-- ESPACE DES BARRES DE CANDIDATS (Utilisation de Flexbox + gap pour un tri dynamique propre) -->
+                 <div class="pt-4 flex flex-col gap-3" id="bars-container">
+                     
+                     <!-- Joé Bédier -->
+                     <div id="wrapper-M">
+                        <div class="flex justify-between text-sm font-semibold text-gray-200">
+                            <span class="text-c-M">Joé Bédier (Sortant)</span>
+                            <span id="percent-M" class="font-extrabold text-c-M">0.00 %</span>
                         </div>
-                        <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
-                            <div id="bar-M" class="h-4 rounded-full result-bar-M transition-all duration-500" style="width: 0%;"></div>
+                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                            <div id="bar-M" class="h-3 rounded-full result-bar-M transition-all duration-500" style="width: 0%;"></div>
                         </div>
-                        <p id="votes-M" class="text-right text-xs text-gray-400 mt-1">0 voix</p>
-                     </div>
-                     <div>
-                        <div class="flex justify-between text-lg font-semibold text-gray-200">
-                            <span class="text-red-400">Opposition (O)</span>
-                            <span id="percent-O" class="font-extrabold text-red-400">0.00 %</span>
-                        </div>
-                        <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
-                            <div id="bar-O" class="h-4 rounded-full result-bar-O transition-all duration-500" style="width: 0%;"></div>
-                        </div>
-                        <p id="votes-O" class="text-right text-xs text-gray-400 mt-1">0 voix</p>
                      </div>
                      
-                     <div class="mt-6 p-4 rounded-lg border-l-4 border-indigo-500 bg-indigo-900/50">
-                         <p class="text-sm font-bold text-indigo-300 mb-1">Analyse du Scénario :</p>
-                         <p id="analysis-text" class="text-sm text-gray-200"></p>
+                     <!-- Jean-Marie Virapoullé -->
+                     <div id="wrapper-O">
+                        <div class="flex justify-between text-sm font-semibold text-gray-200">
+                            <span class="text-c-O">Jean-Marie Virapoullé</span>
+                            <span id="percent-O" class="font-extrabold text-c-O">0.00 %</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                            <div id="bar-O" class="h-3 rounded-full result-bar-O transition-all duration-500" style="width: 0%;"></div>
+                        </div>
                      </div>
+                     
+                     <!-- Laurent Virapoullé -->
+                     <div id="wrapper-L">
+                        <div class="flex justify-between text-sm font-semibold text-gray-200">
+                            <span class="text-c-L">Laurent Virapoullé</span>
+                            <span id="percent-L" class="font-extrabold text-c-L">0.00 %</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                            <div id="bar-L" class="h-3 rounded-full result-bar-L transition-all duration-500" style="width: 0%;"></div>
+                        </div>
+                     </div>
+
+                     <!-- Eric Fruteau -->
+                     <div id="wrapper-F">
+                        <div class="flex justify-between text-sm font-semibold text-gray-200">
+                            <span class="text-c-F">Eric Fruteau</span>
+                            <span id="percent-F" class="font-extrabold text-c-F">0.00 %</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                            <div id="bar-F" class="h-3 rounded-full result-bar-F transition-all duration-500" style="width: 0%;"></div>
+                        </div>
+                     </div>
+
+                     <!-- Settama-Vidon -->
+                     <div id="wrapper-SV">
+                        <div class="flex justify-between text-sm font-semibold text-gray-200">
+                            <span class="text-c-SV">Settama-Vidon</span>
+                            <span id="percent-SV" class="font-extrabold text-c-SV">0.00 %</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                            <div id="bar-SV" class="h-3 rounded-full result-bar-SV transition-all duration-500" style="width: 0%;"></div>
+                        </div>
+                     </div>
+
+                     <!-- Soupramanien -->
+                     <div id="wrapper-SOU">
+                        <div class="flex justify-between text-sm font-semibold text-gray-200">
+                            <span class="text-c-SOU">Soupramanien</span>
+                            <span id="percent-SOU" class="font-extrabold text-c-SOU">0.00 %</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                            <div id="bar-SOU" class="h-3 rounded-full result-bar-SOU transition-all duration-500" style="width: 0%;"></div>
+                        </div>
+                     </div>
+
+                     <!-- Sautron -->
+                     <div id="wrapper-SAU">
+                        <div class="flex justify-between text-sm font-semibold text-gray-200">
+                            <span class="text-c-SAU">Sautron</span>
+                            <span id="percent-SAU" class="font-extrabold text-c-SAU">0.00 %</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                            <div id="bar-SAU" class="h-3 rounded-full result-bar-SAU transition-all duration-500" style="width: 0%;"></div>
+                        </div>
+                     </div>
+
+                     <!-- Cotaya -->
+                     <div id="wrapper-C">
+                        <div class="flex justify-between text-sm font-semibold text-gray-200">
+                            <span class="text-c-C">Cotaya</span>
+                            <span id="percent-C" class="font-extrabold text-c-C">0.00 %</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                            <div id="bar-C" class="h-3 rounded-full result-bar-C transition-all duration-500" style="width: 0%;"></div>
+                        </div>
+                     </div>
+                 </div>
+
+                 <div class="mt-6 p-4 rounded-lg border-l-4 border-indigo-500 bg-indigo-900/40">
+                     <p class="text-sm font-bold text-indigo-300 mb-1">Diagnostic du Scrutin :</p>
+                     <p id="analysis-text" class="text-sm text-gray-200 leading-relaxed"></p>
                  </div>
             </div>
 
             <div class="card lg:col-span-1 flex flex-col">
-                <h3 class="text-xl font-bold text-gray-100 mb-6 pb-2 border-b border-slate-700">III. Sensibilité (Impact)</h3>
+                <h3 class="text-xl font-bold text-gray-100 mb-6 pb-2 border-b border-slate-700 uppercase tracking-wide">III. Radar Stratégique</h3>
                 <p class="text-sm text-gray-400 mb-4">
-                    Visualisation de l'influence relative des différents facteurs.
+                    Lecture des forces en présence modifiant l'équilibre politique local.
                 </p>
                 <div class="chart-container">
                     <canvas id="factorImpactChart"></canvas>
@@ -191,197 +274,202 @@
     </div>
 
     <script>
-        const VOTE_ID = { M: 'M', O: 'O', P: 'P' }; 
+        // --- MOTEUR DE CALCUL RÉALISTE (8 CANDIDATS) ---
         
-        // --- DONNÉES SOURCES ---
-        // Bloc de Ralliement Initial (Ramassamy + Moutoucomorapoulé)
-        const RALLIEMENT_INITIAL = 3300; 
+        // Bases Historiques Estimées pour le calcul (Socles fixes)
+        const POTENTIEL_CLAN_VIRAPOULLE = 8500; // Base partagée entre JMV et Laurent
+        const BASE_BEDIER_2020 = 5500;
+        const BASE_FRUTEAU = 3500;
+        const BASE_SETTAMA = 800;
+        const BASE_SOUPRAMANIEN = 600;
+        const BASE_SAUTRON = 400;
+        const BASE_COTAYA = 300;
 
-        // Taux d'Attrition Structurelle (Temps, Désengagement) - FIXE
-        const ATTRITION_RATE = 0.20; // 20% perdus d'office
-        // Taux de Rejet (Vers la Majorité) - FIXE (appliqué sur les non-fidèles)
-        const REJECTION_RATE = 0.10; // 10% des indécis vont à M
+        // Le Pool disponible est recalculé pour tenir compte des nombreux candidats
+        const POOL_DISPONIBLE = 2500; 
 
-        const results_2008 = [ { id: 'M', votes: 3800 }, { id: 'O', votes: 4000 }, { id: 'P', votes: 6000 } ];
-        const results_2014 = [ { id: 'M', votes: 4192 }, { id: 'O', votes: 3568 }, { id: 'P', votes: 5122 } ];
-        const results_2020 = [ { id: 'M', votes: 5543 }, { id: 'O', votes: 3105 }, { id: 'P', votes: 4220 } ]; // P includes 3300
+        function project2026() {
+            // Lecture des curseurs de l'utilisateur
+            const fideliteJMV = parseFloat(document.getElementById('fidelityFactor').value);
+            const attractiviteLaurent = parseFloat(document.getElementById('transferFactor').value);
+            const usureBedier = parseFloat(document.getElementById('erosionFactor').value);
+            const participation = parseFloat(document.getElementById('participationFactor').value);
 
-        // Calcul des Deltas Historiques (Tendance 2014-2020) sur la structure brute
-        let baseDeltaVotes = {};
-        results_2020.forEach(item20 => {
-            const item14 = results_2014.find(i => i.id === item20.id);
-            baseDeltaVotes[item20.id] = item20.votes - item14.votes;
-        });
+            // 1. PARTAGE DU CLAN VIRAPOULLÉ (La Scission)
+            let voixJMV_socle = POTENTIEL_CLAN_VIRAPOULLE * fideliteJMV;
+            let voixLaurent_socle = POTENTIEL_CLAN_VIRAPOULLE * (1 - fideliteJMV);
 
-        // --- MOTEUR DE CALCUL ---
+            // 2. DYNAMIQUE BÉDIER (Usure / Prime au sortant)
+            let voixBedier = BASE_BEDIER_2020 * usureBedier;
 
-        function calculateBase2026(lambda) {
-            // 1. Calcul de l'érosion du bloc de ralliement
-            const bloc_initial = RALLIEMENT_INITIAL; // 3300
-            const attrition = bloc_initial * ATTRITION_RATE; // 660 (Perdus)
-            const bloc_actif = bloc_initial - attrition; // 2640
+            // 3. BASES FIXES DES AUTRES CANDIDATS
+            let voixFruteau = BASE_FRUTEAU; 
+            let voixSettama = BASE_SETTAMA;
+            let voixSoupramanien = BASE_SOUPRAMANIEN;
+            let voixSautron = BASE_SAUTRON;
+            let voixCotaya = BASE_COTAYA;
 
-            // 2. Application de la Fidélité (Lambda)
-            const transfert_vers_O = bloc_actif * lambda; // Vers Opposition
-            
-            // 3. Gestion des "Déçus" (Reste du bloc actif)
-            const bloc_decus = bloc_actif - transfert_vers_O;
-            const rejet_vers_M = bloc_decus * REJECTION_RATE; // Vers Majorité
-            const retour_pool = bloc_decus - rejet_vers_M; // Retour au Pool P
+            // 4. CAPTATION DU POOL (Les indécis restants)
+            let voixLaurent_pool = POOL_DISPONIBLE * attractiviteLaurent;
+            let voixBedier_pool = POOL_DISPONIBLE * 0.15; // Prime au sortant fixe sur le pool
+            let voixJMV_pool = POOL_DISPONIBLE * 0.10 * fideliteJMV; // JMV capte moins si divisé
+            let voixFruteau_pool = POOL_DISPONIBLE * 0.15; // Fruteau prend une part du pool
+            let voixSettama_pool = POOL_DISPONIBLE * 0.05;
+            let voixSoupramanien_pool = POOL_DISPONIBLE * 0.03;
+            let voixSautron_pool = POOL_DISPONIBLE * 0.02;
+            let voixCotaya_pool = POOL_DISPONIBLE * 0.01;
 
-            // 4. Construction de la Base V2026
-            // Base M 2020 + Rejet
-            const base_M = results_2020.find(r => r.id === 'M').votes + rejet_vers_M;
-            // Base O 2020 + Fidélité
-            const base_O = results_2020.find(r => r.id === 'O').votes + transfert_vers_O;
-            // Base P 2020 (4220) - Bloc Ralliement (3300) + Attrition (660) + Retour Pool
-            // Note: Le pool 2020 contenait le bloc. On l'enlève, puis on remet ce qui revient.
-            const pool_initial_2020 = results_2020.find(r => r.id === 'P').votes;
-            const pool_residuel_base = pool_initial_2020 - RALLIEMENT_INITIAL; // 920
-            const base_P = pool_residuel_base + attrition + retour_pool;
+            // Totaux bruts avant ajustement de la participation
+            let total_M = voixBedier + voixBedier_pool;
+            let total_O = voixJMV_socle + voixJMV_pool;
+            let total_L = voixLaurent_socle + voixLaurent_pool;
+            let total_F = voixFruteau + voixFruteau_pool;
+            let total_SV = voixSettama + voixSettama_pool;
+            let total_SOU = voixSoupramanien + voixSoupramanien_pool;
+            let total_SAU = voixSautron + voixSautron_pool;
+            let total_C = voixCotaya + voixCotaya_pool;
 
-            return {
-                M: base_M,
-                O: base_O,
-                P: base_P,
-                details: { attrition, transfert_vers_O, rejet_vers_M, retour_pool }
+            const sommeBrute = total_M + total_O + total_L + total_F + total_SV + total_SOU + total_SAU + total_C;
+
+            // 5. AJUSTEMENT DE PARTICIPATION GLOBALE
+            const totalEstime = sommeBrute * participation;
+            const scale = totalEstime / sommeBrute;
+
+            const resultats = {
+                M: Math.round(total_M * scale),
+                O: Math.round(total_O * scale),
+                L: Math.round(total_L * scale),
+                F: Math.round(total_F * scale),
+                SV: Math.round(total_SV * scale),
+                SOU: Math.round(total_SOU * scale),
+                SAU: Math.round(total_SAU * scale),
+                C: Math.round(total_C * scale),
+                Total: Math.round(totalEstime),
+                details: {
+                    M: { socle: Math.round(voixBedier * scale), pool: Math.round(voixBedier_pool * scale) },
+                    O: { socle: Math.round(voixJMV_socle * scale), pool: Math.round(voixJMV_pool * scale) },
+                    L: { socle: Math.round(voixLaurent_socle * scale), pool: Math.round(voixLaurent_pool * scale) },
+                    F: { socle: Math.round(voixFruteau * scale), pool: Math.round(voixFruteau_pool * scale) },
+                    SV: { socle: Math.round(voixSettama * scale), pool: Math.round(voixSettama_pool * scale) },
+                    SOU: { socle: Math.round(voixSoupramanien * scale), pool: Math.round(voixSoupramanien_pool * scale) },
+                    SAU: { socle: Math.round(voixSautron * scale), pool: Math.round(voixSautron_pool * scale) },
+                    C: { socle: Math.round(voixCotaya * scale), pool: Math.round(voixCotaya_pool * scale) }
+                }
             };
+
+            updateUI(resultats, fideliteJMV, attractiviteLaurent, usureBedier, participation);
         }
-
-        function project2026(base, epsilon, tau, pi) {
-            // 1. Application de la Tendance Historique (Epsilon) sur M et O
-            let proj_M = base.M + (baseDeltaVotes['M'] * epsilon);
-            let proj_O = base.O + (baseDeltaVotes['O'] * epsilon);
-            let proj_P = base.P + (baseDeltaVotes['P'] * epsilon * 0.5); // Pool moins sensible à la tendance historique pure
-
-            proj_M = Math.max(0, proj_M);
-            proj_O = Math.max(0, proj_O);
-            proj_P = Math.max(0, proj_P);
-
-            // 2. Report du Pool (Tau)
-            const transfer_O = proj_P * tau;
-            const transfer_M = proj_P * (1 - tau);
-
-            proj_M += transfer_M;
-            proj_O += transfer_O;
-
-            // 3. Participation (Pi)
-            const total_2020 = 12868;
-            const target_total = total_2020 * pi;
-            const current_total = proj_M + proj_O;
-            const scale = target_total / current_total;
-
-            return {
-                M: Math.round(proj_M * scale),
-                O: Math.round(proj_O * scale),
-                Total: Math.round(target_total)
-            };
-        }
-
-        // --- UI UPDATES ---
 
         function formatNum(n) { return Math.round(n).toLocaleString('fr-FR'); }
 
-        function updateUI(res, base, params) {
-            // Textes
-            document.getElementById('displayLambda').innerText = Math.round(params.lambda * 100) + '%';
-            document.getElementById('displayTau').innerText = params.tau.toFixed(2);
-            document.getElementById('displayEpsilon').innerText = params.epsilon.toFixed(2);
-            document.getElementById('displayPi').innerText = params.pi.toFixed(2);
+        function updateUI(res, fideliteJMV, attractiviteLaurent, usureBedier, participation) {
+            // Mise à jour des textes des curseurs
+            document.getElementById('displayLambda').innerText = Math.round(fideliteJMV * 100) + '%';
+            document.getElementById('displayTau').innerText = Math.round(attractiviteLaurent * 100) + '%';
+            document.getElementById('displayEpsilon').innerText = usureBedier.toFixed(2);
+            document.getElementById('displayPi').innerText = participation.toFixed(2);
 
-            // KPIs
+            // Mise à jour des KPIs en haut
             document.getElementById('kpi-total-votes').innerText = formatNum(res.Total);
-            const gap = res.M - res.O;
-            const gapEl = document.getElementById('kpi-vote-gap');
-            gapEl.innerText = (gap > 0 ? '+' : '') + formatNum(gap);
-            // Couleurs ajustées pour le Dark Mode
-            gapEl.className = `kpi-value text-2xl mt-1 ${gap > 0 ? 'text-green-400' : 'text-red-400'}`;
+            
+            // Création d'un tableau trié de tous les candidats
+            const scores = [
+                { name: 'Joé Bédier', val: res.M, id: 'M', colorClass: 'text-c-M' },
+                { name: 'J.M. Virapoullé', val: res.O, id: 'O', colorClass: 'text-c-O' },
+                { name: 'L. Virapoullé', val: res.L, id: 'L', colorClass: 'text-c-L' },
+                { name: 'Eric Fruteau', val: res.F, id: 'F', colorClass: 'text-c-F' },
+                { name: 'Settama-Vidon', val: res.SV, id: 'SV', colorClass: 'text-c-SV' },
+                { name: 'Soupramanien', val: res.SOU, id: 'SOU', colorClass: 'text-c-SOU' },
+                { name: 'Sautron', val: res.SAU, id: 'SAU', colorClass: 'text-c-SAU' },
+                { name: 'Cotaya', val: res.C, id: 'C', colorClass: 'text-c-C' }
+            ].sort((a, b) => b.val - a.val); // Tri décroissant mathématique
+            
+            // Calcul du gap entre le 1er et le 2ème, peu importe qui c'est
+            const gap = scores[0].val - scores[1].val;
+            document.getElementById('kpi-vote-gap').innerText = formatNum(gap);
             document.getElementById('kpi-seuil').innerText = formatNum(Math.floor(res.Total/2)+1);
 
-            // Bars
-            const perM = (res.M / res.Total) * 100;
-            const perO = (res.O / res.Total) * 100;
-            document.getElementById('bar-M').style.width = perM + '%';
-            document.getElementById('bar-O').style.width = perO + '%';
-            document.getElementById('percent-M').innerText = perM.toFixed(2) + '%';
-            document.getElementById('percent-O').innerText = perO.toFixed(2) + '%';
-            document.getElementById('votes-M').innerText = formatNum(res.M) + ' voix';
-            document.getElementById('votes-O').innerText = formatNum(res.O) + ' voix';
+            // CORRECTION DU BUG DE CLASSEMENT : Mise à jour des barres et REORGANISATION DYNAMIQUE (Flexbox)
+            scores.forEach((candidate, index) => {
+                const percentage = (candidate.val / res.Total) * 100;
+                // Mettre à jour la largeur et le texte
+                document.getElementById(`bar-${candidate.id}`).style.width = percentage + '%';
+                document.getElementById(`percent-${candidate.id}`).innerText = percentage.toFixed(1) + '%';
+                // REORGANISER VISUELLEMENT grâce à la propriété CSS 'order'
+                document.getElementById(`wrapper-${candidate.id}`).style.order = index;
+            });
 
-            // Analysis Text
+            // Diagnostic dynamique intelligent basé sur les 2 premiers
             const analysisBox = document.getElementById('analysis-text');
-            let analysis = "";
-            if (gap > 500) {
-                analysis = "<strong>AVANTAGE SOLIDE MAJORITÉ.</strong> L'érosion du ralliement (faible fidélité) et le rejet partiel vers M permettent au sortant de conserver une avance confortable.";
-            } else if (gap > 0) {
-                analysis = "<strong>VICTOIRE SERRÉE MAJORITÉ.</strong> La Majorité reste en tête grâce à la dispersion du Pool. L'Opposition ne capitalise pas assez sur le ralliement.";
-            } else if (gap > -500) {
-                analysis = "<strong>BASCULE POSSIBLE.</strong> L'Opposition prend un léger avantage. Le ralliement fonctionne suffisamment pour compenser le retard historique.";
+            const premier = scores[0];
+            const deuxieme = scores[1];
+            
+            let message = `<strong>${premier.name.toUpperCase()} EST EN TÊTE.</strong> `;
+            
+            if (premier.id === 'M') {
+                message += `Le maire sortant résiste à la fragmentation. `;
+                if (deuxieme.id === 'L') message += `Fait marquant : Laurent Virapoullé a doublé son frère et s'installe comme le principal opposant.`;
+                else if (deuxieme.id === 'O') message += `Jean-Marie Virapoullé reste son adversaire direct, mais la multiplication des listes empêche la droite de le rattraper.`;
+                else message += `${deuxieme.name} crée la surprise en se hissant à la seconde place.`;
+            } else if (premier.id === 'O') {
+                message += `Le clan Virapoullé reste uni derrière Jean-Marie, ce qui lui permet de dominer un scrutin extrêmement morcelé.`;
+            } else if (premier.id === 'L') {
+                message += `Coup de tonnerre politique : Laurent Virapoullé a totalement siphonné le socle de son père et s'impose devant le maire sortant et son frère.`;
             } else {
-                analysis = "<strong>VICTOIRE OPPOSITION.</strong> Le ralliement est un succès (forte fidélité) et le report du pool résiduel scelle la défaite du sortant.";
+                message += `Énorme surprise politique : ${premier.name} prend la tête d'un scrutin où les favoris historiques se sont neutralisés !`;
             }
-            analysisBox.innerHTML = analysis;
+            analysisBox.innerHTML = message;
 
-            // Table Update
-            // Rétablit le tableau pour qu'il s'adapte automatiquement à la largeur
+            // Mise à jour du tableau explicatif DYNAMIQUE (Trié)
             let tableHtml = `
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-slate-700 text-gray-400 text-xs uppercase">
-                            <th class="p-3 text-left rounded-tl-lg">Bloc</th>
-                            <th class="p-3 text-right">2014</th>
-                            <th class="p-3 text-right">2020</th>
-                            <th class="p-3 text-right bg-indigo-900/40 text-indigo-300 border-b-2 border-indigo-900/60 rounded-tr-lg">Base V2026 (Recalculée)</th>
+                        <tr class="bg-slate-700 text-gray-300 text-xs uppercase">
+                            <th class="p-3 text-left rounded-tl-lg">Candidat</th>
+                            <th class="p-3 text-right">Base / Socle Estimé</th>
+                            <th class="p-3 text-right">Apport Indécis (Pool)</th>
+                            <th class="p-3 text-right bg-indigo-900/40 text-indigo-300 rounded-tr-lg">Total Projeté</th>
                         </tr>
                     </thead>
-                    <tbody class="text-sm text-gray-200">
-                        <tr>
-                            <td class="p-3 font-bold text-green-400">Majorité (M)</td>
-                            <td class="p-3 text-right">4 192</td>
-                            <td class="p-3 text-right">5 543</td>
-                            <td class="p-3 text-right font-bold bg-indigo-900/40">${formatNum(base.M)}</td>
-                        </tr>
-                        <tr>
-                            <td class="p-3 font-bold text-red-400">Opposition (O)</td>
-                            <td class="p-3 text-right">3 568</td>
-                            <td class="p-3 text-right">3 105</td>
-                            <td class="p-3 text-right font-bold bg-indigo-900/40">${formatNum(base.O)}</td>
-                        </tr>
-                        <tr>
-                            <td class="p-3 font-medium text-yellow-400">Pool (P)</td>
-                            <td class="p-3 text-right">5 122</td>
-                            <td class="p-3 text-right">4 220</td>
-                            <td class="p-3 text-right font-bold bg-indigo-900/40">${formatNum(base.P)}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <tbody class="text-sm text-gray-200 divide-y divide-slate-700">
             `;
+
+            scores.forEach((cand, index) => {
+                const det = res.details[cand.id];
+                // Mise en surbrillance du premier
+                const rowClass = index === 0 ? 'bg-slate-700/60' : 'hover:bg-slate-700/30';
+                const rankIcon = index === 0 ? '🏆 ' : `${index + 1}. `;
+                
+                tableHtml += `
+                    <tr class="${rowClass} transition-colors">
+                        <td class="p-3 font-bold ${cand.colorClass}">${rankIcon}${cand.name}</td>
+                        <td class="p-3 text-right text-gray-400">${formatNum(det.socle)} voix</td>
+                        <td class="p-3 text-right text-gray-500">${formatNum(det.pool)} voix</td>
+                        <td class="p-3 text-right font-bold text-lg bg-indigo-900/20 ${cand.colorClass}">${formatNum(cand.val)}</td>
+                    </tr>
+                `;
+            });
+
+            tableHtml += `</tbody></table>`;
             document.getElementById('recalculated-base-table').innerHTML = tableHtml;
         }
 
         function runSimulation() {
-            const lambda = parseFloat(document.getElementById('fidelityFactor').value);
-            const tau = parseFloat(document.getElementById('transferFactor').value);
-            const epsilon = parseFloat(document.getElementById('erosionFactor').value);
-            const pi = parseFloat(document.getElementById('participationFactor').value);
-
-            const base2026 = calculateBase2026(lambda);
-            const result = project2026(base2026, epsilon, tau, pi);
-            
-            updateUI(result, base2026, { lambda, tau, epsilon, pi });
+            project2026();
         }
 
-        // --- CHART ---
+        // Graphique Radar
+        let radarChart = null;
         function initChart() {
             const ctx = document.getElementById('factorImpactChart').getContext('2d');
-            new Chart(ctx, {
+            radarChart = new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: ['Fidélité Ralliement', 'Report Résiduel', 'Volatilité Historique', 'Participation'],
+                    labels: ['Unité JMV', 'Séduction Laurent', 'Force Bédier', 'Participation'],
                     datasets: [{
-                        label: 'Sensibilité',
-                        data: [0.9, 0.7, 0.6, 0.3],
-                        backgroundColor: 'rgba(99, 102, 241, 0.3)', /* Indigo 400 */
+                        label: 'Force du Facteur',
+                        data: [0.5, 0.3, 1.0, 1.0],
+                        backgroundColor: 'rgba(99, 102, 241, 0.2)',
                         borderColor: '#6366f1',
                         pointBackgroundColor: '#818cf8',
                         borderWidth: 2
@@ -393,17 +481,32 @@
                     scales: { 
                         r: { 
                             suggestedMin: 0, 
-                            suggestedMax: 1, 
+                            suggestedMax: 1.2, 
                             ticks: { display: false },
-                            grid: { color: '#334155' }, // Grille sombre
+                            grid: { color: '#334155' },
                             angleLines: { color: '#334155' },
-                            pointLabels: { color: '#f1f5f9' } // Étiquettes blanches
+                            pointLabels: { color: '#e2e8f0', font: { size: 11, family: 'Inter' } }
                         } 
                     },
                     plugins: { legend: { display: false } }
                 }
             });
         }
+
+        // Mettre à jour le radar quand les sliders bougent
+        document.querySelectorAll('.range-slider').forEach(slider => {
+            slider.addEventListener('input', () => {
+                if(radarChart) {
+                    radarChart.data.datasets[0].data = [
+                        document.getElementById('fidelityFactor').value,
+                        document.getElementById('transferFactor').value,
+                        document.getElementById('erosionFactor').value - 0.2,
+                        document.getElementById('participationFactor').value - 0.2
+                    ];
+                    radarChart.update();
+                }
+            });
+        });
 
         window.onload = () => {
             initChart();
