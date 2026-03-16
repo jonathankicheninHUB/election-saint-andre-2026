@@ -1,272 +1,414 @@
-import React, { useState } from 'react';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, RadarChart, PolarGrid, PolarAngleAxis, Radar } from 'recharts';
-import { TrendingDown, Users, Award, Target, Clock } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord d'Analyse Électorale V5</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #0f172a; /* Slate 900 - Fond principal très sombre */
+            color: #f1f5f9; /* Text-slate-100 */
+        }
+        .container-bg {
+             background-color: #1e293b; /* Slate 800 - Fond du container */
+             border-radius: 16px;
+             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+        .card { 
+            background-color: #1e293b; /* Slate 800 - Fond des cartes */
+            border-radius: 12px;
+            border: 1px solid #334155; /* Slate 700 - Bordure sombre */
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+        .header-bg { 
+            background-color: #4f46e5; /* Indigo 600 - En-tête accrocheur */
+        }
+        .kpi-value {
+            font-size: 2.5rem; 
+            font-weight: 800;
+            line-height: 1;
+        }
+        .chart-container { 
+            position: relative; 
+            width: 100%; 
+            max-width: none;
+            margin: 0; 
+            flex-grow: 1; 
+        }
+        .range-slider {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            background: #475569; /* Slate 600 - Piste de curseur sombre */
+            border-radius: 3px;
+            cursor: grab;
+            outline: none;
+        }
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #6366f1; /* Indigo 500 - Pouce du curseur */
+            cursor: grab;
+            box-shadow: 0 0 5px rgba(99, 102, 241, 0.6);
+        }
+        .range-slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #6366f1;
+            cursor: grab;
+            box-shadow: 0 0 5px rgba(99, 102, 241, 0.6);
+        }
+        .result-bar-M {
+             background-color: #10b981; /* Vert */
+        }
+        .result-bar-O {
+             background-color: #ef4444; /* Rouge */
+        }
+        /* Suppression de la classe .table-responsive */
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen flex items-start justify-center">
 
-const COLORS = ['#06b6d4', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#ef4444', '#3b82f6'];
-const BACKGROUND_COLOR = '#0f172a';
-
-// --- DONNÉES ÉLECTORALES ---
-const electionData = {
-  2008: { tour1: [{ candidat: 'Eric Fruteau', parti: 'DVG', voix: 9351, pourcentage: 48.39 }, { candidat: 'Jean-Paul Virapoullé', parti: 'DVD', voix: 7788, pourcentage: 40.30 }, { candidat: 'Emmanuel Seriacaroupin', parti: 'DVG', voix: 2187, pourcentage: 11.32 }], tour2: [{ candidat: 'Eric Fruteau', parti: 'DVG', voix: 13150, pourcentage: 58.30, elu: true, sieges: 34 }, { candidat: 'Jean-Paul Virapoullé', parti: 'DVD', voix: 9404, pourcentage: 41.70, sieges: 9 }], participation: { tour1: 71.07, tour2: 80.45 }, votants: { tour1: 20139, tour2: 23069 } },
-  2014: { tour1: [{ candidat: 'Jean Paul Virapoullé', parti: 'DVD', voix: 11365, pourcentage: 49.96 }, { candidat: 'Claudy Fruteau', parti: 'DVG', voix: 5024, pourcentage: 22.08 }, { candidat: 'Joé Bedier', parti: 'DVG', voix: 2753, pourcentage: 12.10 }, { candidat: 'Serge Camatchy', parti: 'DVG', voix: 2432, pourcentage: 10.69 }, { candidat: 'Jean-François Ramassamy', parti: 'DVD', voix: 845, pourcentage: 3.71 }], tour2: [{ candidat: 'Jean Paul Virapoullé', parti: 'DVD', voix: 15348, pourcentage: 62.57, elu: true, sieges: 37 }, { candidat: 'Claudy Fruteau', parti: 'DVG', voix: 5604, pourcentage: 22.84, sieges: 5 }, { candidat: 'Joé Bedier', parti: 'DVG', voix: 3575, pourcentage: 14.57, sieges: 3 }], participation: { tour1: 68.08, tour2: 73.08 }, votants: { tour1: 23688, tour2: 25428 } },
-  2020: { tour1: [{ candidat: 'Jean-Marie Virapoullé', parti: 'DVD', voix: 5722, pourcentage: 31.47 }, { candidat: 'Joé Bedier', parti: 'DVG', voix: 4524, pourcentage: 24.88 }, { candidat: 'Eric Fruteau', parti: 'DVG', voix: 3107, pourcentage: 17.09 }, { candidat: 'Jean François Ramassamy', parti: 'DVD', voix: 1058, pourcentage: 5.81 }, { candidat: 'Serge Antoine Camatchy', parti: 'DVG', voix: 1001, pourcentage: 5.50 }, { candidat: 'Sylvie Moutoucomorapoule', parti: 'DVG', voix: 1000, pourcentage: 5.50 }], tour2: [{ candidat: 'Joé Bedier', parti: 'DVG', voix: 10703, pourcentage: 52.16, elu: true, sieges: 34 }, { candidat: 'Jean-Marie Virapoullé', parti: 'DVD', voix: 9813, pourcentage: 47.83, sieges: 11 }], participation: { tour1: 48.06, tour2: 54.84 }, votants: { tour1: 18867, tour2: 21656 } }
-};
-
-const candidats2026 = [
-  { nom: 'Joé Bedier (Maire)', parti: 'DVG / Majorité', statut: 'Maire sortant', projectionT1: 28, projectionT2: 54, force: 85, notoriete: 95, ancrage: 80, dynamique: 70, couleur: '#06b6d4', analyse: 'Maire sortant avec un bilan à défendre.' },
-  { nom: 'J.M. Virapoullé (Opposition)', parti: 'DVD / Alliance', statut: 'Opposant principal', projectionT1: 26, projectionT2: 46, force: 75, notoriete: 90, ancrage: 85, dynamique: 60, couleur: '#8b5cf6', analyse: 'Chef de file de la famille historique.' },
-  { nom: 'L. Virapoullé (RN)', parti: 'RN / Extrême Droite', statut: 'Candidat émergent', projectionT1: 15, projectionT2: null, force: 50, notoriete: 65, ancrage: 40, dynamique: 80, couleur: '#ef4444', analyse: 'Nouveau pôle d\'attraction autour du RN.' },
-  { nom: 'Eric Fruteau', parti: 'DVG / Ancien Maire', statut: 'Candidat dissident', projectionT1: 10, projectionT2: null, force: 40, notoriete: 75, ancrage: 60, dynamique: 30, couleur: '#f59e0b', analyse: 'Ancien maire en déclin. Fragmente le vote DVG.' },
-  { nom: 'Société Civile / Écologie', parti: 'Divers', statut: 'Liste de rupture', projectionT1: 11, projectionT2: null, force: 35, notoriete: 35, ancrage: 30, dynamique: 70, couleur: '#10b981', analyse: 'Capte le vote protestataire et la volatilité jeune.' },
-  { nom: 'Autres Oppositions', parti: 'Divers', statut: 'Petits candidats', projectionT1: 10, projectionT2: null, force: 20, notoriete: 30, ancrage: 25, dynamique: 40, couleur: '#ec4899', analyse: 'Listes non qualifiantes.' }
-];
-
-const evolutionPolitique = [{ annee: '2008', DVG: 58.30, DVD: 41.70 }, { annee: '2014', DVG: 37.41, DVD: 62.57 }, { annee: '2020', DVG: 52.16, DVD: 47.83 }, { annee: '2026*', DVG: 54, DVD: 46 }];
-const evolutionParticipation = [{ annee: '2008', tour1: 71.07, tour2: 80.45 }, { annee: '2014', tour1: 68.08, tour2: 73.08 }, { annee: '2020', tour1: 48.06, tour2: 54.84 }, { annee: '2026*', tour1: 52, tour2: 58 }];
-const blocsPolitiques2026 = [
-    { nom: 'Bloc DVG (Bedier)', pourcentage: 28, couleur: '#06b6d4' },
-    { nom: 'Bloc DVD/Alliance (Virapoullé)', pourcentage: 26, couleur: '#8b5cf6' },
-    { nom: 'Bloc RN / Anti-Système', pourcentage: 15, couleur: '#ef4444' },
-    { nom: 'Fragmentation DVG (Fruteau)', pourcentage: 10, couleur: '#f59e0b' },
-    { nom: 'Nouveaux/Écolo', pourcentage: 11, couleur: '#10b981' },
-    { nom: 'Autres', pourcentage: 10, couleur: '#ec4899' },
-];
-// --- FIN DES DONNÉES ÉLECTORALES ---
-
-// Composant Tooltip Personnalisé
-const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    return (
-      <div className="p-3 bg-slate-900 border border-white/30 rounded-lg shadow-xl text-white">
-        <p className="font-bold text-lg mb-1">{label}</p>
-        <p className="text-sm">{data.candidat || data.nom} ({data.parti || data.statut})</p>
-        <p className="text-xl font-extrabold" style={{ color: payload[0].color }}>{payload[0].value.toFixed(2)}%</p>
-        <p className="text-xs text-gray-400 mt-1">Voix : {data.voix || 'N/A'}</p>
-      </div>
-    );
-  }
-  return null;
-};
-
-// Composant Card
-const Card = ({ icon: Icon, title, value, subtitle, color }) => (
-  <div className={`bg-gradient-to-br from-${color}-600 to-${color}-700 p-4 rounded-xl shadow-xl`}>
-    <div className="flex items-center gap-2 mb-2">
-      <Icon className="text-white" size={24} />
-      <h3 className="font-bold text-white text-sm">{title}</h3>
-    </div>
-    <p className="text-2xl font-bold text-white mb-1">{value}</p>
-    <p className={`text-${color}-100 font-semibold text-xs`}>{subtitle}</p>
-  </div>
-);
-
-// Composant ChartCard
-const ChartCard = ({ title, children, borderColor }) => (
-  <div className={`bg-slate-800 p-4 rounded-xl shadow-2xl border-t-4 border-${borderColor}-500`}>
-    <h3 className="text-xl font-bold mb-4 text-white">{title}</h3>
-    <ResponsiveContainer width="100%" height={250}>
-      {children}
-    </ResponsiveContainer>
-  </div>
-);
-
-// Composant principal
-const App = () => {
-  const [selectedYear, setSelectedYear] = useState('2020');
-  const [viewMode, setViewMode] = useState('projection2026');
-
-  const renderOverview = () => (
-    <div className="space-y-6 animate-fadeIn">
-      <div className="bg-gradient-to-br from-purple-600 to-pink-600 text-white p-6 rounded-2xl shadow-xl">
-        <h2 className="text-3xl font-extrabold">📊 Synthèse Historique</h2>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card icon={Award} title="Maire actuel (2020)" value="Joé Bedier" subtitle="DVG - 52,16%" color="cyan" />
-        <Card icon={TrendingDown} title="Participation 2020 (T2)" value="54,84%" subtitle="Baisse de 18 points vs 2014 ⚠️" color="pink" />
-        <Card icon={Users} title="Volatilité Jeunesse" value="Facteur X" subtitle="Clé pour 2026" color="indigo" />
-      </div>
-
-      <ChartCard title="Évolution de la participation électorale" borderColor="yellow">
-        <LineChart data={evolutionParticipation}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#ffffff30" />
-          <XAxis dataKey="annee" stroke="#fff" />
-          <YAxis domain={[0, 100]} stroke="#fff" />
-          <Tooltip contentStyle={{backgroundColor: BACKGROUND_COLOR, border: '1px solid #ffffff30', borderRadius: '8px'}} />
-          <Legend />
-          <Line type="monotone" dataKey="tour1" stroke="#f59e0b" name="Tour 1 (%)" strokeWidth={2} dot={{r: 4}} />
-          <Line type="monotone" dataKey="tour2" stroke="#06b6d4" name="Tour 2 (%)" strokeWidth={2} dot={{r: 4}} />
-        </LineChart>
-      </ChartCard>
-
-      <ChartCard title="Alternance gauche-droite (Résultat T2)" borderColor="pink">
-        <BarChart data={evolutionPolitique}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#ffffff30" />
-          <XAxis dataKey="annee" stroke="#fff" />
-          <YAxis domain={[0, 100]} stroke="#fff" />
-          <Tooltip contentStyle={{backgroundColor: BACKGROUND_COLOR, border: '1px solid #ffffff30', borderRadius: '8px'}} />
-          <Legend />
-          <Bar dataKey="DVG" fill="#06b6d4" name="Divers Gauche (%)" radius={[5, 5, 0, 0]} />
-          <Bar dataKey="DVD" fill="#8b5cf6" name="Divers Droite / Allié (%)" radius={[5, 5, 0, 0]} />
-        </BarChart>
-      </ChartCard>
-    </div>
-  );
-
-  const renderProjection2026 = () => (
-    <div className="space-y-6 animate-fadeIn">
-      <div className="bg-gradient-to-r from-yellow-500 to-red-600 text-white p-6 rounded-2xl shadow-xl">
-        <h2 className="text-3xl font-extrabold">🔮 Projections Municipales 2026</h2>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Candidats et Radar */}
-        <div className="lg:col-span-1 space-y-4">
-          <h3 className="text-xl font-bold text-white">Forces en Présence (T1)</h3>
-          {candidats2026.map((candidat, idx) => (
-            <div key={idx} className="bg-slate-800 p-4 rounded-xl shadow-xl border-l-4" style={{borderColor: candidat.couleur}}>
-              <div className="flex items-center justify-between mb-2">
-                <div>
-                  <h4 className="text-lg font-bold text-white">{candidat.nom}</h4>
-                  <p className="text-xs text-gray-400">{candidat.parti}</p>
-                </div>
-                <div className="text-3xl font-extrabold" style={{color: candidat.couleur}}>{candidat.projectionT1}%</div>
-              </div>
-
-              {/* Radar Chart */}
-              <ResponsiveContainer width="100%" height={120}>
-                <RadarChart data={[
-                  { metric: 'Force', value: candidat.force, fullMark: 100 },
-                  { metric: 'Notoriété', value: candidat.notoriete, fullMark: 100 },
-                  { metric: 'Ancrage', value: candidat.ancrage, fullMark: 100 },
-                  { metric: 'Dynamique', value: candidat.dynamique, fullMark: 100 }
-                ]}>
-                  <PolarGrid stroke="#ffffff30" />
-                  <PolarAngleAxis dataKey="metric" stroke="#fff" fontSize={10} />
-                  <Radar dataKey="value" stroke={candidat.couleur} fill={candidat.couleur} fillOpacity={0.4} />
-                </RadarChart>
-              </ResponsiveContainer>
-            </div>
-          ))}
-        </div>
-
-        {/* Graphiques Projection */}
-        <div className="lg:col-span-1 space-y-4">
-          <ChartCard title="Baromètre T1 - Fragmentation" borderColor="indigo">
-            <BarChart data={candidats2026.sort((a, b) => b.projectionT1 - a.projectionT1)}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#ffffff30" />
-              <XAxis dataKey="nom" stroke="#fff" angle={-30} textAnchor="end" height={80} interval={0} fontSize={10} />
-              <YAxis stroke="#fff" />
-              <Tooltip contentStyle={{backgroundColor: BACKGROUND_COLOR, border: '1px solid #ffffff30', borderRadius: '8px'}} />
-              <Bar dataKey="projectionT1" name="Projection T1 (%)" radius={[5, 5, 0, 0]}>
-                {candidats2026.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.couleur} />))}
-              </Bar>
-            </BarChart>
-          </ChartCard>
-
-          <ChartCard title="Répartition des Blocs Politiques (T1)" borderColor="cyan">
-            <PieChart>
-              <Pie data={blocsPolitiques2026} dataKey="pourcentage" nameKey="nom" cx="50%" cy="50%" innerRadius={50} outerRadius={100} label={({ nom, pourcentage }) => `${nom.split(' ')[0]} ${pourcentage}%`} labelLine={false}>
-                {blocsPolitiques2026.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.couleur} />))}
-              </Pie>
-              <Tooltip contentStyle={{backgroundColor: BACKGROUND_COLOR, border: '1px solid #ffffff30', borderRadius: '8px'}} />
-            </PieChart>
-          </ChartCard>
-          
-          <div className="bg-emerald-700 p-4 rounded-xl shadow-xl">
-            <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2"><Clock size={20} /> Clés de la Victoire (T2)</h3>
-            <ul className="list-disc pl-5 text-sm text-white space-y-1">
-              <li><strong>Mobilisation :</strong> Le Bloc Bedier doit maximiser le report des voix DVG.</li>
-              <li><strong>Facteur RN :</strong> L'alliance Virapoullé doit gérer le report des voix DVD face au RN.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderDetail = () => {
-    const data = electionData[selectedYear];
-    
-    return (
-      <div className="space-y-6 animate-fadeIn">
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-700 text-white p-6 rounded-2xl shadow-xl">
-            <h2 className="text-3xl font-extrabold">🔎 Résultats Détaillés - {selectedYear}</h2>
-        </div>
-
-        <div className="flex flex-wrap gap-3 mb-4">
-          {['2008', '2014', '2020'].map(year => (
-            <button key={year} onClick={() => setSelectedYear(year)} className={`px-4 py-2 rounded-lg font-bold text-sm ${selectedYear === year ? 'bg-pink-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>{year}</button>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <ChartCard title="Tour 1 - Répartition des Votes" borderColor="blue">
-            <PieChart>
-              <Pie data={data.tour1} dataKey="pourcentage" nameKey="candidat" cx="50%" cy="50%" outerRadius={100} label={(entry) => `${entry.candidat.split(' ')[0]} ${entry.pourcentage}%`} labelLine={false}>
-                {data.tour1.map((entry, index) => (<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />))}
-              </Pie>
-              <Tooltip content={CustomTooltip} />
-            </PieChart>
-            <Legend wrapperStyle={{color: 'white', marginTop: '10px'}} />
-          </ChartCard>
-
-          <div className="bg-emerald-700 p-4 rounded-xl shadow-xl border-l-4 border-green-300">
-            <h3 className="text-xl font-bold mb-3 text-white">🏆 Tour 2 - Élus et Sièges</h3>
-            <div className="space-y-3">
-              {data.tour2.map((entry, index) => (
-                <div key={index} className={`p-3 rounded-lg border-l-4 ${entry.elu ? 'border-yellow-300 bg-green-900/50' : 'border-red-300 bg-slate-800/50'}`}>
-                  <div className="flex justify-between items-center text-white">
-                    <span className="font-bold">{entry.candidat} {entry.elu && ' (ÉLU)'}</span>
-                    <span className="text-xl font-extrabold">{entry.pourcentage}%</span>
-                  </div>
-                  <p className="text-xs text-gray-300">Sièges : <span className="font-bold">{entry.sieges}</span></p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-  
-  // Rendu principal
-  return (
-    <div className="min-h-screen p-4 font-inter" style={{ backgroundColor: BACKGROUND_COLOR }}>
-      <div className="max-w-7xl mx-auto">
-        <header className="py-4 mb-6 border-b border-slate-700">
-          <h1 className="text-3xl font-extrabold text-white text-center">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Saint-André 2026</span>
-          </h1>
+    <div class="w-full max-w-7xl container-bg p-6 md:p-10">
+        
+        <header class="header-bg text-white p-6 md:p-8 rounded-t-xl mb-6 shadow-lg">
+            <h1 class="text-3xl font-extrabold mb-1">TABLEAU DE BORD D'ANALYSE ÉLECTORALE V5</h1>
+            <p class="text-md font-light opacity-90">Modèle Avancé : Intégration de l'Érosion du Ralliement et de l'Incompatibilité Idéologique.</p>
         </header>
 
-        <nav className="flex flex-wrap justify-center gap-3 mb-6">
-          {[
-            { id: 'projection2026', label: '🔮 Projection 2026' },
-            { id: 'overview', label: '📊 Historique' },
-            { id: 'detail', label: '📈 Détails' }
-          ].map(item => (
-            <button
-              key={item.id}
-              onClick={() => setViewMode(item.id)}
-              className={`px-4 py-2 rounded-full font-bold text-sm ${
-                viewMode === item.id ? 'bg-gradient-to-r from-cyan-500 to-purple-600 text-white' : 'bg-slate-700 text-slate-300'
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
-        </nav>
+        <section class="card mb-6">
+            <h2 class="text-xl font-bold text-gray-100 mb-4 pb-2 border-b border-slate-700">I. Historique des Votes & Base Recalculée (Final)</h2>
+            <div id="recalculated-base-table"></div>
+            <p class="mt-4 text-sm text-gray-400">
+                <strong class="text-red-400">Correction V5 :</strong> Le ralliement de 3 300 voix n'est plus un transfert automatique. Il est soumis à une <strong>attrition de 20%</strong> (Taux Fixe) et à un <strong>taux de fidélité</strong> ajustable, reflétant la réalité sociologique.
+            </p>
+        </section>
 
-        <main>
-          {viewMode === 'overview' && renderOverview()}
-          {viewMode === 'projection2026' && renderProjection2026()}
-          {viewMode === 'detail' && renderDetail()}
-        </main>
-      </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 items-stretch">
+            
+            <div class="card lg:col-span-2">
+                 <h3 class="text-xl font-bold text-gray-100 mb-6 pb-2 border-b border-slate-700">II. Simulation V2026 : Contrôles & Résultats</h3>
+                 
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 bg-indigo-900/40 p-4 rounded-xl border border-indigo-900/60">
+                    <div>
+                        <label for="fidelityFactor" class="block text-sm font-bold text-indigo-300 mb-2">1. Fidélité du Ralliement</label>
+                        <input type="range" id="fidelityFactor" value="0.45" min="0" max="1.0" step="0.05" class="range-slider" oninput="runSimulation()">
+                        <div class="flex justify-between text-xs text-indigo-400 mt-1">
+                            <span>0% (Echec total)</span>
+                            <span id="displayLambda" class="font-bold text-lg">45%</span>
+                            <span>100% (Suivisme total)</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1 italic">Part des 3300 voix qui suivent réellement vers l'Opposition.</p>
+                    </div>
+                    <div>
+                         <label for="transferFactor" class="block text-sm font-bold text-yellow-400 mb-2">2. Report du Pool Résiduel</label>
+                         <input type="range" id="transferFactor" value="0.75" min="0" max="1.0" step="0.01" class="range-slider" oninput="runSimulation()">
+                         <div class="flex justify-between text-xs text-yellow-400 mt-1">
+                             <span>0% (Vers Majorité)</span>
+                             <span id="displayTau" class="font-bold text-lg">0.75</span>
+                             <span>100% (Vers Opposition)</span>
+                         </div>
+                         <p class="text-xs text-gray-400 mt-1 italic">Comportement des voix restantes (Pool + Déçus).</p>
+                    </div>
+                 </div>
+
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 px-4">
+                    <div>
+                        <label for="erosionFactor" class="block text-sm font-medium text-gray-300 mb-2">Volatilité Historique (x 2014-2020) : <span class="font-bold text-indigo-400" id="displayEpsilon">1.00</span></label>
+                        <input type="range" id="erosionFactor" value="1.0" min="0" max="3.0" step="0.01" class="range-slider" oninput="runSimulation()">
+                    </div>
+                    <div>
+                        <label for="participationFactor" class="block text-sm font-medium text-gray-300 mb-2">Participation (Ratio 2020) : <span class="font-bold text-indigo-400" id="displayPi">1.00</span></label>
+                        <input type="range" id="participationFactor" value="1.0" min="0.8" max="1.4" step="0.01" class="range-slider" oninput="runSimulation()">
+                    </div>
+                 </div>
+                 
+                 <div class="grid grid-cols-3 gap-4 text-center mb-6">
+                      <div class="p-3 bg-slate-700 rounded-lg">
+                         <p class="text-xs text-gray-400 uppercase font-semibold">Total Votants</p>
+                         <div id="kpi-total-votes" class="kpi-value text-white text-2xl mt-1">0</div>
+                      </div>
+                      <div class="p-3 bg-slate-800 border-2 border-slate-700 rounded-lg">
+                         <p class="text-xs text-gray-400 uppercase font-semibold">Écart (Voix)</p>
+                         <div id="kpi-vote-gap" class="kpi-value text-white text-2xl mt-1">0</div>
+                      </div>
+                      <div class="p-3 bg-slate-700 rounded-lg">
+                         <p class="text-xs text-gray-400 uppercase font-semibold">Seuil Victoire</p>
+                         <div id="kpi-seuil" class="kpi-value text-gray-500 text-2xl mt-1">0</div>
+                      </div>
+                 </div>
+                 
+                 <div class="pt-4 space-y-4">
+                     <div>
+                        <div class="flex justify-between text-lg font-semibold text-gray-200">
+                            <span class="text-green-400">Majorité (M)</span>
+                            <span id="percent-M" class="font-extrabold text-green-400">0.00 %</span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
+                            <div id="bar-M" class="h-4 rounded-full result-bar-M transition-all duration-500" style="width: 0%;"></div>
+                        </div>
+                        <p id="votes-M" class="text-right text-xs text-gray-400 mt-1">0 voix</p>
+                     </div>
+                     <div>
+                        <div class="flex justify-between text-lg font-semibold text-gray-200">
+                            <span class="text-red-400">Opposition (O)</span>
+                            <span id="percent-O" class="font-extrabold text-red-400">0.00 %</span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
+                            <div id="bar-O" class="h-4 rounded-full result-bar-O transition-all duration-500" style="width: 0%;"></div>
+                        </div>
+                        <p id="votes-O" class="text-right text-xs text-gray-400 mt-1">0 voix</p>
+                     </div>
+                     
+                     <div class="mt-6 p-4 rounded-lg border-l-4 border-indigo-500 bg-indigo-900/50">
+                         <p class="text-sm font-bold text-indigo-300 mb-1">Analyse du Scénario :</p>
+                         <p id="analysis-text" class="text-sm text-gray-200"></p>
+                     </div>
+                 </div>
+            </div>
+
+            <div class="card lg:col-span-1 flex flex-col">
+                <h3 class="text-xl font-bold text-gray-100 mb-6 pb-2 border-b border-slate-700">III. Sensibilité (Impact)</h3>
+                <p class="text-sm text-gray-400 mb-4">
+                    Visualisation de l'influence relative des différents facteurs.
+                </p>
+                <div class="chart-container">
+                    <canvas id="factorImpactChart"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
-  );
-};
 
-export default App;
+    <script>
+        const VOTE_ID = { M: 'M', O: 'O', P: 'P' }; 
+        
+        // --- DONNÉES SOURCES ---
+        // Bloc de Ralliement Initial (Ramassamy + Moutoucomorapoulé)
+        const RALLIEMENT_INITIAL = 3300; 
+
+        // Taux d'Attrition Structurelle (Temps, Désengagement) - FIXE
+        const ATTRITION_RATE = 0.20; // 20% perdus d'office
+        // Taux de Rejet (Vers la Majorité) - FIXE (appliqué sur les non-fidèles)
+        const REJECTION_RATE = 0.10; // 10% des indécis vont à M
+
+        const results_2008 = [ { id: 'M', votes: 3800 }, { id: 'O', votes: 4000 }, { id: 'P', votes: 6000 } ];
+        const results_2014 = [ { id: 'M', votes: 4192 }, { id: 'O', votes: 3568 }, { id: 'P', votes: 5122 } ];
+        const results_2020 = [ { id: 'M', votes: 5543 }, { id: 'O', votes: 3105 }, { id: 'P', votes: 4220 } ]; // P includes 3300
+
+        // Calcul des Deltas Historiques (Tendance 2014-2020) sur la structure brute
+        let baseDeltaVotes = {};
+        results_2020.forEach(item20 => {
+            const item14 = results_2014.find(i => i.id === item20.id);
+            baseDeltaVotes[item20.id] = item20.votes - item14.votes;
+        });
+
+        // --- MOTEUR DE CALCUL ---
+
+        function calculateBase2026(lambda) {
+            // 1. Calcul de l'érosion du bloc de ralliement
+            const bloc_initial = RALLIEMENT_INITIAL; // 3300
+            const attrition = bloc_initial * ATTRITION_RATE; // 660 (Perdus)
+            const bloc_actif = bloc_initial - attrition; // 2640
+
+            // 2. Application de la Fidélité (Lambda)
+            const transfert_vers_O = bloc_actif * lambda; // Vers Opposition
+            
+            // 3. Gestion des "Déçus" (Reste du bloc actif)
+            const bloc_decus = bloc_actif - transfert_vers_O;
+            const rejet_vers_M = bloc_decus * REJECTION_RATE; // Vers Majorité
+            const retour_pool = bloc_decus - rejet_vers_M; // Retour au Pool P
+
+            // 4. Construction de la Base V2026
+            // Base M 2020 + Rejet
+            const base_M = results_2020.find(r => r.id === 'M').votes + rejet_vers_M;
+            // Base O 2020 + Fidélité
+            const base_O = results_2020.find(r => r.id === 'O').votes + transfert_vers_O;
+            // Base P 2020 (4220) - Bloc Ralliement (3300) + Attrition (660) + Retour Pool
+            // Note: Le pool 2020 contenait le bloc. On l'enlève, puis on remet ce qui revient.
+            const pool_initial_2020 = results_2020.find(r => r.id === 'P').votes;
+            const pool_residuel_base = pool_initial_2020 - RALLIEMENT_INITIAL; // 920
+            const base_P = pool_residuel_base + attrition + retour_pool;
+
+            return {
+                M: base_M,
+                O: base_O,
+                P: base_P,
+                details: { attrition, transfert_vers_O, rejet_vers_M, retour_pool }
+            };
+        }
+
+        function project2026(base, epsilon, tau, pi) {
+            // 1. Application de la Tendance Historique (Epsilon) sur M et O
+            let proj_M = base.M + (baseDeltaVotes['M'] * epsilon);
+            let proj_O = base.O + (baseDeltaVotes['O'] * epsilon);
+            let proj_P = base.P + (baseDeltaVotes['P'] * epsilon * 0.5); // Pool moins sensible à la tendance historique pure
+
+            proj_M = Math.max(0, proj_M);
+            proj_O = Math.max(0, proj_O);
+            proj_P = Math.max(0, proj_P);
+
+            // 2. Report du Pool (Tau)
+            const transfer_O = proj_P * tau;
+            const transfer_M = proj_P * (1 - tau);
+
+            proj_M += transfer_M;
+            proj_O += transfer_O;
+
+            // 3. Participation (Pi)
+            const total_2020 = 12868;
+            const target_total = total_2020 * pi;
+            const current_total = proj_M + proj_O;
+            const scale = target_total / current_total;
+
+            return {
+                M: Math.round(proj_M * scale),
+                O: Math.round(proj_O * scale),
+                Total: Math.round(target_total)
+            };
+        }
+
+        // --- UI UPDATES ---
+
+        function formatNum(n) { return Math.round(n).toLocaleString('fr-FR'); }
+
+        function updateUI(res, base, params) {
+            // Textes
+            document.getElementById('displayLambda').innerText = Math.round(params.lambda * 100) + '%';
+            document.getElementById('displayTau').innerText = params.tau.toFixed(2);
+            document.getElementById('displayEpsilon').innerText = params.epsilon.toFixed(2);
+            document.getElementById('displayPi').innerText = params.pi.toFixed(2);
+
+            // KPIs
+            document.getElementById('kpi-total-votes').innerText = formatNum(res.Total);
+            const gap = res.M - res.O;
+            const gapEl = document.getElementById('kpi-vote-gap');
+            gapEl.innerText = (gap > 0 ? '+' : '') + formatNum(gap);
+            // Couleurs ajustées pour le Dark Mode
+            gapEl.className = `kpi-value text-2xl mt-1 ${gap > 0 ? 'text-green-400' : 'text-red-400'}`;
+            document.getElementById('kpi-seuil').innerText = formatNum(Math.floor(res.Total/2)+1);
+
+            // Bars
+            const perM = (res.M / res.Total) * 100;
+            const perO = (res.O / res.Total) * 100;
+            document.getElementById('bar-M').style.width = perM + '%';
+            document.getElementById('bar-O').style.width = perO + '%';
+            document.getElementById('percent-M').innerText = perM.toFixed(2) + '%';
+            document.getElementById('percent-O').innerText = perO.toFixed(2) + '%';
+            document.getElementById('votes-M').innerText = formatNum(res.M) + ' voix';
+            document.getElementById('votes-O').innerText = formatNum(res.O) + ' voix';
+
+            // Analysis Text
+            const analysisBox = document.getElementById('analysis-text');
+            let analysis = "";
+            if (gap > 500) {
+                analysis = "<strong>AVANTAGE SOLIDE MAJORITÉ.</strong> L'érosion du ralliement (faible fidélité) et le rejet partiel vers M permettent au sortant de conserver une avance confortable.";
+            } else if (gap > 0) {
+                analysis = "<strong>VICTOIRE SERRÉE MAJORITÉ.</strong> La Majorité reste en tête grâce à la dispersion du Pool. L'Opposition ne capitalise pas assez sur le ralliement.";
+            } else if (gap > -500) {
+                analysis = "<strong>BASCULE POSSIBLE.</strong> L'Opposition prend un léger avantage. Le ralliement fonctionne suffisamment pour compenser le retard historique.";
+            } else {
+                analysis = "<strong>VICTOIRE OPPOSITION.</strong> Le ralliement est un succès (forte fidélité) et le report du pool résiduel scelle la défaite du sortant.";
+            }
+            analysisBox.innerHTML = analysis;
+
+            // Table Update
+            // Rétablit le tableau pour qu'il s'adapte automatiquement à la largeur
+            let tableHtml = `
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-700 text-gray-400 text-xs uppercase">
+                            <th class="p-3 text-left rounded-tl-lg">Bloc</th>
+                            <th class="p-3 text-right">2014</th>
+                            <th class="p-3 text-right">2020</th>
+                            <th class="p-3 text-right bg-indigo-900/40 text-indigo-300 border-b-2 border-indigo-900/60 rounded-tr-lg">Base V2026 (Recalculée)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm text-gray-200">
+                        <tr>
+                            <td class="p-3 font-bold text-green-400">Majorité (M)</td>
+                            <td class="p-3 text-right">4 192</td>
+                            <td class="p-3 text-right">5 543</td>
+                            <td class="p-3 text-right font-bold bg-indigo-900/40">${formatNum(base.M)}</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-red-400">Opposition (O)</td>
+                            <td class="p-3 text-right">3 568</td>
+                            <td class="p-3 text-right">3 105</td>
+                            <td class="p-3 text-right font-bold bg-indigo-900/40">${formatNum(base.O)}</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-medium text-yellow-400">Pool (P)</td>
+                            <td class="p-3 text-right">5 122</td>
+                            <td class="p-3 text-right">4 220</td>
+                            <td class="p-3 text-right font-bold bg-indigo-900/40">${formatNum(base.P)}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('recalculated-base-table').innerHTML = tableHtml;
+        }
+
+        function runSimulation() {
+            const lambda = parseFloat(document.getElementById('fidelityFactor').value);
+            const tau = parseFloat(document.getElementById('transferFactor').value);
+            const epsilon = parseFloat(document.getElementById('erosionFactor').value);
+            const pi = parseFloat(document.getElementById('participationFactor').value);
+
+            const base2026 = calculateBase2026(lambda);
+            const result = project2026(base2026, epsilon, tau, pi);
+            
+            updateUI(result, base2026, { lambda, tau, epsilon, pi });
+        }
+
+        // --- CHART ---
+        function initChart() {
+            const ctx = document.getElementById('factorImpactChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Fidélité Ralliement', 'Report Résiduel', 'Volatilité Historique', 'Participation'],
+                    datasets: [{
+                        label: 'Sensibilité',
+                        data: [0.9, 0.7, 0.6, 0.3],
+                        backgroundColor: 'rgba(99, 102, 241, 0.3)', /* Indigo 400 */
+                        borderColor: '#6366f1',
+                        pointBackgroundColor: '#818cf8',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        r: { 
+                            suggestedMin: 0, 
+                            suggestedMax: 1, 
+                            ticks: { display: false },
+                            grid: { color: '#334155' }, // Grille sombre
+                            angleLines: { color: '#334155' },
+                            pointLabels: { color: '#f1f5f9' } // Étiquettes blanches
+                        } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        window.onload = () => {
+            initChart();
+            runSimulation();
+        };
+    </script>
+</body>
+</html>
