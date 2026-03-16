@@ -22,8 +22,11 @@
             background-color: #1e293b; 
             border-radius: 12px;
             border: 1px solid #334155;
-            padding: 1.5rem;
+            padding: 1rem; /* Padding réduit sur mobile */
             transition: all 0.3s ease;
+        }
+        @media (min-width: 768px) {
+            .card { padding: 1.5rem; } /* Padding normal sur tablette/desktop */
         }
         .card:hover {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
@@ -32,9 +35,12 @@
             background-color: #4f46e5; 
         }
         .kpi-value {
-            font-size: 2.5rem; 
+            font-size: 2rem; /* Légèrement réduit pour mobile */
             font-weight: 800;
             line-height: 1;
+        }
+        @media (min-width: 768px) {
+            .kpi-value { font-size: 2.5rem; }
         }
         .chart-container { 
             position: relative; 
@@ -54,16 +60,16 @@
         }
         .range-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
+            width: 20px; /* Pouce plus grand pour le tactile mobile */
+            height: 20px;
             border-radius: 50%;
             background: #6366f1;
             cursor: pointer;
             box-shadow: 0 0 5px rgba(99, 102, 241, 0.6);
         }
         .range-slider::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             background: #6366f1;
             cursor: pointer;
@@ -100,175 +106,171 @@
         }
     </style>
 </head>
-<body class="p-4 md:p-8 min-h-screen flex items-start justify-center">
+<body class="p-2 md:p-8 min-h-screen flex items-start justify-center">
 
-    <div class="w-full max-w-7xl container-bg p-6 md:p-10">
+    <div class="w-full max-w-7xl container-bg p-4 md:p-10">
         
-        <header class="header-bg text-white p-6 md:p-8 rounded-t-xl mb-6 shadow-lg text-center relative">
-            <h1 class="text-3xl font-extrabold mb-1 uppercase tracking-tighter">Tableau de Bord V5 : Scrutin à 8 Candidats</h1>
-            <p class="text-md font-light opacity-90">Modèle Réaliste : Dynamique complète de l'électorat de Saint-André</p>
-            <div id="cloud-indicator" class="absolute top-4 right-4 bg-slate-800 text-xs px-3 py-1 rounded-full flex items-center gap-2 border border-slate-600 hidden">
+        <!-- HEADER RESPONSIVE -->
+        <header class="header-bg text-white p-4 md:p-8 rounded-t-xl mb-6 shadow-lg flex flex-col items-center relative">
+            <h1 class="text-2xl md:text-3xl font-extrabold mb-2 uppercase tracking-tighter text-center">Tableau de Bord V5 : Scrutin à 8 Candidats</h1>
+            <p class="text-xs md:text-md font-light opacity-90 text-center mb-2 md:mb-0">Modèle Réaliste : Dynamique complète de l'électorat</p>
+            
+            <!-- Indicateur Cloud repensé pour mobile (se centre sous le texte sur mobile, absolu sur desktop) -->
+            <div id="cloud-indicator" class="mt-2 md:mt-0 md:absolute md:top-4 md:right-4 bg-slate-800 text-xs px-3 py-1 rounded-full flex items-center justify-center gap-2 border border-slate-600 hidden w-max mx-auto md:w-auto">
                 <div class="w-2 h-2 rounded-full bg-green-500 cloud-active"></div>
-                Cloud Collaboratif Connecté
+                <span>Cloud Connecté</span>
             </div>
         </header>
 
         <section class="card mb-6 border-l-4 border-amber-500">
-            <h2 class="text-xl font-bold text-gray-100 mb-4 pb-2 border-b border-slate-700 uppercase tracking-wide">I. Mécanique du Calcul : Le Partage de l'Héritage</h2>
-            <div id="recalculated-base-table" class="overflow-x-auto">
-                <!-- Le tableau sera généré ici dynamiquement par Javascript pour être toujours trié -->
+            <h2 class="text-lg md:text-xl font-bold text-gray-100 mb-4 pb-2 border-b border-slate-700 uppercase tracking-wide">I. Mécanique du Calcul</h2>
+            <div id="recalculated-base-table" class="overflow-x-auto w-full pb-2">
+                <!-- Le tableau sera généré ici dynamiquement -->
             </div>
-            <p class="mt-4 text-sm text-gray-400 italic">
-                *Le tableau se trie automatiquement en temps réel. Les voix sont partagées entre les bases historiques, la scission familiale Virapoullé, et la répartition du grand pool des indécis.
+            <p class="mt-4 text-xs md:text-sm text-gray-400 italic">
+                *Le tableau se trie automatiquement en temps réel. Les voix sont partagées entre les bases historiques, la scission familiale, et le pool d'indécis. (Glissez vers la droite sur mobile pour voir tout le tableau).
             </p>
         </section>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 items-stretch">
             
             <div class="card lg:col-span-2">
-                 <h3 class="text-xl font-bold text-gray-100 mb-6 pb-2 border-b border-slate-700 uppercase tracking-wide">II. Simulation Interactive</h3>
+                 <h3 class="text-lg md:text-xl font-bold text-gray-100 mb-6 pb-2 border-b border-slate-700 uppercase tracking-wide">II. Simulation Interactive</h3>
                  
-                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 bg-indigo-900/40 p-4 rounded-xl border border-indigo-900/60">
+                 <!-- BLOC RÉGLETTES 1 -->
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 md:mb-8 bg-indigo-900/40 p-4 rounded-xl border border-indigo-900/60">
                     <div>
-                        <label for="fidelityFactor" class="block text-sm font-bold text-red-400 mb-2">1. Fidélité au leader (J.M. Virapoullé)</label>
+                        <label for="fidelityFactor" class="block text-xs md:text-sm font-bold text-red-400 mb-2">1. Fidélité au leader (J.M. Virapoullé)</label>
                         <input type="range" id="fidelityFactor" value="0.50" min="0.10" max="0.90" step="0.01" class="range-slider" oninput="runSimulation()">
-                        <div class="flex justify-between text-xs text-indigo-400 mt-1">
-                            <span>Rejet Fort (10%)</span>
-                            <span id="displayLambda" class="font-bold text-lg text-white">50%</span>
-                            <span>Clan Uni (90%)</span>
+                        <div class="flex justify-between text-[10px] md:text-xs text-indigo-400 mt-1">
+                            <span>Rejet (10%)</span>
+                            <span id="displayLambda" class="font-bold text-base md:text-lg text-white">50%</span>
+                            <span>Uni (90%)</span>
                         </div>
-                        <p class="text-[11px] text-gray-400 mt-1">Définit la part du socle JPV (8500 voix) qui reste chez Jean-Marie. Le reste glisse vers Laurent.</p>
                     </div>
                     <div>
-                         <label for="transferFactor" class="block text-sm font-bold text-amber-500 mb-2">2. Attractivité de Laurent (sur le Pool)</label>
+                         <label for="transferFactor" class="block text-xs md:text-sm font-bold text-amber-500 mb-2">2. Attractivité de Laurent (Pool)</label>
                          <input type="range" id="transferFactor" value="0.30" min="0" max="0.80" step="0.01" class="range-slider" oninput="runSimulation()">
-                         <div class="flex justify-between text-xs text-indigo-400 mt-1">
+                         <div class="flex justify-between text-[10px] md:text-xs text-indigo-400 mt-1">
                              <span>Nulle (0%)</span>
-                             <span id="displayTau" class="font-bold text-lg text-white">30%</span>
+                             <span id="displayTau" class="font-bold text-base md:text-lg text-white">30%</span>
                              <span>Forte (80%)</span>
                          </div>
-                         <p class="text-[11px] text-gray-400 mt-1">Capacité de Laurent à capter les indécis face aux 5 autres candidats d'opposition.</p>
                     </div>
                  </div>
 
-                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4 px-4">
+                 <!-- BLOC RÉGLETTES 2 -->
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 md:mb-8 px-0 md:px-4">
                     <div>
-                        <label for="erosionFactor" class="block text-sm font-medium text-gray-300 mb-2">Dynamique Bédier (Usure/Prime) : <span class="font-bold text-green-400" id="displayEpsilon">1.00</span></label>
+                        <label for="erosionFactor" class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Usure/Prime Sortant : <span class="font-bold text-green-400" id="displayEpsilon">1.00</span></label>
                         <input type="range" id="erosionFactor" value="1.0" min="0.7" max="1.3" step="0.01" class="range-slider" oninput="runSimulation()">
                     </div>
                     <div>
-                        <label for="participationFactor" class="block text-sm font-medium text-gray-300 mb-2">Participation Globale : <span class="font-bold text-blue-400" id="displayPi">1.00</span></label>
+                        <label for="participationFactor" class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Participation Globale : <span class="font-bold text-blue-400" id="displayPi">1.00</span></label>
                         <input type="range" id="participationFactor" value="1.0" min="0.8" max="1.2" step="0.01" class="range-slider" oninput="runSimulation()">
                     </div>
                  </div>
 
-                 <!-- BOUTON DE SAUVEGARDE CLOUD -->
-                 <div class="flex justify-center mb-8">
-                     <button onclick="saveCurrentScenario()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 border border-indigo-400 flex items-center gap-2">
+                 <!-- BOUTON DE SAUVEGARDE CLOUD (Pleine largeur sur mobile) -->
+                 <div class="flex justify-center mb-6 md:mb-8 w-full">
+                     <button onclick="saveCurrentScenario()" class="w-full md:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 md:py-2 px-4 md:px-6 rounded-xl md:rounded-full shadow-lg transition-transform transform hover:scale-105 border border-indigo-400 flex items-center justify-center gap-2 text-sm md:text-base">
                          <span>💾</span> Enregistrer et Partager le Scénario
                      </button>
                  </div>
                  
-                 <div class="grid grid-cols-3 gap-4 text-center mb-6">
+                 <!-- KPIS RESPONSIVE (1 colonne sur mobile, 3 sur tablette/desktop) -->
+                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center mb-6">
                       <div class="p-3 bg-slate-700 rounded-lg">
-                         <p class="text-xs text-gray-400 uppercase font-semibold">Votants Totaux</p>
-                         <div id="kpi-total-votes" class="kpi-value text-white text-2xl mt-1">0</div>
+                         <p class="text-[10px] md:text-xs text-gray-400 uppercase font-semibold">Votants Totaux</p>
+                         <div id="kpi-total-votes" class="kpi-value text-white mt-1">0</div>
                       </div>
                       <div class="p-3 bg-slate-800 border-2 border-slate-700 rounded-lg">
-                         <p class="text-xs text-gray-400 uppercase font-semibold">Tête vs Second</p>
-                         <div id="kpi-vote-gap" class="kpi-value text-white text-2xl mt-1">0</div>
+                         <p class="text-[10px] md:text-xs text-gray-400 uppercase font-semibold">Tête vs Second</p>
+                         <div id="kpi-vote-gap" class="kpi-value text-white mt-1">0</div>
                       </div>
                       <div class="p-3 bg-slate-700 rounded-lg">
-                         <p class="text-xs text-gray-400 uppercase font-semibold">Seuil (50%)</p>
-                         <div id="kpi-seuil" class="kpi-value text-gray-400 text-2xl mt-1">0</div>
+                         <p class="text-[10px] md:text-xs text-gray-400 uppercase font-semibold">Seuil (50%)</p>
+                         <div id="kpi-seuil" class="kpi-value text-gray-400 mt-1">0</div>
                       </div>
                  </div>
                  
-                 <!-- ESPACE DES BARRES DE CANDIDATS (Utilisation de Flexbox + gap pour un tri dynamique propre) -->
+                 <!-- ESPACE DES BARRES DE CANDIDATS -->
                  <div class="pt-4 flex flex-col gap-3" id="bars-container">
-                     
                      <!-- Joé Bédier -->
                      <div id="wrapper-M">
-                        <div class="flex justify-between text-sm font-semibold text-gray-200">
-                            <span class="text-c-M">Joé Bédier (Sortant)</span>
-                            <span id="percent-M" class="font-extrabold text-c-M">0.00 %</span>
+                        <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                            <span class="text-c-M truncate">Joé Bédier (Sortant)</span>
+                            <span id="percent-M" class="font-extrabold text-c-M whitespace-nowrap">0.00 %</span>
                         </div>
                         <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
                             <div id="bar-M" class="h-3 rounded-full result-bar-M transition-all duration-500" style="width: 0%;"></div>
                         </div>
                      </div>
-                     
                      <!-- Jean-Marie Virapoullé -->
                      <div id="wrapper-O">
-                        <div class="flex justify-between text-sm font-semibold text-gray-200">
-                            <span class="text-c-O">Jean-Marie Virapoullé</span>
-                            <span id="percent-O" class="font-extrabold text-c-O">0.00 %</span>
+                        <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                            <span class="text-c-O truncate">J.M. Virapoullé</span>
+                            <span id="percent-O" class="font-extrabold text-c-O whitespace-nowrap">0.00 %</span>
                         </div>
                         <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
                             <div id="bar-O" class="h-3 rounded-full result-bar-O transition-all duration-500" style="width: 0%;"></div>
                         </div>
                      </div>
-                     
                      <!-- Laurent Virapoullé -->
                      <div id="wrapper-L">
-                        <div class="flex justify-between text-sm font-semibold text-gray-200">
-                            <span class="text-c-L">Laurent Virapoullé</span>
-                            <span id="percent-L" class="font-extrabold text-c-L">0.00 %</span>
+                        <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                            <span class="text-c-L truncate">Laurent Virapoullé</span>
+                            <span id="percent-L" class="font-extrabold text-c-L whitespace-nowrap">0.00 %</span>
                         </div>
                         <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
                             <div id="bar-L" class="h-3 rounded-full result-bar-L transition-all duration-500" style="width: 0%;"></div>
                         </div>
                      </div>
-
                      <!-- Eric Fruteau -->
                      <div id="wrapper-F">
-                        <div class="flex justify-between text-sm font-semibold text-gray-200">
-                            <span class="text-c-F">Eric Fruteau</span>
-                            <span id="percent-F" class="font-extrabold text-c-F">0.00 %</span>
+                        <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                            <span class="text-c-F truncate">Eric Fruteau</span>
+                            <span id="percent-F" class="font-extrabold text-c-F whitespace-nowrap">0.00 %</span>
                         </div>
                         <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
                             <div id="bar-F" class="h-3 rounded-full result-bar-F transition-all duration-500" style="width: 0%;"></div>
                         </div>
                      </div>
-
                      <!-- Settama-Vidon -->
                      <div id="wrapper-SV">
-                        <div class="flex justify-between text-sm font-semibold text-gray-200">
-                            <span class="text-c-SV">Settama-Vidon</span>
-                            <span id="percent-SV" class="font-extrabold text-c-SV">0.00 %</span>
+                        <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                            <span class="text-c-SV truncate">Settama-Vidon</span>
+                            <span id="percent-SV" class="font-extrabold text-c-SV whitespace-nowrap">0.00 %</span>
                         </div>
                         <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
                             <div id="bar-SV" class="h-3 rounded-full result-bar-SV transition-all duration-500" style="width: 0%;"></div>
                         </div>
                      </div>
-
                      <!-- Soupramanien -->
                      <div id="wrapper-SOU">
-                        <div class="flex justify-between text-sm font-semibold text-gray-200">
-                            <span class="text-c-SOU">Soupramanien</span>
-                            <span id="percent-SOU" class="font-extrabold text-c-SOU">0.00 %</span>
+                        <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                            <span class="text-c-SOU truncate">Soupramanien</span>
+                            <span id="percent-SOU" class="font-extrabold text-c-SOU whitespace-nowrap">0.00 %</span>
                         </div>
                         <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
                             <div id="bar-SOU" class="h-3 rounded-full result-bar-SOU transition-all duration-500" style="width: 0%;"></div>
                         </div>
                      </div>
-
                      <!-- Sautron -->
                      <div id="wrapper-SAU">
-                        <div class="flex justify-between text-sm font-semibold text-gray-200">
-                            <span class="text-c-SAU">Sautron</span>
-                            <span id="percent-SAU" class="font-extrabold text-c-SAU">0.00 %</span>
+                        <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                            <span class="text-c-SAU truncate">Sautron</span>
+                            <span id="percent-SAU" class="font-extrabold text-c-SAU whitespace-nowrap">0.00 %</span>
                         </div>
                         <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
                             <div id="bar-SAU" class="h-3 rounded-full result-bar-SAU transition-all duration-500" style="width: 0%;"></div>
                         </div>
                      </div>
-
                      <!-- Cotaya -->
                      <div id="wrapper-C">
-                        <div class="flex justify-between text-sm font-semibold text-gray-200">
-                            <span class="text-c-C">Cotaya</span>
-                            <span id="percent-C" class="font-extrabold text-c-C">0.00 %</span>
+                        <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                            <span class="text-c-C truncate">Cotaya</span>
+                            <span id="percent-C" class="font-extrabold text-c-C whitespace-nowrap">0.00 %</span>
                         </div>
                         <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
                             <div id="bar-C" class="h-3 rounded-full result-bar-C transition-all duration-500" style="width: 0%;"></div>
@@ -277,44 +279,44 @@
                  </div>
 
                  <div class="mt-6 p-4 rounded-lg border-l-4 border-indigo-500 bg-indigo-900/40">
-                     <p class="text-sm font-bold text-indigo-300 mb-1">Diagnostic du Scrutin :</p>
-                     <p id="analysis-text" class="text-sm text-gray-200 leading-relaxed"></p>
+                     <p class="text-xs md:text-sm font-bold text-indigo-300 mb-1">Diagnostic du Scrutin :</p>
+                     <p id="analysis-text" class="text-xs md:text-sm text-gray-200 leading-relaxed"></p>
                  </div>
             </div>
 
+            <!-- RADAR -->
             <div class="card lg:col-span-1 flex flex-col">
-                <h3 class="text-xl font-bold text-gray-100 mb-6 pb-2 border-b border-slate-700 uppercase tracking-wide">III. Radar Stratégique</h3>
-                <p class="text-sm text-gray-400 mb-4">
-                    Lecture des forces en présence modifiant l'équilibre politique local.
+                <h3 class="text-lg md:text-xl font-bold text-gray-100 mb-4 pb-2 border-b border-slate-700 uppercase tracking-wide">III. Radar Stratégique</h3>
+                <p class="text-xs md:text-sm text-gray-400 mb-4">
+                    Forces en présence modifiant l'équilibre politique.
                 </p>
-                <div class="chart-container">
+                <div class="chart-container" style="min-height: 250px;">
                     <canvas id="factorImpactChart"></canvas>
                 </div>
             </div>
         </div>
 
         <!-- SECTION : HISTORIQUE DES SCÉNARIOS CLOUD -->
-        <section class="card mb-6 border-t-4 border-teal-500 mt-8">
-            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-700">
-                <h2 class="text-xl font-bold text-gray-100 uppercase tracking-wide">IV. Scénarios Partagés (Public)</h2>
+        <section class="card mb-6 border-t-4 border-teal-500 mt-4 md:mt-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 pb-2 border-b border-slate-700 gap-2">
+                <h2 class="text-lg md:text-xl font-bold text-gray-100 uppercase tracking-wide">IV. Scénarios Partagés</h2>
                 <button onclick="clearAllScenarios()" class="text-xs text-red-400 hover:text-red-300 underline hidden" id="btn-clear-local">Effacer l'historique local</button>
             </div>
             
-            <div class="overflow-x-auto">
-                <table class="min-w-full text-sm text-left">
+            <div class="overflow-x-auto w-full pb-2">
+                <table class="min-w-full text-xs md:text-sm text-left">
                     <thead class="text-gray-400 uppercase bg-slate-800">
                         <tr>
-                            <th class="px-4 py-3 rounded-tl-lg">Nom du Scénario</th>
-                            <th class="px-4 py-3">Vainqueur Projeté</th>
-                            <th class="px-4 py-3">Fidélité (JMV)</th>
-                            <th class="px-4 py-3">Attract. (Laurent)</th>
-                            <th class="px-4 py-3">Usure Bédier</th>
-                            <th class="px-4 py-3">Particip.</th>
-                            <th class="px-4 py-3 text-right rounded-tr-lg">Action</th>
+                            <th class="px-3 py-3 rounded-tl-lg whitespace-nowrap">Nom du Scénario</th>
+                            <th class="px-3 py-3 whitespace-nowrap">Vainqueur</th>
+                            <th class="px-3 py-3 whitespace-nowrap">Fidélité (JMV)</th>
+                            <th class="px-3 py-3 whitespace-nowrap">Attract. (Laurent)</th>
+                            <th class="px-3 py-3 whitespace-nowrap">Usure Bédier</th>
+                            <th class="px-3 py-3 whitespace-nowrap">Particip.</th>
+                            <th class="px-3 py-3 text-right rounded-tr-lg whitespace-nowrap">Action</th>
                         </tr>
                     </thead>
                     <tbody id="scenario-list-body" class="divide-y divide-slate-700">
-                        <!-- Les scénarios sauvegardés s'afficheront ici -->
                         <tr>
                             <td colspan="7" class="px-4 py-6 text-center text-gray-500 italic">Chargement des scénarios partagés...</td>
                         </tr>
@@ -353,7 +355,6 @@
         // 1. Initialisation de Firebase Cloud Database
         async function initCloudDatabase() {
             try {
-                // Cette configuration magique est injectée par l'environnement
                 const configString = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
                 
                 if (configString) {
@@ -364,11 +365,9 @@
                     auth = getAuth(app);
                     db = getFirestore(app);
                     
-                    // Indiquer à l'utilisateur que le cloud est actif
                     isCloudActive = true;
                     document.getElementById('cloud-indicator').classList.remove('hidden');
 
-                    // Authentification obligatoire
                     if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                         await signInWithCustomToken(auth, __initial_auth_token);
                     } else {
@@ -382,14 +381,13 @@
                         }
                     });
                 } else {
-                    // Fallback Local
                     document.getElementById('btn-clear-local').classList.remove('hidden');
                     renderScenariosTable();
                 }
             } catch (e) {
                 console.error("Le Cloud n'est pas disponible, passage en mode local.", e);
                 document.getElementById('btn-clear-local').classList.remove('hidden');
-                renderScenariosTable(); // Fallback Local
+                renderScenariosTable(); 
             }
         }
 
@@ -397,7 +395,6 @@
         function listenToCloudScenarios() {
             if (!currentUser || !isCloudActive) return;
             
-            // Chemin public sécurisé et partagé
             const scenariosRef = collection(db, 'artifacts', cloudAppId, 'public', 'data', 'scenarios');
             
             onSnapshot(scenariosRef, (snapshot) => {
@@ -406,7 +403,6 @@
                     globalScenarios.push({ id: doc.id, ...doc.data() });
                 });
                 
-                // Tri en mémoire du plus récent au plus ancien
                 globalScenarios.sort((a, b) => b.timestamp - a.timestamp);
                 renderScenariosTable();
             }, (error) => {
@@ -528,7 +524,7 @@
             let message = `<strong>${premier.name.toUpperCase()} EST EN TÊTE.</strong> `;
             if (premier.id === 'M') {
                 message += `Le maire sortant résiste à la fragmentation. `;
-                if (deuxieme.id === 'L') message += `Fait marquant : Laurent Virapoullé a doublé son frère et s'installe comme le principal opposant.`;
+                if (deuxieme.id === 'L') message += `Laurent Virapoullé a doublé son frère et s'installe comme principal opposant.`;
                 else if (deuxieme.id === 'O') message += `Jean-Marie Virapoullé reste son adversaire direct.`;
                 else message += `${deuxieme.name} crée la surprise en se hissant à la seconde place.`;
             } else if (premier.id === 'O') {
@@ -536,21 +532,22 @@
             } else if (premier.id === 'L') {
                 message += `Coup de tonnerre politique : Laurent Virapoullé a siphonné le socle de son père et s'impose.`;
             } else {
-                message += `Énorme surprise politique : ${premier.name} prend la tête !`;
+                message += `Surprise politique : ${premier.name} prend la tête !`;
             }
             analysisBox.innerHTML = message;
 
+            // Ajout de classes whitespace-nowrap pour éviter les cassures de tableau sur mobile
             let tableHtml = `
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-slate-700 text-gray-300 text-xs uppercase">
-                            <th class="p-3 text-left rounded-tl-lg">Candidat</th>
-                            <th class="p-3 text-right">Base / Socle</th>
-                            <th class="p-3 text-right">Apport (Pool)</th>
-                            <th class="p-3 text-right bg-indigo-900/40 text-indigo-300 rounded-tr-lg">Total Projeté</th>
+                        <tr class="bg-slate-700 text-gray-300 text-[10px] md:text-xs uppercase">
+                            <th class="p-2 md:p-3 text-left rounded-tl-lg whitespace-nowrap">Candidat</th>
+                            <th class="p-2 md:p-3 text-right whitespace-nowrap">Socle Estimé</th>
+                            <th class="p-2 md:p-3 text-right whitespace-nowrap">Apport (Pool)</th>
+                            <th class="p-2 md:p-3 text-right bg-indigo-900/40 text-indigo-300 rounded-tr-lg whitespace-nowrap">Total Projeté</th>
                         </tr>
                     </thead>
-                    <tbody class="text-sm text-gray-200 divide-y divide-slate-700">
+                    <tbody class="text-xs md:text-sm text-gray-200 divide-y divide-slate-700">
             `;
 
             scores.forEach((cand, index) => {
@@ -559,10 +556,10 @@
                 const rankIcon = index === 0 ? '🏆 ' : `${index + 1}. `;
                 tableHtml += `
                     <tr class="${rowClass} transition-colors">
-                        <td class="p-3 font-bold ${cand.colorClass}">${rankIcon}${cand.name}</td>
-                        <td class="p-3 text-right text-gray-400">${formatNum(det.socle)} voix</td>
-                        <td class="p-3 text-right text-gray-500">${formatNum(det.pool)} voix</td>
-                        <td class="p-3 text-right font-bold text-lg bg-indigo-900/20 ${cand.colorClass}">${formatNum(cand.val)}</td>
+                        <td class="p-2 md:p-3 font-bold ${cand.colorClass} whitespace-nowrap">${rankIcon}${cand.name}</td>
+                        <td class="p-2 md:p-3 text-right text-gray-400 whitespace-nowrap">${formatNum(det.socle)} v.</td>
+                        <td class="p-2 md:p-3 text-right text-gray-500 whitespace-nowrap">${formatNum(det.pool)} v.</td>
+                        <td class="p-2 md:p-3 text-right font-bold text-sm md:text-lg bg-indigo-900/20 ${cand.colorClass} whitespace-nowrap">${formatNum(cand.val)}</td>
                     </tr>
                 `;
             });
@@ -570,7 +567,7 @@
             document.getElementById('recalculated-base-table').innerHTML = tableHtml;
         }
 
-        // Déclarations Globales pour pouvoir être appelées depuis le HTML
+        // Déclarations Globales
         window.runSimulation = function() {
             project2026();
         }
@@ -578,7 +575,7 @@
         // --- SAUVEGARDE ET SYNCHRONISATION ---
 
         window.saveCurrentScenario = async function() {
-            const scenarioName = prompt("Donnez un nom à ce scénario (Il sera visible par tous les visiteurs) :");
+            const scenarioName = prompt("Nommez ce scénario (Il sera visible par tous) :");
             if (!scenarioName) return;
 
             const newScenario = {
@@ -590,16 +587,13 @@
 
             if (isCloudActive && currentUser) {
                 try {
-                    // Envoi vers le Cloud Public
                     const scenariosRef = collection(db, 'artifacts', cloudAppId, 'public', 'data', 'scenarios');
                     await addDoc(scenariosRef, newScenario);
-                    // Pas besoin de rafraîchir manuellement, le onSnapshot le fera !
                 } catch (e) {
                     console.error("Erreur de sauvegarde cloud", e);
                     alert("Erreur de sauvegarde dans le Cloud.");
                 }
             } else {
-                // Fallback Local (Ancien système)
                 let history = JSON.parse(localStorage.getItem('electionScenariosV5')) || [];
                 history.push(newScenario);
                 localStorage.setItem('electionScenariosV5', JSON.stringify(history));
@@ -635,7 +629,7 @@
         }
 
         window.deleteScenario = async function(identifier) {
-            if(confirm("Êtes-vous sûr de vouloir supprimer ce scénario pour tout le monde ?")) {
+            if(confirm("Supprimer ce scénario pour tout le monde ?")) {
                 if (isCloudActive && currentUser) {
                     try {
                         const docRef = doc(db, 'artifacts', cloudAppId, 'public', 'data', 'scenarios', identifier);
@@ -665,35 +659,33 @@
 
             if (history.length === 0) {
                 let msg = isCloudActive 
-                    ? "Aucun scénario partagé. Soyez le premier à enregistrer votre simulation pour les autres visiteurs !"
+                    ? "Aucun scénario partagé. Soyez le premier !"
                     : "Aucun scénario local enregistré.";
-                tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-6 text-center text-gray-500 italic">${msg}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-6 text-center text-gray-500 italic whitespace-nowrap">${msg}</td></tr>`;
                 return;
             }
 
             let html = '';
-            // L'historique local doit être inversé pour afficher du plus récent au plus ancien (le Cloud l'est déjà)
             const listToRender = isCloudActive ? history : [...history].reverse();
 
             listToRender.forEach((scenario, index) => {
                 const s = scenario.data.sliders;
-                // Si Cloud, on utilise l'ID Firestore, sinon l'index Local
                 const identifier = isCloudActive ? `'${scenario.id}'` : (history.length - 1 - index); 
                 
                 html += `
                     <tr class="hover:bg-slate-700/50 transition-colors">
-                        <td class="px-4 py-3 font-medium text-white">
+                        <td class="px-3 py-3 font-medium text-white whitespace-nowrap">
                             ${scenario.name}
                             <div class="text-[10px] text-gray-500 font-normal">${scenario.date}</div>
                         </td>
-                        <td class="px-4 py-3 font-bold ${scenario.data.winnerColor}">${scenario.data.winner}</td>
-                        <td class="px-4 py-3">${Math.round(s.fidelity * 100)}%</td>
-                        <td class="px-4 py-3">${Math.round(s.transfer * 100)}%</td>
-                        <td class="px-4 py-3">${Number(s.erosion).toFixed(2)}</td>
-                        <td class="px-4 py-3">${Number(s.participation).toFixed(2)}</td>
-                        <td class="px-4 py-3 text-right space-x-2 whitespace-nowrap">
-                            <button onclick="loadScenario(${identifier})" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs py-1 px-3 rounded">Recharger</button>
-                            <button onclick="deleteScenario(${identifier})" class="text-red-400 hover:text-red-300 text-xs">✖</button>
+                        <td class="px-3 py-3 font-bold ${scenario.data.winnerColor} whitespace-nowrap">${scenario.data.winner}</td>
+                        <td class="px-3 py-3 whitespace-nowrap">${Math.round(s.fidelity * 100)}%</td>
+                        <td class="px-3 py-3 whitespace-nowrap">${Math.round(s.transfer * 100)}%</td>
+                        <td class="px-3 py-3 whitespace-nowrap">${Number(s.erosion).toFixed(2)}</td>
+                        <td class="px-3 py-3 whitespace-nowrap">${Number(s.participation).toFixed(2)}</td>
+                        <td class="px-3 py-3 text-right space-x-2 whitespace-nowrap">
+                            <button onclick="loadScenario(${identifier})" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs py-1 px-2 md:px-3 rounded">Recharger</button>
+                            <button onclick="deleteScenario(${identifier})" class="text-red-400 hover:text-red-300 text-xs mt-2 md:mt-0">✖</button>
                         </td>
                     </tr>
                 `;
@@ -707,7 +699,7 @@
             radarChart = new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: ['Unité JMV', 'Séduction Laurent', 'Force Bédier', 'Participation'],
+                    labels: ['Unité JMV', 'Séduction L.', 'Force Bédier', 'Particip.'],
                     datasets: [{
                         label: 'Force du Facteur',
                         data: [0.5, 0.3, 1.0, 1.0],
@@ -721,7 +713,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: { 
-                        r: { suggestedMin: 0, suggestedMax: 1.2, ticks: { display: false }, grid: { color: '#334155' }, angleLines: { color: '#334155' }, pointLabels: { color: '#e2e8f0', font: { size: 11, family: 'Inter' } } } 
+                        r: { suggestedMin: 0, suggestedMax: 1.2, ticks: { display: false }, grid: { color: '#334155' }, angleLines: { color: '#334155' }, pointLabels: { color: '#e2e8f0', font: { size: 10, family: 'Inter' } } } 
                     },
                     plugins: { legend: { display: false } }
                 }
@@ -746,7 +738,7 @@
         window.onload = () => {
             initChart();
             runSimulation();
-            initCloudDatabase(); // Initialise Firebase
+            initCloudDatabase();
         };
     </script>
 </body>
