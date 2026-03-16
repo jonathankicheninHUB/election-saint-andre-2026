@@ -58,7 +58,7 @@
             height: 16px;
             border-radius: 50%;
             background: #6366f1;
-            cursor: grab;
+            cursor: pointer;
             box-shadow: 0 0 5px rgba(99, 102, 241, 0.6);
         }
         .range-slider::-moz-range-thumb {
@@ -66,7 +66,7 @@
             height: 16px;
             border-radius: 50%;
             background: #6366f1;
-            cursor: grab;
+            cursor: pointer;
             box-shadow: 0 0 5px rgba(99, 102, 241, 0.6);
         }
         
@@ -88,15 +88,29 @@
         .text-c-SOU { color: #14b8a6; }
         .text-c-SAU { color: #06b6d4; }
         .text-c-C { color: #84cc16; }
+
+        /* Animation pour signaler la sauvegarde cloud */
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .cloud-active {
+            animation: pulse-green 2s infinite;
+        }
     </style>
 </head>
 <body class="p-4 md:p-8 min-h-screen flex items-start justify-center">
 
     <div class="w-full max-w-7xl container-bg p-6 md:p-10">
         
-        <header class="header-bg text-white p-6 md:p-8 rounded-t-xl mb-6 shadow-lg text-center">
+        <header class="header-bg text-white p-6 md:p-8 rounded-t-xl mb-6 shadow-lg text-center relative">
             <h1 class="text-3xl font-extrabold mb-1 uppercase tracking-tighter">Tableau de Bord V5 : Scrutin à 8 Candidats</h1>
             <p class="text-md font-light opacity-90">Modèle Réaliste : Dynamique complète de l'électorat de Saint-André</p>
+            <div id="cloud-indicator" class="absolute top-4 right-4 bg-slate-800 text-xs px-3 py-1 rounded-full flex items-center gap-2 border border-slate-600 hidden">
+                <div class="w-2 h-2 rounded-full bg-green-500 cloud-active"></div>
+                Cloud Collaboratif Connecté
+            </div>
         </header>
 
         <section class="card mb-6 border-l-4 border-amber-500">
@@ -137,7 +151,7 @@
                     </div>
                  </div>
 
-                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 px-4">
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4 px-4">
                     <div>
                         <label for="erosionFactor" class="block text-sm font-medium text-gray-300 mb-2">Dynamique Bédier (Usure/Prime) : <span class="font-bold text-green-400" id="displayEpsilon">1.00</span></label>
                         <input type="range" id="erosionFactor" value="1.0" min="0.7" max="1.3" step="0.01" class="range-slider" oninput="runSimulation()">
@@ -146,6 +160,13 @@
                         <label for="participationFactor" class="block text-sm font-medium text-gray-300 mb-2">Participation Globale : <span class="font-bold text-blue-400" id="displayPi">1.00</span></label>
                         <input type="range" id="participationFactor" value="1.0" min="0.8" max="1.2" step="0.01" class="range-slider" oninput="runSimulation()">
                     </div>
+                 </div>
+
+                 <!-- BOUTON DE SAUVEGARDE CLOUD -->
+                 <div class="flex justify-center mb-8">
+                     <button onclick="saveCurrentScenario()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 border border-indigo-400 flex items-center gap-2">
+                         <span>💾</span> Enregistrer et Partager le Scénario
+                     </button>
                  </div>
                  
                  <div class="grid grid-cols-3 gap-4 text-center mb-6">
@@ -271,55 +292,154 @@
                 </div>
             </div>
         </div>
+
+        <!-- SECTION : HISTORIQUE DES SCÉNARIOS CLOUD -->
+        <section class="card mb-6 border-t-4 border-teal-500 mt-8">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-700">
+                <h2 class="text-xl font-bold text-gray-100 uppercase tracking-wide">IV. Scénarios Partagés (Public)</h2>
+                <button onclick="clearAllScenarios()" class="text-xs text-red-400 hover:text-red-300 underline hidden" id="btn-clear-local">Effacer l'historique local</button>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm text-left">
+                    <thead class="text-gray-400 uppercase bg-slate-800">
+                        <tr>
+                            <th class="px-4 py-3 rounded-tl-lg">Nom du Scénario</th>
+                            <th class="px-4 py-3">Vainqueur Projeté</th>
+                            <th class="px-4 py-3">Fidélité (JMV)</th>
+                            <th class="px-4 py-3">Attract. (Laurent)</th>
+                            <th class="px-4 py-3">Usure Bédier</th>
+                            <th class="px-4 py-3">Particip.</th>
+                            <th class="px-4 py-3 text-right rounded-tr-lg">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scenario-list-body" class="divide-y divide-slate-700">
+                        <!-- Les scénarios sauvegardés s'afficheront ici -->
+                        <tr>
+                            <td colspan="7" class="px-4 py-6 text-center text-gray-500 italic">Chargement des scénarios partagés...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
     </div>
 
-    <script>
+    <!-- SCRIPT DE TYPE MODULE POUR UTILISER FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
         // --- MOTEUR DE CALCUL RÉALISTE (8 CANDIDATS) ---
-        
-        // Bases Historiques Estimées pour le calcul (Socles fixes)
-        const POTENTIEL_CLAN_VIRAPOULLE = 8500; // Base partagée entre JMV et Laurent
+        const POTENTIEL_CLAN_VIRAPOULLE = 8500; 
         const BASE_BEDIER_2020 = 5500;
         const BASE_FRUTEAU = 3500;
         const BASE_SETTAMA = 800;
         const BASE_SOUPRAMANIEN = 600;
         const BASE_SAUTRON = 400;
         const BASE_COTAYA = 300;
-
-        // Le Pool disponible est recalculé pour tenir compte des nombreux candidats
         const POOL_DISPONIBLE = 2500; 
 
+        // Variables Globales
+        let currentStateData = {};
+        let radarChart = null;
+
+        // Variables Firebase Cloud
+        let db, auth, currentUser, cloudAppId;
+        let globalScenarios = [];
+        let isCloudActive = false;
+
+        // 1. Initialisation de Firebase Cloud Database
+        async function initCloudDatabase() {
+            try {
+                // Cette configuration magique est injectée par l'environnement
+                const configString = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
+                
+                if (configString) {
+                    const firebaseConfig = JSON.parse(configString);
+                    cloudAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                    
+                    const app = initializeApp(firebaseConfig);
+                    auth = getAuth(app);
+                    db = getFirestore(app);
+                    
+                    // Indiquer à l'utilisateur que le cloud est actif
+                    isCloudActive = true;
+                    document.getElementById('cloud-indicator').classList.remove('hidden');
+
+                    // Authentification obligatoire
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+
+                    onAuthStateChanged(auth, (u) => {
+                        if (u) {
+                            currentUser = u;
+                            listenToCloudScenarios();
+                        }
+                    });
+                } else {
+                    // Fallback Local
+                    document.getElementById('btn-clear-local').classList.remove('hidden');
+                    renderScenariosTable();
+                }
+            } catch (e) {
+                console.error("Le Cloud n'est pas disponible, passage en mode local.", e);
+                document.getElementById('btn-clear-local').classList.remove('hidden');
+                renderScenariosTable(); // Fallback Local
+            }
+        }
+
+        // 2. Écoute des Scénarios en Temps Réel
+        function listenToCloudScenarios() {
+            if (!currentUser || !isCloudActive) return;
+            
+            // Chemin public sécurisé et partagé
+            const scenariosRef = collection(db, 'artifacts', cloudAppId, 'public', 'data', 'scenarios');
+            
+            onSnapshot(scenariosRef, (snapshot) => {
+                globalScenarios = [];
+                snapshot.forEach((doc) => {
+                    globalScenarios.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Tri en mémoire du plus récent au plus ancien
+                globalScenarios.sort((a, b) => b.timestamp - a.timestamp);
+                renderScenariosTable();
+            }, (error) => {
+                console.error("Erreur de synchronisation:", error);
+            });
+        }
+
+        // --- Moteur d'Élection ---
+
         function project2026() {
-            // Lecture des curseurs de l'utilisateur
             const fideliteJMV = parseFloat(document.getElementById('fidelityFactor').value);
             const attractiviteLaurent = parseFloat(document.getElementById('transferFactor').value);
             const usureBedier = parseFloat(document.getElementById('erosionFactor').value);
             const participation = parseFloat(document.getElementById('participationFactor').value);
 
-            // 1. PARTAGE DU CLAN VIRAPOULLÉ (La Scission)
             let voixJMV_socle = POTENTIEL_CLAN_VIRAPOULLE * fideliteJMV;
             let voixLaurent_socle = POTENTIEL_CLAN_VIRAPOULLE * (1 - fideliteJMV);
-
-            // 2. DYNAMIQUE BÉDIER (Usure / Prime au sortant)
             let voixBedier = BASE_BEDIER_2020 * usureBedier;
-
-            // 3. BASES FIXES DES AUTRES CANDIDATS
             let voixFruteau = BASE_FRUTEAU; 
             let voixSettama = BASE_SETTAMA;
             let voixSoupramanien = BASE_SOUPRAMANIEN;
             let voixSautron = BASE_SAUTRON;
             let voixCotaya = BASE_COTAYA;
 
-            // 4. CAPTATION DU POOL (Les indécis restants)
             let voixLaurent_pool = POOL_DISPONIBLE * attractiviteLaurent;
-            let voixBedier_pool = POOL_DISPONIBLE * 0.15; // Prime au sortant fixe sur le pool
-            let voixJMV_pool = POOL_DISPONIBLE * 0.10 * fideliteJMV; // JMV capte moins si divisé
-            let voixFruteau_pool = POOL_DISPONIBLE * 0.15; // Fruteau prend une part du pool
+            let voixBedier_pool = POOL_DISPONIBLE * 0.15; 
+            let voixJMV_pool = POOL_DISPONIBLE * 0.10 * fideliteJMV; 
+            let voixFruteau_pool = POOL_DISPONIBLE * 0.15; 
             let voixSettama_pool = POOL_DISPONIBLE * 0.05;
             let voixSoupramanien_pool = POOL_DISPONIBLE * 0.03;
             let voixSautron_pool = POOL_DISPONIBLE * 0.02;
             let voixCotaya_pool = POOL_DISPONIBLE * 0.01;
 
-            // Totaux bruts avant ajustement de la participation
             let total_M = voixBedier + voixBedier_pool;
             let total_O = voixJMV_socle + voixJMV_pool;
             let total_L = voixLaurent_socle + voixLaurent_pool;
@@ -330,8 +450,6 @@
             let total_C = voixCotaya + voixCotaya_pool;
 
             const sommeBrute = total_M + total_O + total_L + total_F + total_SV + total_SOU + total_SAU + total_C;
-
-            // 5. AJUSTEMENT DE PARTICIPATION GLOBALE
             const totalEstime = sommeBrute * participation;
             const scale = totalEstime / sommeBrute;
 
@@ -363,16 +481,12 @@
         function formatNum(n) { return Math.round(n).toLocaleString('fr-FR'); }
 
         function updateUI(res, fideliteJMV, attractiviteLaurent, usureBedier, participation) {
-            // Mise à jour des textes des curseurs
             document.getElementById('displayLambda').innerText = Math.round(fideliteJMV * 100) + '%';
             document.getElementById('displayTau').innerText = Math.round(attractiviteLaurent * 100) + '%';
             document.getElementById('displayEpsilon').innerText = usureBedier.toFixed(2);
             document.getElementById('displayPi').innerText = participation.toFixed(2);
-
-            // Mise à jour des KPIs en haut
             document.getElementById('kpi-total-votes').innerText = formatNum(res.Total);
             
-            // Création d'un tableau trié de tous les candidats
             const scores = [
                 { name: 'Joé Bédier', val: res.M, id: 'M', colorClass: 'text-c-M' },
                 { name: 'J.M. Virapoullé', val: res.O, id: 'O', colorClass: 'text-c-O' },
@@ -382,52 +496,57 @@
                 { name: 'Soupramanien', val: res.SOU, id: 'SOU', colorClass: 'text-c-SOU' },
                 { name: 'Sautron', val: res.SAU, id: 'SAU', colorClass: 'text-c-SAU' },
                 { name: 'Cotaya', val: res.C, id: 'C', colorClass: 'text-c-C' }
-            ].sort((a, b) => b.val - a.val); // Tri décroissant mathématique
+            ].sort((a, b) => b.val - a.val); 
             
-            // Calcul du gap entre le 1er et le 2ème, peu importe qui c'est
             const gap = scores[0].val - scores[1].val;
             document.getElementById('kpi-vote-gap').innerText = formatNum(gap);
             document.getElementById('kpi-seuil').innerText = formatNum(Math.floor(res.Total/2)+1);
 
-            // CORRECTION DU BUG DE CLASSEMENT : Mise à jour des barres et REORGANISATION DYNAMIQUE (Flexbox)
             scores.forEach((candidate, index) => {
                 const percentage = (candidate.val / res.Total) * 100;
-                // Mettre à jour la largeur et le texte
                 document.getElementById(`bar-${candidate.id}`).style.width = percentage + '%';
                 document.getElementById(`percent-${candidate.id}`).innerText = percentage.toFixed(1) + '%';
-                // REORGANISER VISUELLEMENT grâce à la propriété CSS 'order'
                 document.getElementById(`wrapper-${candidate.id}`).style.order = index;
             });
 
-            // Diagnostic dynamique intelligent basé sur les 2 premiers
+            // Sauvegarde de l'état
+            currentStateData = {
+                sliders: {
+                    fidelity: fideliteJMV,
+                    transfer: attractiviteLaurent,
+                    erosion: usureBedier,
+                    participation: participation
+                },
+                winner: scores[0].name,
+                winnerColor: scores[0].colorClass
+            };
+
             const analysisBox = document.getElementById('analysis-text');
             const premier = scores[0];
             const deuxieme = scores[1];
             
             let message = `<strong>${premier.name.toUpperCase()} EST EN TÊTE.</strong> `;
-            
             if (premier.id === 'M') {
                 message += `Le maire sortant résiste à la fragmentation. `;
                 if (deuxieme.id === 'L') message += `Fait marquant : Laurent Virapoullé a doublé son frère et s'installe comme le principal opposant.`;
-                else if (deuxieme.id === 'O') message += `Jean-Marie Virapoullé reste son adversaire direct, mais la multiplication des listes empêche la droite de le rattraper.`;
+                else if (deuxieme.id === 'O') message += `Jean-Marie Virapoullé reste son adversaire direct.`;
                 else message += `${deuxieme.name} crée la surprise en se hissant à la seconde place.`;
             } else if (premier.id === 'O') {
-                message += `Le clan Virapoullé reste uni derrière Jean-Marie, ce qui lui permet de dominer un scrutin extrêmement morcelé.`;
+                message += `Le clan Virapoullé reste uni derrière Jean-Marie, qui domine un scrutin extrêmement morcelé.`;
             } else if (premier.id === 'L') {
-                message += `Coup de tonnerre politique : Laurent Virapoullé a totalement siphonné le socle de son père et s'impose devant le maire sortant et son frère.`;
+                message += `Coup de tonnerre politique : Laurent Virapoullé a siphonné le socle de son père et s'impose.`;
             } else {
-                message += `Énorme surprise politique : ${premier.name} prend la tête d'un scrutin où les favoris historiques se sont neutralisés !`;
+                message += `Énorme surprise politique : ${premier.name} prend la tête !`;
             }
             analysisBox.innerHTML = message;
 
-            // Mise à jour du tableau explicatif DYNAMIQUE (Trié)
             let tableHtml = `
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-slate-700 text-gray-300 text-xs uppercase">
                             <th class="p-3 text-left rounded-tl-lg">Candidat</th>
-                            <th class="p-3 text-right">Base / Socle Estimé</th>
-                            <th class="p-3 text-right">Apport Indécis (Pool)</th>
+                            <th class="p-3 text-right">Base / Socle</th>
+                            <th class="p-3 text-right">Apport (Pool)</th>
                             <th class="p-3 text-right bg-indigo-900/40 text-indigo-300 rounded-tr-lg">Total Projeté</th>
                         </tr>
                     </thead>
@@ -436,10 +555,8 @@
 
             scores.forEach((cand, index) => {
                 const det = res.details[cand.id];
-                // Mise en surbrillance du premier
                 const rowClass = index === 0 ? 'bg-slate-700/60' : 'hover:bg-slate-700/30';
                 const rankIcon = index === 0 ? '🏆 ' : `${index + 1}. `;
-                
                 tableHtml += `
                     <tr class="${rowClass} transition-colors">
                         <td class="p-3 font-bold ${cand.colorClass}">${rankIcon}${cand.name}</td>
@@ -449,17 +566,142 @@
                     </tr>
                 `;
             });
-
             tableHtml += `</tbody></table>`;
             document.getElementById('recalculated-base-table').innerHTML = tableHtml;
         }
 
-        function runSimulation() {
+        // Déclarations Globales pour pouvoir être appelées depuis le HTML
+        window.runSimulation = function() {
             project2026();
         }
 
-        // Graphique Radar
-        let radarChart = null;
+        // --- SAUVEGARDE ET SYNCHRONISATION ---
+
+        window.saveCurrentScenario = async function() {
+            const scenarioName = prompt("Donnez un nom à ce scénario (Il sera visible par tous les visiteurs) :");
+            if (!scenarioName) return;
+
+            const newScenario = {
+                name: scenarioName,
+                date: new Date().toLocaleString('fr-FR'),
+                timestamp: Date.now(),
+                data: currentStateData
+            };
+
+            if (isCloudActive && currentUser) {
+                try {
+                    // Envoi vers le Cloud Public
+                    const scenariosRef = collection(db, 'artifacts', cloudAppId, 'public', 'data', 'scenarios');
+                    await addDoc(scenariosRef, newScenario);
+                    // Pas besoin de rafraîchir manuellement, le onSnapshot le fera !
+                } catch (e) {
+                    console.error("Erreur de sauvegarde cloud", e);
+                    alert("Erreur de sauvegarde dans le Cloud.");
+                }
+            } else {
+                // Fallback Local (Ancien système)
+                let history = JSON.parse(localStorage.getItem('electionScenariosV5')) || [];
+                history.push(newScenario);
+                localStorage.setItem('electionScenariosV5', JSON.stringify(history));
+                renderScenariosTable();
+            }
+        }
+
+        window.loadScenario = function(identifier) {
+            let scenario = null;
+            
+            if (isCloudActive) {
+                scenario = globalScenarios.find(s => s.id === identifier);
+            } else {
+                let history = JSON.parse(localStorage.getItem('electionScenariosV5')) || [];
+                scenario = history[identifier];
+            }
+
+            if (scenario) {
+                const s = scenario.data.sliders;
+                document.getElementById('fidelityFactor').value = s.fidelity;
+                document.getElementById('transferFactor').value = s.transfer;
+                document.getElementById('erosionFactor').value = s.erosion;
+                document.getElementById('participationFactor').value = s.participation;
+                
+                if(radarChart) {
+                    radarChart.data.datasets[0].data = [s.fidelity, s.transfer, s.erosion - 0.2, s.participation - 0.2];
+                    radarChart.update();
+                }
+                
+                runSimulation();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        window.deleteScenario = async function(identifier) {
+            if(confirm("Êtes-vous sûr de vouloir supprimer ce scénario pour tout le monde ?")) {
+                if (isCloudActive && currentUser) {
+                    try {
+                        const docRef = doc(db, 'artifacts', cloudAppId, 'public', 'data', 'scenarios', identifier);
+                        await deleteDoc(docRef);
+                    } catch(e) {
+                        console.error("Erreur de suppression cloud", e);
+                    }
+                } else {
+                    let history = JSON.parse(localStorage.getItem('electionScenariosV5')) || [];
+                    history.splice(identifier, 1);
+                    localStorage.setItem('electionScenariosV5', JSON.stringify(history));
+                    renderScenariosTable();
+                }
+            }
+        }
+
+        window.clearAllScenarios = function() {
+            if(confirm("Attention, ceci va effacer tout votre historique local de scénarios. Confirmer ?")) {
+                localStorage.removeItem('electionScenariosV5');
+                renderScenariosTable();
+            }
+        }
+
+        function renderScenariosTable() {
+            const tbody = document.getElementById('scenario-list-body');
+            let history = isCloudActive ? globalScenarios : (JSON.parse(localStorage.getItem('electionScenariosV5')) || []);
+
+            if (history.length === 0) {
+                let msg = isCloudActive 
+                    ? "Aucun scénario partagé. Soyez le premier à enregistrer votre simulation pour les autres visiteurs !"
+                    : "Aucun scénario local enregistré.";
+                tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-6 text-center text-gray-500 italic">${msg}</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            // L'historique local doit être inversé pour afficher du plus récent au plus ancien (le Cloud l'est déjà)
+            const listToRender = isCloudActive ? history : [...history].reverse();
+
+            listToRender.forEach((scenario, index) => {
+                const s = scenario.data.sliders;
+                // Si Cloud, on utilise l'ID Firestore, sinon l'index Local
+                const identifier = isCloudActive ? `'${scenario.id}'` : (history.length - 1 - index); 
+                
+                html += `
+                    <tr class="hover:bg-slate-700/50 transition-colors">
+                        <td class="px-4 py-3 font-medium text-white">
+                            ${scenario.name}
+                            <div class="text-[10px] text-gray-500 font-normal">${scenario.date}</div>
+                        </td>
+                        <td class="px-4 py-3 font-bold ${scenario.data.winnerColor}">${scenario.data.winner}</td>
+                        <td class="px-4 py-3">${Math.round(s.fidelity * 100)}%</td>
+                        <td class="px-4 py-3">${Math.round(s.transfer * 100)}%</td>
+                        <td class="px-4 py-3">${Number(s.erosion).toFixed(2)}</td>
+                        <td class="px-4 py-3">${Number(s.participation).toFixed(2)}</td>
+                        <td class="px-4 py-3 text-right space-x-2 whitespace-nowrap">
+                            <button onclick="loadScenario(${identifier})" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs py-1 px-3 rounded">Recharger</button>
+                            <button onclick="deleteScenario(${identifier})" class="text-red-400 hover:text-red-300 text-xs">✖</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        // Radar Chart Initialization
         function initChart() {
             const ctx = document.getElementById('factorImpactChart').getContext('2d');
             radarChart = new Chart(ctx, {
@@ -479,21 +721,13 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: { 
-                        r: { 
-                            suggestedMin: 0, 
-                            suggestedMax: 1.2, 
-                            ticks: { display: false },
-                            grid: { color: '#334155' },
-                            angleLines: { color: '#334155' },
-                            pointLabels: { color: '#e2e8f0', font: { size: 11, family: 'Inter' } }
-                        } 
+                        r: { suggestedMin: 0, suggestedMax: 1.2, ticks: { display: false }, grid: { color: '#334155' }, angleLines: { color: '#334155' }, pointLabels: { color: '#e2e8f0', font: { size: 11, family: 'Inter' } } } 
                     },
                     plugins: { legend: { display: false } }
                 }
             });
         }
 
-        // Mettre à jour le radar quand les sliders bougent
         document.querySelectorAll('.range-slider').forEach(slider => {
             slider.addEventListener('input', () => {
                 if(radarChart) {
@@ -508,9 +742,11 @@
             });
         });
 
+        // Démarrage
         window.onload = () => {
             initChart();
             runSimulation();
+            initCloudDatabase(); // Initialise Firebase
         };
     </script>
 </body>
