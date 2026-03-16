@@ -114,7 +114,7 @@
         <header class="header-bg text-white p-4 md:p-8 rounded-t-xl mb-6 shadow-lg flex flex-col items-center relative">
             <h1 class="text-2xl md:text-3xl font-extrabold mb-2 uppercase tracking-tighter text-center">Prédiction et Analyse V5 : Scrutin à 8 Candidats</h1>
             <p class="text-xs md:text-md font-light opacity-90 text-center mb-1">Modèle Réaliste : Dynamique complète de l'électorat</p>
-            <p class="text-[10px] md:text-xs text-indigo-200 font-medium tracking-wide mb-2 md:mb-0">Version initiale : Novembre 2026</p>
+            <p class="text-[10px] md:text-xs text-indigo-200 font-medium tracking-wide mb-2 md:mb-0">Version initiale : Novembre 2026 | Créé par <strong>Jonathan Kichenin</strong></p>
             
             <!-- Indicateur Cloud repensé pour mobile (se centre sous le texte sur mobile, absolu sur desktop) -->
             <div id="cloud-indicator" class="mt-2 md:mt-0 md:absolute md:top-4 md:right-4 bg-slate-800 text-xs px-3 py-1 rounded-full flex items-center justify-center gap-2 border border-slate-600 hidden w-max mx-auto md:w-auto">
@@ -122,6 +122,21 @@
                 <span>Cloud Connecté</span>
             </div>
         </header>
+
+        <!-- NOUVELLE SECTION : EXPLICATION ET DÉMARCHE -->
+        <section class="card mb-6 border-t-4 border-blue-500 bg-slate-800/50">
+            <h2 class="text-lg md:text-xl font-bold text-blue-400 mb-3 flex items-center gap-2">
+                <span>🎯</span> Objectif et Démarche Mathématique
+            </h2>
+            <div class="text-xs md:text-sm text-gray-300 space-y-3 leading-relaxed">
+                <p>
+                    <strong class="text-gray-100">L'Objectif :</strong> Cet exercice interactif vise à objectiver les dynamiques électorales complexes de la commune de Saint-André. Plutôt que de se fier à de simples sondages, ce tableau de bord permet d'expérimenter et de visualiser comment de légères variations de comportements (mobilisation, fidélité d'un clan, captation des indécis) peuvent bouleverser l'issue d'un scrutin fragmenté à 8 candidats.
+                </p>
+                <p>
+                    <strong class="text-gray-100">La Démarche (Algorithme) :</strong> Conçu par <strong>Jonathan Kichenin</strong>, le modèle repose sur un algorithme déterministe de flux de votes. Il s'appuie sur les socles électoraux historiques (2014-2020) qu'il soumet à des contraintes actuelles. Il applique un facteur de volatilité (usure ou prime) au maire sortant, scinde mathématiquement les bases familiales selon vos réglages, et redistribue un "pool" de voix flottantes (les indécis) selon des coefficients d'attractivité. L'équation finale ajuste proportionnellement tous les résultats en fonction de la participation globale ($\pi$) pour garantir une projection exacte à 100% des suffrages exprimés.
+                </p>
+            </div>
+        </section>
 
         <section class="card mb-6 border-l-4 border-amber-500">
             <h2 class="text-lg md:text-xl font-bold text-gray-100 mb-4 pb-2 border-b border-slate-700 uppercase tracking-wide">I. Mécanique du Calcul</h2>
@@ -331,6 +346,12 @@
                 </table>
             </div>
         </section>
+
+        <!-- FOOTER -->
+        <footer class="text-center text-xs text-gray-500 pt-6 mt-8 border-t border-slate-700">
+            <p>&copy; 2026 Prédiction et Analyse Électorale V5.</p>
+            <p class="mt-1">Conçu et développé par <strong class="text-gray-400">Jonathan Kichenin</strong>. Tous droits réservés.</p>
+        </footer>
 
     </div>
 
