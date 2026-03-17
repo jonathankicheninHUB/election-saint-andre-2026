@@ -22,11 +22,11 @@
             background-color: #1e293b; 
             border-radius: 12px;
             border: 1px solid #334155;
-            padding: 1rem; /* Padding réduit sur mobile */
+            padding: 1rem;
             transition: all 0.3s ease;
         }
         @media (min-width: 768px) {
-            .card { padding: 1.5rem; } /* Padding normal sur tablette/desktop */
+            .card { padding: 1.5rem; } 
         }
         .card:hover {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
@@ -35,7 +35,7 @@
             background-color: #4f46e5; 
         }
         .kpi-value {
-            font-size: 2rem; /* Légèrement réduit pour mobile */
+            font-size: 2rem; 
             font-weight: 800;
             line-height: 1;
         }
@@ -60,7 +60,7 @@
         }
         .range-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 20px; /* Pouce plus grand pour le tactile mobile */
+            width: 20px; 
             height: 20px;
             border-radius: 50%;
             background: #6366f1;
@@ -76,15 +76,15 @@
             box-shadow: 0 0 5px rgba(99, 102, 241, 0.6);
         }
         
-        /* Couleurs des 8 Candidats */
-        .result-bar-M { background-color: #10b981; } /* Vert Bédier */
-        .result-bar-O { background-color: #ef4444; } /* Rouge J.M. Virapoullé */
-        .result-bar-L { background-color: #f59e0b; } /* Orange Laurent Virapoullé */
-        .result-bar-F { background-color: #a855f7; } /* Violet Fruteau */
-        .result-bar-SV { background-color: #ec4899; } /* Rose Settama-Vidon */
-        .result-bar-SOU { background-color: #14b8a6; } /* Teal Soupramanien */
-        .result-bar-SAU { background-color: #06b6d4; } /* Cyan Sautron */
-        .result-bar-C { background-color: #84cc16; } /* Lime Cotaya */
+        /* Couleurs des Candidats */
+        .result-bar-M { background-color: #10b981; } 
+        .result-bar-O { background-color: #ef4444; } 
+        .result-bar-L { background-color: #f59e0b; } 
+        .result-bar-F { background-color: #a855f7; } 
+        .result-bar-SV { background-color: #ec4899; } 
+        .result-bar-SOU { background-color: #14b8a6; } 
+        .result-bar-SAU { background-color: #06b6d4; } 
+        .result-bar-C { background-color: #84cc16; } 
 
         .text-c-M { color: #10b981; }
         .text-c-O { color: #ef4444; }
@@ -95,7 +95,6 @@
         .text-c-SAU { color: #06b6d4; }
         .text-c-C { color: #84cc16; }
 
-        /* Animation pour signaler la sauvegarde cloud */
         @keyframes pulse-green {
             0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
             70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
@@ -110,248 +109,373 @@
 
     <div class="w-full max-w-7xl container-bg p-4 md:p-10">
         
-        <!-- HEADER RESPONSIVE -->
+        <!-- HEADER -->
         <header class="header-bg text-white p-4 md:p-8 rounded-t-xl mb-6 shadow-lg flex flex-col items-center relative">
             <h1 class="text-2xl md:text-3xl font-extrabold mb-2 uppercase tracking-tighter text-center">Prédiction et Analyse V5 : Scrutin à 8 Candidats</h1>
             <p class="text-xs md:text-md font-light opacity-90 text-center mb-1">Modèle Réaliste : Dynamique complète de l'électorat</p>
             <p class="text-[10px] md:text-xs text-indigo-200 font-medium tracking-wide mb-2 md:mb-0">Version initiale : Novembre 2025 | Créé par <strong>Jonathan Kichenin</strong></p>
             
-            <!-- Indicateur Cloud repensé pour mobile (se centre sous le texte sur mobile, absolu sur desktop) -->
             <div id="cloud-indicator" class="mt-2 md:mt-0 md:absolute md:top-4 md:right-4 bg-slate-800 text-xs px-3 py-1 rounded-full flex items-center justify-center gap-2 border border-slate-600 hidden w-max mx-auto md:w-auto">
                 <div class="w-2 h-2 rounded-full bg-green-500 cloud-active"></div>
                 <span>Cloud Connecté</span>
             </div>
         </header>
 
-        <!-- NOUVELLE SECTION : EXPLICATION ET DÉMARCHE -->
-        <section class="card mb-6 border-t-4 border-blue-500 bg-slate-800/50">
-            <h2 class="text-lg md:text-xl font-bold text-blue-400 mb-3 flex items-center gap-2">
-                <span>🎯</span> Objectif et Démarche Mathématique
-            </h2>
-            <div class="text-xs md:text-sm text-gray-300 space-y-3 leading-relaxed">
-                <p>
-                    <strong class="text-gray-100">L'Objectif :</strong> Cet exercice interactif vise à objectiver les dynamiques électorales complexes de la commune de Saint-André. Plutôt que de se fier à de simples sondages, ce tableau de bord permet d'expérimenter et de visualiser comment de légères variations de comportements (mobilisation, fidélité d'un clan, captation des indécis) peuvent bouleverser l'issue d'un scrutin fragmenté à 8 candidats.
-                </p>
-                <p>
-                    <strong class="text-gray-100">La Démarche (Algorithme) :</strong> Conçu par <strong>Jonathan Kichenin</strong>, le modèle repose sur un algorithme déterministe de flux de votes. Il s'appuie sur les socles électoraux historiques (2014-2020) qu'il soumet à des contraintes actuelles. Il applique un facteur de volatilité (usure ou prime) au maire sortant, scinde mathématiquement les bases familiales selon vos réglages, et redistribue un "pool" de voix flottantes (les indécis) selon des coefficients d'attractivité. L'équation finale ajuste proportionnellement tous les résultats en fonction de la participation globale ($\pi$) pour garantir une projection exacte à 100% des suffrages exprimés.
-                </p>
-            </div>
-        </section>
+        <!-- NAVIGATION DES ONGLETS -->
+        <div class="flex justify-center space-x-2 md:space-x-4 mb-8 border-b border-slate-700 pb-4">
+            <button id="btn-tab-1" onclick="switchTab(1)" class="px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-indigo-600 text-white shadow-lg">1er Tour (Simulation)</button>
+            <button id="btn-tab-2" onclick="switchTab(2)" class="px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600">2nd Tour (Scénario Projeté)</button>
+        </div>
 
-        <section class="card mb-6 border-l-4 border-amber-500">
-            <h2 class="text-lg md:text-xl font-bold text-gray-100 mb-4 pb-2 border-b border-slate-700 uppercase tracking-wide">I. Mécanique du Calcul</h2>
-            <div id="recalculated-base-table" class="overflow-x-auto w-full pb-2">
-                <!-- Le tableau sera généré ici dynamiquement -->
-            </div>
-            <p class="mt-4 text-xs md:text-sm text-gray-400 italic">
-                *Le tableau se trie automatiquement en temps réel. Les voix sont partagées entre les bases historiques, la scission familiale, et le pool d'indécis. (Glissez vers la droite sur mobile pour voir tout le tableau).
-            </p>
-        </section>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 items-stretch">
+        <!-- ========================================== -->
+        <!-- ONGLET 1 : PREMIER TOUR (Le Tableau de bord) -->
+        <!-- ========================================== -->
+        <div id="tab-1" class="space-y-6">
             
-            <div class="card lg:col-span-2">
-                 <h3 class="text-lg md:text-xl font-bold text-gray-100 mb-6 pb-2 border-b border-slate-700 uppercase tracking-wide">II. Simulation Interactive</h3>
-                 
-                 <!-- BLOC RÉGLETTES 1 -->
-                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 md:mb-8 bg-indigo-900/40 p-4 rounded-xl border border-indigo-900/60">
-                    <div>
-                        <label for="fidelityFactor" class="block text-xs md:text-sm font-bold text-red-400 mb-2">1. Fidélité au leader (J.M. Virapoullé)</label>
-                        <!-- Valeur par défaut modifiée à 0.49 -->
-                        <input type="range" id="fidelityFactor" value="0.49" min="0.10" max="0.90" step="0.01" class="range-slider" oninput="runSimulation()">
-                        <div class="flex justify-between text-[10px] md:text-xs text-indigo-400 mt-1">
-                            <span>Rejet (10%)</span>
-                            <!-- Affichage par défaut modifié à 49% -->
-                            <span id="displayLambda" class="font-bold text-base md:text-lg text-white">49%</span>
-                            <span>Uni (90%)</span>
+            <section class="card border-t-4 border-blue-500 bg-slate-800/50">
+                <h2 class="text-lg md:text-xl font-bold text-blue-400 mb-3 flex items-center gap-2">
+                    <span>🎯</span> Objectif et Démarche Mathématique
+                </h2>
+                <div class="text-xs md:text-sm text-gray-300 space-y-3 leading-relaxed">
+                    <p>
+                        <strong class="text-gray-100">L'Objectif :</strong> Cet exercice interactif vise à objectiver les dynamiques électorales complexes de la commune de Saint-André. Plutôt que de se fier à de simples sondages, ce tableau de bord permet d'expérimenter et de visualiser comment de légères variations de comportements (mobilisation, fidélité d'un clan, captation des indécis) peuvent bouleverser l'issue d'un scrutin fragmenté à 8 candidats.
+                    </p>
+                    <p>
+                        <strong class="text-gray-100">La Démarche (Algorithme) :</strong> Conçu par <strong>Jonathan Kichenin</strong>, le modèle repose sur un algorithme déterministe de flux de votes. Il s'appuie sur les socles électoraux historiques (2014-2020) qu'il soumet à des contraintes actuelles. Il applique un facteur de volatilité (usure ou prime) au maire sortant, scinde mathématiquement les bases familiales selon vos réglages, et redistribue un "pool" de voix flottantes (les indécis) selon des coefficients d'attractivité. L'équation finale ajuste proportionnellement tous les résultats en fonction de la participation globale ($\pi$) pour garantir une projection exacte à 100% des suffrages exprimés.
+                    </p>
+                </div>
+            </section>
+
+            <section class="card border-l-4 border-amber-500">
+                <h2 class="text-lg md:text-xl font-bold text-gray-100 mb-4 pb-2 border-b border-slate-700 uppercase tracking-wide">I. Mécanique du Calcul</h2>
+                <div id="recalculated-base-table" class="overflow-x-auto w-full pb-2">
+                    <!-- Le tableau sera généré ici dynamiquement -->
+                </div>
+                <p class="mt-4 text-xs md:text-sm text-gray-400 italic">
+                    *Le tableau se trie automatiquement en temps réel. Les voix sont partagées entre les bases historiques, la scission familiale, et le pool d'indécis.
+                </p>
+            </section>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+                <div class="card lg:col-span-2">
+                     <h3 class="text-lg md:text-xl font-bold text-gray-100 mb-6 pb-2 border-b border-slate-700 uppercase tracking-wide">II. Simulation Interactive</h3>
+                     
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 md:mb-8 bg-indigo-900/40 p-4 rounded-xl border border-indigo-900/60">
+                        <div>
+                            <label for="fidelityFactor" class="block text-xs md:text-sm font-bold text-red-400 mb-2">1. Fidélité au leader (J.M. Virapoullé)</label>
+                            <input type="range" id="fidelityFactor" value="0.49" min="0.10" max="0.90" step="0.01" class="range-slider" oninput="runSimulation()">
+                            <div class="flex justify-between text-[10px] md:text-xs text-indigo-400 mt-1">
+                                <span>Rejet (10%)</span>
+                                <span id="displayLambda" class="font-bold text-base md:text-lg text-white">49%</span>
+                                <span>Uni (90%)</span>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                         <label for="transferFactor" class="block text-xs md:text-sm font-bold text-amber-500 mb-2">2. Attractivité de Laurent (Pool)</label>
-                         <!-- Valeur par défaut modifiée à 0.06 -->
-                         <input type="range" id="transferFactor" value="0.06" min="0" max="0.80" step="0.01" class="range-slider" oninput="runSimulation()">
-                         <div class="flex justify-between text-[10px] md:text-xs text-indigo-400 mt-1">
-                             <span>Nulle (0%)</span>
-                             <!-- Affichage par défaut modifié à 6% -->
-                             <span id="displayTau" class="font-bold text-base md:text-lg text-white">6%</span>
-                             <span>Forte (80%)</span>
+                        <div>
+                             <label for="transferFactor" class="block text-xs md:text-sm font-bold text-amber-500 mb-2">2. Attractivité de Laurent (Pool)</label>
+                             <input type="range" id="transferFactor" value="0.06" min="0" max="0.80" step="0.01" class="range-slider" oninput="runSimulation()">
+                             <div class="flex justify-between text-[10px] md:text-xs text-indigo-400 mt-1">
+                                 <span>Nulle (0%)</span>
+                                 <span id="displayTau" class="font-bold text-base md:text-lg text-white">6%</span>
+                                 <span>Forte (80%)</span>
+                             </div>
+                        </div>
+                     </div>
+
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 md:mb-8 px-0 md:px-4">
+                        <div>
+                            <label for="erosionFactor" class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Usure/Prime Sortant : <span class="font-bold text-green-400" id="displayEpsilon">1.05</span></label>
+                            <input type="range" id="erosionFactor" value="1.05" min="0.7" max="1.3" step="0.01" class="range-slider" oninput="runSimulation()">
+                        </div>
+                        <div>
+                            <label for="participationFactor" class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Participation Globale : <span class="font-bold text-blue-400" id="displayPi">1.05</span></label>
+                            <input type="range" id="participationFactor" value="1.05" min="0.8" max="1.2" step="0.01" class="range-slider" oninput="runSimulation()">
+                        </div>
+                     </div>
+
+                     <div class="flex justify-center mb-6 md:mb-8 w-full">
+                         <button onclick="saveCurrentScenario()" class="w-full md:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 md:py-2 px-4 md:px-6 rounded-xl md:rounded-full shadow-lg transition-transform transform hover:scale-105 border border-indigo-400 flex items-center justify-center gap-2 text-sm md:text-base">
+                             <span>💾</span> Enregistrer et Partager le Scénario
+                         </button>
+                     </div>
+                     
+                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center mb-6">
+                          <div class="p-3 bg-slate-700 rounded-lg">
+                             <p class="text-[10px] md:text-xs text-gray-400 uppercase font-semibold">Votants Totaux</p>
+                             <div id="kpi-total-votes" class="kpi-value text-white mt-1">0</div>
+                          </div>
+                          <div class="p-3 bg-slate-800 border-2 border-slate-700 rounded-lg">
+                             <p class="text-[10px] md:text-xs text-gray-400 uppercase font-semibold">Tête vs Second</p>
+                             <div id="kpi-vote-gap" class="kpi-value text-white mt-1">0</div>
+                          </div>
+                          <div class="p-3 bg-slate-700 rounded-lg">
+                             <p class="text-[10px] md:text-xs text-gray-400 uppercase font-semibold">Seuil (50%)</p>
+                             <div id="kpi-seuil" class="kpi-value text-gray-400 mt-1">0</div>
+                          </div>
+                     </div>
+                     
+                     <div class="pt-4 flex flex-col gap-3" id="bars-container">
+                         <!-- Bédier -->
+                         <div id="wrapper-M">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                                <span class="text-c-M truncate">Joé Bédier (Sortant)</span>
+                                <span id="percent-M" class="font-extrabold text-c-M whitespace-nowrap">0.00 %</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                                <div id="bar-M" class="h-3 rounded-full result-bar-M transition-all duration-500" style="width: 0%;"></div>
+                            </div>
                          </div>
-                    </div>
-                 </div>
+                         <!-- JM Virapoullé -->
+                         <div id="wrapper-O">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                                <span class="text-c-O truncate">J.M. Virapoullé</span>
+                                <span id="percent-O" class="font-extrabold text-c-O whitespace-nowrap">0.00 %</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                                <div id="bar-O" class="h-3 rounded-full result-bar-O transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+                         </div>
+                         <!-- Laurent Virapoullé -->
+                         <div id="wrapper-L">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                                <span class="text-c-L truncate">Laurent Virapoullé</span>
+                                <span id="percent-L" class="font-extrabold text-c-L whitespace-nowrap">0.00 %</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                                <div id="bar-L" class="h-3 rounded-full result-bar-L transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+                         </div>
+                         <!-- Fruteau -->
+                         <div id="wrapper-F">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                                <span class="text-c-F truncate">Eric Fruteau</span>
+                                <span id="percent-F" class="font-extrabold text-c-F whitespace-nowrap">0.00 %</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                                <div id="bar-F" class="h-3 rounded-full result-bar-F transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+                         </div>
+                         <!-- Settama-Vidon -->
+                         <div id="wrapper-SV">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                                <span class="text-c-SV truncate">Settama-Vidon</span>
+                                <span id="percent-SV" class="font-extrabold text-c-SV whitespace-nowrap">0.00 %</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                                <div id="bar-SV" class="h-3 rounded-full result-bar-SV transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+                         </div>
+                         <!-- Soupramanien -->
+                         <div id="wrapper-SOU">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                                <span class="text-c-SOU truncate">Soupramanien</span>
+                                <span id="percent-SOU" class="font-extrabold text-c-SOU whitespace-nowrap">0.00 %</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                                <div id="bar-SOU" class="h-3 rounded-full result-bar-SOU transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+                         </div>
+                         <!-- Sautron -->
+                         <div id="wrapper-SAU">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                                <span class="text-c-SAU truncate">Sautron</span>
+                                <span id="percent-SAU" class="font-extrabold text-c-SAU whitespace-nowrap">0.00 %</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                                <div id="bar-SAU" class="h-3 rounded-full result-bar-SAU transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+                         </div>
+                         <!-- Cotaya -->
+                         <div id="wrapper-C">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                                <span class="text-c-C truncate">Cotaya</span>
+                                <span id="percent-C" class="font-extrabold text-c-C whitespace-nowrap">0.00 %</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                                <div id="bar-C" class="h-3 rounded-full result-bar-C transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+                         </div>
+                     </div>
 
-                 <!-- BLOC RÉGLETTES 2 -->
-                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 md:mb-8 px-0 md:px-4">
-                    <div>
-                        <label for="erosionFactor" class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Usure/Prime Sortant : <span class="font-bold text-green-400" id="displayEpsilon">1.05</span></label>
-                        <!-- Valeur par défaut modifiée à 1.05 -->
-                        <input type="range" id="erosionFactor" value="1.05" min="0.7" max="1.3" step="0.01" class="range-slider" oninput="runSimulation()">
-                    </div>
-                    <div>
-                        <label for="participationFactor" class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Participation Globale : <span class="font-bold text-blue-400" id="displayPi">1.05</span></label>
-                        <!-- Valeur par défaut modifiée à 1.05 -->
-                        <input type="range" id="participationFactor" value="1.05" min="0.8" max="1.2" step="0.01" class="range-slider" oninput="runSimulation()">
-                    </div>
-                 </div>
+                     <div class="mt-6 p-4 rounded-lg border-l-4 border-indigo-500 bg-indigo-900/40">
+                         <p class="text-xs md:text-sm font-bold text-indigo-300 mb-1">Diagnostic du Scrutin :</p>
+                         <p id="analysis-text" class="text-xs md:text-sm text-gray-200 leading-relaxed"></p>
+                     </div>
+                </div>
 
-                 <!-- BOUTON DE SAUVEGARDE CLOUD (Pleine largeur sur mobile) -->
-                 <div class="flex justify-center mb-6 md:mb-8 w-full">
-                     <button onclick="saveCurrentScenario()" class="w-full md:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 md:py-2 px-4 md:px-6 rounded-xl md:rounded-full shadow-lg transition-transform transform hover:scale-105 border border-indigo-400 flex items-center justify-center gap-2 text-sm md:text-base">
-                         <span>💾</span> Enregistrer et Partager le Scénario
-                     </button>
-                 </div>
-                 
-                 <!-- KPIS RESPONSIVE (1 colonne sur mobile, 3 sur tablette/desktop) -->
-                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center mb-6">
-                      <div class="p-3 bg-slate-700 rounded-lg">
-                         <p class="text-[10px] md:text-xs text-gray-400 uppercase font-semibold">Votants Totaux</p>
-                         <div id="kpi-total-votes" class="kpi-value text-white mt-1">0</div>
-                      </div>
-                      <div class="p-3 bg-slate-800 border-2 border-slate-700 rounded-lg">
-                         <p class="text-[10px] md:text-xs text-gray-400 uppercase font-semibold">Tête vs Second</p>
-                         <div id="kpi-vote-gap" class="kpi-value text-white mt-1">0</div>
-                      </div>
-                      <div class="p-3 bg-slate-700 rounded-lg">
-                         <p class="text-[10px] md:text-xs text-gray-400 uppercase font-semibold">Seuil (50%)</p>
-                         <div id="kpi-seuil" class="kpi-value text-gray-400 mt-1">0</div>
-                      </div>
-                 </div>
-                 
-                 <!-- ESPACE DES BARRES DE CANDIDATS -->
-                 <div class="pt-4 flex flex-col gap-3" id="bars-container">
-                     <!-- Joé Bédier -->
-                     <div id="wrapper-M">
-                        <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
-                            <span class="text-c-M truncate">Joé Bédier (Sortant)</span>
-                            <span id="percent-M" class="font-extrabold text-c-M whitespace-nowrap">0.00 %</span>
-                        </div>
-                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
-                            <div id="bar-M" class="h-3 rounded-full result-bar-M transition-all duration-500" style="width: 0%;"></div>
-                        </div>
-                     </div>
-                     <!-- Jean-Marie Virapoullé -->
-                     <div id="wrapper-O">
-                        <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
-                            <span class="text-c-O truncate">J.M. Virapoullé</span>
-                            <span id="percent-O" class="font-extrabold text-c-O whitespace-nowrap">0.00 %</span>
-                        </div>
-                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
-                            <div id="bar-O" class="h-3 rounded-full result-bar-O transition-all duration-500" style="width: 0%;"></div>
-                        </div>
-                     </div>
-                     <!-- Laurent Virapoullé -->
-                     <div id="wrapper-L">
-                        <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
-                            <span class="text-c-L truncate">Laurent Virapoullé</span>
-                            <span id="percent-L" class="font-extrabold text-c-L whitespace-nowrap">0.00 %</span>
-                        </div>
-                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
-                            <div id="bar-L" class="h-3 rounded-full result-bar-L transition-all duration-500" style="width: 0%;"></div>
-                        </div>
-                     </div>
-                     <!-- Eric Fruteau -->
-                     <div id="wrapper-F">
-                        <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
-                            <span class="text-c-F truncate">Eric Fruteau</span>
-                            <span id="percent-F" class="font-extrabold text-c-F whitespace-nowrap">0.00 %</span>
-                        </div>
-                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
-                            <div id="bar-F" class="h-3 rounded-full result-bar-F transition-all duration-500" style="width: 0%;"></div>
-                        </div>
-                     </div>
-                     <!-- Settama-Vidon -->
-                     <div id="wrapper-SV">
-                        <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
-                            <span class="text-c-SV truncate">Settama-Vidon</span>
-                            <span id="percent-SV" class="font-extrabold text-c-SV whitespace-nowrap">0.00 %</span>
-                        </div>
-                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
-                            <div id="bar-SV" class="h-3 rounded-full result-bar-SV transition-all duration-500" style="width: 0%;"></div>
-                        </div>
-                     </div>
-                     <!-- Soupramanien -->
-                     <div id="wrapper-SOU">
-                        <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
-                            <span class="text-c-SOU truncate">Soupramanien</span>
-                            <span id="percent-SOU" class="font-extrabold text-c-SOU whitespace-nowrap">0.00 %</span>
-                        </div>
-                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
-                            <div id="bar-SOU" class="h-3 rounded-full result-bar-SOU transition-all duration-500" style="width: 0%;"></div>
-                        </div>
-                     </div>
-                     <!-- Sautron -->
-                     <div id="wrapper-SAU">
-                        <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
-                            <span class="text-c-SAU truncate">Sautron</span>
-                            <span id="percent-SAU" class="font-extrabold text-c-SAU whitespace-nowrap">0.00 %</span>
-                        </div>
-                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
-                            <div id="bar-SAU" class="h-3 rounded-full result-bar-SAU transition-all duration-500" style="width: 0%;"></div>
-                        </div>
-                     </div>
-                     <!-- Cotaya -->
-                     <div id="wrapper-C">
-                        <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
-                            <span class="text-c-C truncate">Cotaya</span>
-                            <span id="percent-C" class="font-extrabold text-c-C whitespace-nowrap">0.00 %</span>
-                        </div>
-                        <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
-                            <div id="bar-C" class="h-3 rounded-full result-bar-C transition-all duration-500" style="width: 0%;"></div>
-                        </div>
-                     </div>
-                 </div>
-
-                 <div class="mt-6 p-4 rounded-lg border-l-4 border-indigo-500 bg-indigo-900/40">
-                     <p class="text-xs md:text-sm font-bold text-indigo-300 mb-1">Diagnostic du Scrutin :</p>
-                     <p id="analysis-text" class="text-xs md:text-sm text-gray-200 leading-relaxed"></p>
-                 </div>
+                <!-- RADAR -->
+                <div class="card lg:col-span-1 flex flex-col">
+                    <h3 class="text-lg md:text-xl font-bold text-gray-100 mb-4 pb-2 border-b border-slate-700 uppercase tracking-wide">III. Radar Stratégique</h3>
+                    <p class="text-xs md:text-sm text-gray-400 mb-4">
+                        Forces en présence modifiant l'équilibre politique.
+                    </p>
+                    <div class="chart-container" style="min-height: 250px;">
+                        <canvas id="factorImpactChart"></canvas>
+                    </div>
+                </div>
             </div>
 
-            <!-- RADAR -->
-            <div class="card lg:col-span-1 flex flex-col">
-                <h3 class="text-lg md:text-xl font-bold text-gray-100 mb-4 pb-2 border-b border-slate-700 uppercase tracking-wide">III. Radar Stratégique</h3>
-                <p class="text-xs md:text-sm text-gray-400 mb-4">
-                    Forces en présence modifiant l'équilibre politique.
-                </p>
-                <div class="chart-container" style="min-height: 250px;">
-                    <canvas id="factorImpactChart"></canvas>
+            <!-- SECTION : HISTORIQUE CLOUD -->
+            <section class="card border-t-4 border-teal-500 mt-4 md:mt-8">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 pb-2 border-b border-slate-700 gap-2">
+                    <h2 class="text-lg md:text-xl font-bold text-gray-100 uppercase tracking-wide">IV. Scénarios Partagés</h2>
+                    <button onclick="clearAllScenarios()" class="text-xs text-red-400 hover:text-red-300 underline hidden" id="btn-clear-local">Effacer l'historique local</button>
+                </div>
+                
+                <div class="overflow-x-auto w-full pb-2">
+                    <table class="min-w-full text-xs md:text-sm text-left">
+                        <thead class="text-gray-400 uppercase bg-slate-800">
+                            <tr>
+                                <th class="px-3 py-3 rounded-tl-lg whitespace-nowrap">Nom du Scénario</th>
+                                <th class="px-3 py-3 whitespace-nowrap">Vainqueur</th>
+                                <th class="px-3 py-3 whitespace-nowrap">Fidélité (JMV)</th>
+                                <th class="px-3 py-3 whitespace-nowrap">Attract. (Lau)</th>
+                                <th class="px-3 py-3 whitespace-nowrap">Usure Bédier</th>
+                                <th class="px-3 py-3 whitespace-nowrap">Particip.</th>
+                                <th class="px-3 py-3 text-right rounded-tr-lg whitespace-nowrap">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scenario-list-body" class="divide-y divide-slate-700">
+                            <tr>
+                                <td colspan="7" class="px-4 py-6 text-center text-gray-500 italic">Chargement des scénarios partagés...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ONGLET 2 : SECOND TOUR (Nouveau Scénario) -->
+        <!-- ========================================== -->
+        <div id="tab-2" class="hidden space-y-6">
+            
+            <!-- Hypotheses Section -->
+            <div class="card border-t-4 border-purple-500">
+                <h2 class="text-lg md:text-xl font-bold mb-4 flex items-center text-purple-400">
+                    <svg class="w-5 h-5 md:w-6 md:h-6 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                    Les hypothèses de report (Fusion à droite et retraits sans consigne)
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs md:text-sm">
+                    <!-- JM Virapoullé -->
+                    <div class="bg-blue-900/20 p-4 rounded-lg border border-blue-800">
+                        <strong class="block text-blue-400 mb-1">JM. Virapoullé (4 516)</strong>
+                        <p class="text-gray-300 mb-2">Rejoint L. Virapoullé.</p>
+                        <ul class="list-disc list-inside text-gray-400">
+                            <li>85% vers L. Virapoullé</li>
+                            <li>15% vers Abstention</li>
+                        </ul>
+                    </div>
+                    <!-- Fruteau -->
+                    <div class="bg-red-900/20 p-4 rounded-lg border border-red-800">
+                        <strong class="block text-red-400 mb-1">E. Fruteau (3 580)</strong>
+                        <p class="text-gray-300 mb-2">Se retire, sans consigne.</p>
+                        <ul class="list-disc list-inside text-gray-400">
+                            <li>45% vers J. Bédier</li>
+                            <li>10% vers L. Virapoullé</li>
+                            <li>45% vers Abstention</li>
+                        </ul>
+                    </div>
+                    <!-- Soupramanien -->
+                    <div class="bg-teal-900/20 p-4 rounded-lg border border-teal-800">
+                        <strong class="block text-teal-400 mb-1">S. Soupramanien (909)</strong>
+                        <p class="text-gray-300 mb-2">Se retire, sans consigne.</p>
+                        <ul class="list-disc list-inside text-gray-400">
+                            <li>50% vers L. Virapoullé</li>
+                            <li>50% vers Abstention</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="text-[10px] md:text-xs text-gray-500 mt-4 italic">* Autres petites listes (1474 voix) estimées à 30% Bédier, 30% Laurent, 40% Abstention.</p>
+            </div>
+
+            <!-- Projected Results Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                <!-- Final Score Chart -->
+                <div class="card">
+                    <h2 class="text-lg md:text-xl font-bold mb-1 flex items-center text-gray-100">
+                        <span class="w-1.5 h-5 bg-green-500 rounded mr-2"></span> Résultat Projeté
+                    </h2>
+                    <p class="text-xs md:text-sm text-gray-400 mb-4">Victoire estimée de la liste fusionnée.</p>
+                    <div class="relative w-full h-64 md:h-[350px]">
+                        <canvas id="projectedResultsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Composition Chart -->
+                <div class="card">
+                    <h2 class="text-lg md:text-xl font-bold mb-1 flex items-center text-gray-100">
+                        <span class="w-1.5 h-5 bg-purple-500 rounded mr-2"></span> Composition des votes
+                    </h2>
+                    <p class="text-xs md:text-sm text-gray-400 mb-4">Origine des voix du 2nd tour</p>
+                    <div class="relative w-full h-64 md:h-[350px]">
+                        <canvas id="compositionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Calculation Table -->
+            <div class="card p-0 overflow-hidden border-t-4 border-slate-600">
+                <div class="p-4 md:p-6 border-b border-slate-700 bg-slate-800/50">
+                    <h2 class="text-lg md:text-xl font-bold text-gray-100">Détail des reports</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[600px]">
+                        <thead>
+                            <tr class="text-[10px] md:text-xs uppercase text-gray-400 bg-slate-800 border-b border-slate-700">
+                                <th class="px-3 py-3 md:px-6 md:py-4 font-bold">Provenance</th>
+                                <th class="px-3 py-3 md:px-6 md:py-4 font-bold text-center">Vers J. Bédier</th>
+                                <th class="px-3 py-3 md:px-6 md:py-4 font-bold text-center">Vers L. Virapoullé</th>
+                                <th class="px-3 py-3 md:px-6 md:py-4 font-bold text-center text-gray-500">Abstention</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700 text-xs md:text-sm text-gray-200">
+                            <tr class="hover:bg-slate-700/50 transition-colors">
+                                <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Base J. Bédier (6 516)</td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-green-400">+ 6 516</td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">-</td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/50 transition-colors">
+                                <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Base L. Virapoullé (4 712)</td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-amber-500">+ 4 712</td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">-</td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/50 bg-blue-900/10 transition-colors">
+                                <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report JM. Virapoullé</td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 3 838 <span class="block text-[10px] text-gray-500">(85%)</span></td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 678 <span class="block text-[10px]">(15%)</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/50 bg-red-900/10 transition-colors">
+                                <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report E. Fruteau</td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center text-green-400">+ 1 611 <span class="block text-[10px] text-gray-500">(45%)</span></td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 358 <span class="block text-[10px] text-gray-500">(10%)</span></td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 1 611 <span class="block text-[10px]">(45%)</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/50 bg-teal-900/10 transition-colors">
+                                <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report S. Soupramanien</td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 454 <span class="block text-[10px] text-gray-500">(50%)</span></td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 455 <span class="block text-[10px]">(50%)</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/50 transition-colors">
+                                <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report Autres listes</td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center text-green-400">+ 442 <span class="block text-[10px] text-gray-500">(30%)</span></td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 442 <span class="block text-[10px] text-gray-500">(30%)</span></td>
+                                <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 590 <span class="block text-[10px]">(40%)</span></td>
+                            </tr>
+                            <tr class="bg-slate-800 font-bold text-sm md:text-lg">
+                                <td class="px-3 py-4 md:px-6 md:py-4 text-white">TOTAL PROJETÉ</td>
+                                <td class="px-3 py-4 md:px-6 md:py-4 text-center text-green-400">8 569 voix</td>
+                                <td class="px-3 py-4 md:px-6 md:py-4 text-center text-amber-500">9 804 voix</td>
+                                <td class="px-3 py-4 md:px-6 md:py-4 text-center text-gray-500 whitespace-nowrap">+ 3 334 abs.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-
-        <!-- SECTION : HISTORIQUE DES SCÉNARIOS CLOUD -->
-        <section class="card mb-6 border-t-4 border-teal-500 mt-4 md:mt-8">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 pb-2 border-b border-slate-700 gap-2">
-                <h2 class="text-lg md:text-xl font-bold text-gray-100 uppercase tracking-wide">IV. Scénarios Partagés</h2>
-                <button onclick="clearAllScenarios()" class="text-xs text-red-400 hover:text-red-300 underline hidden" id="btn-clear-local">Effacer l'historique local</button>
-            </div>
-            
-            <div class="overflow-x-auto w-full pb-2">
-                <table class="min-w-full text-xs md:text-sm text-left">
-                    <thead class="text-gray-400 uppercase bg-slate-800">
-                        <tr>
-                            <th class="px-3 py-3 rounded-tl-lg whitespace-nowrap">Nom du Scénario</th>
-                            <th class="px-3 py-3 whitespace-nowrap">Vainqueur</th>
-                            <th class="px-3 py-3 whitespace-nowrap">Fidélité (JMV)</th>
-                            <th class="px-3 py-3 whitespace-nowrap">Attract. (Laurent)</th>
-                            <th class="px-3 py-3 whitespace-nowrap">Usure/Prime Bédier</th>
-                            <th class="px-3 py-3 whitespace-nowrap">Particip.</th>
-                            <th class="px-3 py-3 text-right rounded-tr-lg whitespace-nowrap">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="scenario-list-body" class="divide-y divide-slate-700">
-                        <tr>
-                            <td colspan="7" class="px-4 py-6 text-center text-gray-500 italic">Chargement des scénarios partagés...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- FOOTER -->
-        <footer class="text-center text-xs text-gray-500 pt-6 mt-8 border-t border-slate-700">
-            <p>&copy; 2026 Prédiction et Analyse Électorale V5.</p>
-            <p class="mt-1">Conçu et développé par <strong class="text-gray-400">Jonathan Kichenin</strong>. Tous droits réservés.</p>
-        </footer>
 
     </div>
 
@@ -361,7 +485,34 @@
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- MOTEUR DE CALCUL RÉALISTE (8 CANDIDATS) ---
+        // ==========================================
+        // GESTION DES ONGLETS
+        // ==========================================
+        window.switchTab = function(tabIndex) {
+            const tab1 = document.getElementById('tab-1');
+            const tab2 = document.getElementById('tab-2');
+            const btn1 = document.getElementById('btn-tab-1');
+            const btn2 = document.getElementById('btn-tab-2');
+
+            const activeClass = "px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-indigo-600 text-white shadow-lg";
+            const inactiveClass = "px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600";
+
+            if (tabIndex === 1) {
+                tab1.classList.remove('hidden');
+                tab2.classList.add('hidden');
+                btn1.className = activeClass;
+                btn2.className = inactiveClass;
+            } else {
+                tab1.classList.add('hidden');
+                tab2.classList.remove('hidden');
+                btn2.className = activeClass;
+                btn1.className = inactiveClass;
+            }
+        };
+
+        // ==========================================
+        // MOTEUR DE CALCUL RÉALISTE (1er TOUR - 8 CANDIDATS)
+        // ==========================================
         const POTENTIEL_CLAN_VIRAPOULLE = 8500; 
         const BASE_BEDIER_2020 = 5500;
         const BASE_FRUTEAU = 3500;
@@ -371,16 +522,14 @@
         const BASE_COTAYA = 300;
         const POOL_DISPONIBLE = 2500; 
 
-        // Variables Globales
         let currentStateData = {};
         let radarChart = null;
 
-        // Variables Firebase Cloud
+        // Firebase Cloud
         let db, auth, currentUser, cloudAppId;
         let globalScenarios = [];
         let isCloudActive = false;
 
-        // 1. Initialisation de Firebase Cloud Database
         async function initCloudDatabase() {
             try {
                 const configString = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
@@ -419,26 +568,20 @@
             }
         }
 
-        // 2. Écoute des Scénarios en Temps Réel
         function listenToCloudScenarios() {
             if (!currentUser || !isCloudActive) return;
-            
             const scenariosRef = collection(db, 'artifacts', cloudAppId, 'public', 'data', 'scenarios');
-            
             onSnapshot(scenariosRef, (snapshot) => {
                 globalScenarios = [];
                 snapshot.forEach((doc) => {
                     globalScenarios.push({ id: doc.id, ...doc.data() });
                 });
-                
                 globalScenarios.sort((a, b) => b.timestamp - a.timestamp);
                 renderScenariosTable();
             }, (error) => {
                 console.error("Erreur de synchronisation:", error);
             });
         }
-
-        // --- Moteur d'Élection ---
 
         function project2026() {
             const fideliteJMV = parseFloat(document.getElementById('fidelityFactor').value);
@@ -533,7 +676,6 @@
                 document.getElementById(`wrapper-${candidate.id}`).style.order = index;
             });
 
-            // Sauvegarde de l'état
             currentStateData = {
                 sliders: {
                     fidelity: fideliteJMV,
@@ -564,7 +706,6 @@
             }
             analysisBox.innerHTML = message;
 
-            // Ajout de classes whitespace-nowrap pour éviter les cassures de tableau sur mobile
             let tableHtml = `
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -595,12 +736,9 @@
             document.getElementById('recalculated-base-table').innerHTML = tableHtml;
         }
 
-        // Déclarations Globales
         window.runSimulation = function() {
             project2026();
         }
-
-        // --- SAUVEGARDE ET SYNCHRONISATION ---
 
         window.saveCurrentScenario = async function() {
             const scenarioName = prompt("Nommez ce scénario (Il sera visible par tous) :");
@@ -618,7 +756,7 @@
                     const scenariosRef = collection(db, 'artifacts', cloudAppId, 'public', 'data', 'scenarios');
                     await addDoc(scenariosRef, newScenario);
                 } catch (e) {
-                    console.error("Erreur de sauvegarde cloud", e);
+                    console.error("Erreur cloud", e);
                     alert("Erreur de sauvegarde dans le Cloud.");
                 }
             } else {
@@ -631,7 +769,6 @@
 
         window.loadScenario = function(identifier) {
             let scenario = null;
-            
             if (isCloudActive) {
                 scenario = globalScenarios.find(s => s.id === identifier);
             } else {
@@ -663,7 +800,7 @@
                         const docRef = doc(db, 'artifacts', cloudAppId, 'public', 'data', 'scenarios', identifier);
                         await deleteDoc(docRef);
                     } catch(e) {
-                        console.error("Erreur de suppression cloud", e);
+                        console.error("Erreur", e);
                     }
                 } else {
                     let history = JSON.parse(localStorage.getItem('electionScenariosV5')) || [];
@@ -675,7 +812,7 @@
         }
 
         window.clearAllScenarios = function() {
-            if(confirm("Attention, ceci va effacer tout votre historique local de scénarios. Confirmer ?")) {
+            if(confirm("Attention, ceci va effacer tout votre historique local. Confirmer ?")) {
                 localStorage.removeItem('electionScenariosV5');
                 renderScenariosTable();
             }
@@ -686,9 +823,7 @@
             let history = isCloudActive ? globalScenarios : (JSON.parse(localStorage.getItem('electionScenariosV5')) || []);
 
             if (history.length === 0) {
-                let msg = isCloudActive 
-                    ? "Aucun scénario partagé. Soyez le premier !"
-                    : "Aucun scénario local enregistré.";
+                let msg = isCloudActive ? "Aucun scénario partagé. Soyez le premier !" : "Aucun scénario local enregistré.";
                 tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-6 text-center text-gray-500 italic whitespace-nowrap">${msg}</td></tr>`;
                 return;
             }
@@ -721,12 +856,8 @@
             tbody.innerHTML = html;
         }
 
-        // Radar Chart Initialization
         function initChart() {
             const ctx = document.getElementById('factorImpactChart').getContext('2d');
-            
-            // Valeurs par défaut ajustées pour le graphique Radar
-            // Pour le radar, on soustrait 0.2 à Epsilon et Pi pour l'affichage visuel (échelle de 0 à 1.2)
             const initialFidelity = 0.49;
             const initialTransfer = 0.06;
             const initialErosion = 1.05;
@@ -770,11 +901,100 @@
             });
         });
 
-        // Démarrage
+        // ==========================================
+        // INITIALISATION GRAPHIQUES 2ND TOUR
+        // ==========================================
+        function initSecondTourCharts() {
+            const isMobile = window.innerWidth < 768;
+            const FONT_COLOR = '#e0e0e0';
+            const GRID_COLOR = 'rgba(224, 224, 224, 0.1)';
+
+            const bedierTotal = 8569;
+            const laurentTotal = 9804;
+            const totalExprimes = bedierTotal + laurentTotal;
+            const bedierPct = ((bedierTotal / totalExprimes) * 100).toFixed(2);
+            const laurentPct = ((laurentTotal / totalExprimes) * 100).toFixed(2);
+
+            const ctxResults = document.getElementById('projectedResultsChart').getContext('2d');
+            new Chart(ctxResults, {
+                type: 'bar',
+                data: {
+                    labels: ['J. Bédier', 'L. Virapoullé'],
+                    datasets: [{
+                        label: '% des voix exprimées',
+                        data: [bedierPct, laurentPct],
+                        backgroundColor: ['#10b981', '#f59e0b'], 
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw + '% (' + (context.dataIndex === 0 ? bedierTotal : laurentTotal) + ' voix)';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } },
+                        y: { 
+                            beginAtZero: true, 
+                            max: 60, 
+                            title: { display: !isMobile, text: 'Pourcentage (%)', color: FONT_COLOR },
+                            ticks: { color: FONT_COLOR }, 
+                            grid: { color: GRID_COLOR }
+                        }
+                    }
+                }
+            });
+
+            const ctxComposition = document.getElementById('compositionChart').getContext('2d');
+            new Chart(ctxComposition, {
+                type: 'bar',
+                data: {
+                    labels: ['J. Bédier', 'L. Virapoullé'],
+                    datasets: [
+                        { label: 'Base 1er tour', data: [6516, 4712], backgroundColor: '#1e40af' },
+                        { label: 'Report JM Virapoullé', data: [0, 3838], backgroundColor: '#60a5fa' },
+                        { label: 'Report E. Fruteau', data: [1611, 358], backgroundColor: '#f87171' },
+                        { label: 'Report S. Soupramanien', data: [0, 454], backgroundColor: '#9ca3af' },
+                        { label: 'Report Autres', data: [442, 442], backgroundColor: '#d1d5db' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            position: isMobile ? 'bottom' : 'right', 
+                            labels: { boxWidth: 10, font: { size: 10 }, color: FONT_COLOR } 
+                        },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        x: { stacked: true, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } },
+                        y: { 
+                            stacked: true, 
+                            title: { display: !isMobile, text: 'Nombre de voix', color: FONT_COLOR },
+                            ticks: { color: FONT_COLOR }, 
+                            grid: { color: GRID_COLOR }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Démarrage Global
         window.onload = () => {
             initChart();
             runSimulation();
             initCloudDatabase();
+            initSecondTourCharts();
         };
     </script>
 </body>
