@@ -494,13 +494,13 @@
                 </div>
             </div>
 
-            <!-- CONTENU : SCÉNARIO FUSION (DUEL) -->
+            <!-- CONTENU : SCÉNARIO FUSION (DUEL) + NOUVEAUTÉ FRONT ANTI-RN -->
             <div id="content-fusion" class="hidden space-y-6">
                 <!-- Hypotheses Section -->
                 <div class="card border-t-4 border-blue-500">
                     <h2 class="text-lg md:text-xl font-bold mb-4 flex items-center text-blue-400">
                         <svg class="w-5 h-5 md:w-6 md:h-6 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                        Les hypothèses de report (Scénario de Fusion / Duel)
+                        Les hypothèses de report (Scénario de Duel Unifié)
                     </h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs md:text-sm">
                         <!-- JM Virapoullé -->
@@ -533,6 +533,28 @@
                         </div>
                     </div>
                     <p class="text-[10px] md:text-xs text-gray-500 mt-4 italic">* Autres petites listes (1474 voix) estimées à 30% Bédier, 30% Laurent, 40% Abstention.</p>
+                    
+                    <!-- NOUVEAU : FRONT ANTI-RN -->
+                    <div class="mt-6 bg-slate-800 border border-slate-600 p-4 md:p-6 rounded-xl">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-xl">🛡️</span>
+                            <h3 class="text-base md:text-lg font-bold text-gray-100">Le Facteur Polarisant : "Front anti-RN"</h3>
+                        </div>
+                        <p class="text-xs md:text-sm text-gray-400 mb-4 leading-relaxed">
+                            À Saint-André, les récents scrutins nationaux ont montré une forte percée de l'extrême droite. Dans un scénario de duel très polarisé (Gauche sortante vs Droite unie), le sortant pourrait déclencher un "vote barrage". Ce paramètre simule le **réveil d'une partie des abstentionnistes** du 1er tour qui se déplaceraient uniquement pour faire barrage à la droite unie, apportant une réserve de voix inespérée à Joé Bédier.
+                        </p>
+                        
+                        <div>
+                            <label for="frontRnSlider" class="block text-sm font-bold text-emerald-400 mb-2">
+                                Mobilisation Front anti-RN (Surserve d'Abstention) : <span id="frontRnValue" class="text-xl font-extrabold text-white ml-2">+0 voix</span>
+                            </label>
+                            <input type="range" id="frontRnSlider" min="0" max="1500" value="0" step="10" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer" oninput="updateScenarioBFusion()">
+                            <div class="flex justify-between text-[10px] md:text-xs text-gray-500 mt-1">
+                                <span>Aucun Barrage (+0 voix)</span>
+                                <span>Barrage Massif (+1 500 voix)</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Projected Results Section -->
@@ -542,7 +564,7 @@
                         <h2 class="text-lg md:text-xl font-bold mb-1 flex items-center text-gray-100">
                             <span class="w-1.5 h-5 bg-green-500 rounded mr-2"></span> Résultat Projeté
                         </h2>
-                        <p class="text-xs md:text-sm text-gray-400 mb-4">Victoire estimée de la liste fusionnée.</p>
+                        <p class="text-xs md:text-sm text-gray-400 mb-4" id="fusion-result-text">Marge de victoire estimée.</p>
                         <div class="relative w-full h-64 md:h-[350px]">
                             <canvas id="projectedResultsChartFus"></canvas>
                         </div>
@@ -572,52 +594,11 @@
                                     <th class="px-3 py-3 md:px-6 md:py-4 font-bold">Provenance</th>
                                     <th class="px-3 py-3 md:px-6 md:py-4 font-bold text-center">Vers J. Bédier</th>
                                     <th class="px-3 py-3 md:px-6 md:py-4 font-bold text-center">Vers L. Virapoullé</th>
-                                    <th class="px-3 py-3 md:px-6 md:py-4 font-bold text-center text-gray-500">Abstention</th>
+                                    <th class="px-3 py-3 md:px-6 md:py-4 font-bold text-center text-gray-500">Abstention / Perdu</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-700 text-xs md:text-sm text-gray-200">
-                                <tr class="hover:bg-slate-700/50 transition-colors">
-                                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Base J. Bédier (6 516)</td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-green-400">+ 6 516</td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">-</td>
-                                </tr>
-                                <tr class="hover:bg-slate-700/50 transition-colors">
-                                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Base L. Virapoullé (4 712)</td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-amber-500">+ 4 712</td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">-</td>
-                                </tr>
-                                <tr class="hover:bg-slate-700/50 bg-blue-900/10 transition-colors">
-                                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report JM. Virapoullé</td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 3 838 <span class="block text-[10px] text-gray-500">(85%)</span></td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 678 <span class="block text-[10px]">(15%)</span></td>
-                                </tr>
-                                <tr class="hover:bg-slate-700/50 bg-purple-900/10 transition-colors">
-                                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report E. Fruteau</td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-green-400">+ 1 611 <span class="block text-[10px] text-gray-500">(45%)</span></td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 358 <span class="block text-[10px] text-gray-500">(10%)</span></td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 1 611 <span class="block text-[10px]">(45%)</span></td>
-                                </tr>
-                                <tr class="hover:bg-slate-700/50 bg-teal-900/10 transition-colors">
-                                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report S. Soupramanien</td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 454 <span class="block text-[10px] text-gray-500">(50%)</span></td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 455 <span class="block text-[10px]">(50%)</span></td>
-                                </tr>
-                                <tr class="hover:bg-slate-700/50 transition-colors">
-                                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report Autres listes</td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-green-400">+ 442 <span class="block text-[10px] text-gray-500">(30%)</span></td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 442 <span class="block text-[10px] text-gray-500">(30%)</span></td>
-                                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 590 <span class="block text-[10px]">(40%)</span></td>
-                                </tr>
-                                <tr class="bg-slate-800 font-bold text-sm md:text-lg">
-                                    <td class="px-3 py-4 md:px-6 md:py-4 text-white">TOTAL PROJETÉ</td>
-                                    <td class="px-3 py-4 md:px-6 md:py-4 text-center text-green-400">8 569 voix</td>
-                                    <td class="px-3 py-4 md:px-6 md:py-4 text-center text-amber-500">9 804 voix</td>
-                                    <td class="px-3 py-4 md:px-6 md:py-4 text-center text-gray-500 whitespace-nowrap">+ 3 334 abs.</td>
-                                </tr>
+                            <tbody id="table-body-fusion" class="divide-y divide-slate-700 text-xs md:text-sm text-gray-200">
+                                <!-- Le contenu de ce tableau sera généré dynamiquement par JS pour inclure le Front anti-RN -->
                             </tbody>
                         </table>
                     </div>
@@ -692,6 +673,10 @@
 
         let currentStateData = {};
         let radarChart = null;
+        
+        // Variables graphiques 2nd Tour Scénario B
+        let ctxResultsFusChart = null;
+        let ctxCompositionFusChart = null;
 
         // Firebase Cloud
         let db, auth, currentUser, cloudAppId;
@@ -701,15 +686,12 @@
         async function initCloudDatabase() {
             try {
                 const configString = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
-                
                 if (configString) {
                     const firebaseConfig = JSON.parse(configString);
                     cloudAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                    
                     const app = initializeApp(firebaseConfig);
                     auth = getAuth(app);
                     db = getFirestore(app);
-                    
                     isCloudActive = true;
                     document.getElementById('cloud-indicator').classList.remove('hidden');
 
@@ -730,7 +712,7 @@
                     renderScenariosTable();
                 }
             } catch (e) {
-                console.error("Le Cloud n'est pas disponible, passage en mode local.", e);
+                console.error("Le Cloud n'est pas disponible.", e);
                 document.getElementById('btn-clear-local').classList.remove('hidden');
                 renderScenariosTable(); 
             }
@@ -908,6 +890,9 @@
             project2026();
         }
 
+        // ==========================================
+        // SAUVEGARDE ET SYNCHRONISATION
+        // ==========================================
         window.saveCurrentScenario = async function() {
             const scenarioName = prompt("Nommez ce scénario (Il sera visible par tous) :");
             if (!scenarioName) return;
@@ -1057,7 +1042,7 @@
 
         document.querySelectorAll('.range-slider').forEach(slider => {
             slider.addEventListener('input', () => {
-                if(radarChart) {
+                if(radarChart && slider.id !== 'frontRnSlider') {
                     radarChart.data.datasets[0].data = [
                         document.getElementById('fidelityFactor').value,
                         document.getElementById('transferFactor').value,
@@ -1070,14 +1055,124 @@
         });
 
         // ==========================================
-        // INITIALISATION GRAPHIQUES 2ND TOUR (TRIANGULAIRE ET FUSION)
+        // MOTEUR DU SECOND TOUR (Scénario B - Fusion avec Front Anti-RN)
         // ==========================================
+        window.updateScenarioBFusion = function() {
+            const sursautRN = parseInt(document.getElementById('frontRnSlider').value, 10);
+            document.getElementById('frontRnValue').textContent = '+' + sursautRN + ' voix';
+
+            // Base de calcul Scénario B
+            const bedierBase = 6516;
+            const bedierRepFruteau = 1611;
+            const bedierRepAutres = 442;
+            const bedierTotalFus = bedierBase + bedierRepFruteau + bedierRepAutres + sursautRN;
+
+            const laurentBase = 4712;
+            const laurentRepJMV = 3838;
+            const laurentRepFruteau = 358;
+            const laurentRepSoup = 454;
+            const laurentRepAutres = 442;
+            const laurentTotalFus = laurentBase + laurentRepJMV + laurentRepFruteau + laurentRepSoup + laurentRepAutres; // 9804
+
+            const totalExprimesFus = bedierTotalFus + laurentTotalFus;
+            const bedierPctFus = ((bedierTotalFus / totalExprimesFus) * 100).toFixed(2);
+            const laurentPctFus = ((laurentTotalFus / totalExprimesFus) * 100).toFixed(2);
+
+            // Mise à jour du texte de résultat
+            const resText = document.getElementById('fusion-result-text');
+            if(bedierTotalFus > laurentTotalFus) {
+                resText.innerHTML = `<span class="text-green-400 font-bold">Joé Bédier l'emporte</span> grâce au sursaut républicain (+${(bedierTotalFus - laurentTotalFus).toLocaleString('fr-FR')} voix).`;
+            } else {
+                resText.innerHTML = `<span class="text-amber-500 font-bold">Laurent Virapoullé l'emporte</span> (+${(laurentTotalFus - bedierTotalFus).toLocaleString('fr-FR')} voix). Le barrage est insuffisant.`;
+            }
+
+            // Mise à jour Graphique 1 (Barres)
+            if(ctxResultsFusChart) {
+                ctxResultsFusChart.data.datasets[0].data = [bedierPctFus, laurentPctFus];
+                ctxResultsFusChart.options.plugins.tooltip.callbacks.label = function(context) { 
+                    const totals = [bedierTotalFus, laurentTotalFus]; 
+                    return context.raw + '% (' + totals[context.dataIndex].toLocaleString('fr-FR') + ' voix)'; 
+                };
+                ctxResultsFusChart.update();
+            }
+
+            // Mise à jour Graphique 2 (Composition empilée)
+            if(ctxCompositionFusChart) {
+                // Dataset 5 correspond au Front Anti-RN
+                ctxCompositionFusChart.data.datasets[5].data = [sursautRN, 0];
+                ctxCompositionFusChart.update();
+            }
+
+            // Mise à jour du Tableau HTML
+            let tableHtml = `
+                <tr class="hover:bg-slate-700/50 transition-colors">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Base J. Bédier (6 516)</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-green-400">+ 6 516</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">-</td>
+                </tr>
+                <tr class="hover:bg-slate-700/50 transition-colors">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Base L. Virapoullé (4 712)</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-amber-500">+ 4 712</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">-</td>
+                </tr>
+                <tr class="hover:bg-slate-700/50 bg-blue-900/10 transition-colors">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report JM. Virapoullé</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 3 838 <span class="block text-[10px] text-gray-500">(85%)</span></td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 678 <span class="block text-[10px]">(15%)</span></td>
+                </tr>
+                <tr class="hover:bg-slate-700/50 bg-purple-900/10 transition-colors">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report E. Fruteau</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-green-400">+ 1 611 <span class="block text-[10px] text-gray-500">(45%)</span></td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 358 <span class="block text-[10px] text-gray-500">(10%)</span></td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 1 611 <span class="block text-[10px]">(45%)</span></td>
+                </tr>
+                <tr class="hover:bg-slate-700/50 bg-teal-900/10 transition-colors">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report S. Soupramanien</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 454 <span class="block text-[10px] text-gray-500">(50%)</span></td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 455 <span class="block text-[10px]">(50%)</span></td>
+                </tr>
+                <tr class="hover:bg-slate-700/50 transition-colors">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report Autres listes</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-green-400">+ 442 <span class="block text-[10px] text-gray-500">(30%)</span></td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 442 <span class="block text-[10px] text-gray-500">(30%)</span></td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 590 <span class="block text-[10px]">(40%)</span></td>
+                </tr>
+            `;
+
+            if(sursautRN > 0) {
+                tableHtml += `
+                    <tr class="hover:bg-slate-700/50 bg-emerald-900/20 transition-colors border-t-2 border-emerald-500">
+                        <td class="px-3 py-3 md:px-6 md:py-4 font-medium text-emerald-400">🛡️ Front anti-RN (Abstentionnistes)</td>
+                        <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-emerald-400">+ ${sursautRN}</td>
+                        <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                        <td class="px-3 py-3 md:px-6 md:py-4 text-center text-red-400">- ${sursautRN} abs.</td>
+                    </tr>
+                `;
+            }
+
+            tableHtml += `
+                <tr class="bg-slate-800 font-bold text-sm md:text-lg border-t-4 border-slate-600">
+                    <td class="px-3 py-4 md:px-6 md:py-4 text-white">TOTAL PROJETÉ</td>
+                    <td class="px-3 py-4 md:px-6 md:py-4 text-center text-green-400">${bedierTotalFus.toLocaleString('fr-FR')} voix</td>
+                    <td class="px-3 py-4 md:px-6 md:py-4 text-center text-amber-500">${laurentTotalFus.toLocaleString('fr-FR')} voix</td>
+                    <td class="px-3 py-4 md:px-6 md:py-4 text-center text-gray-500 whitespace-nowrap">Reste abs.</td>
+                </tr>
+            `;
+            
+            document.getElementById('table-body-fusion').innerHTML = tableHtml;
+        };
+
+
         function initSecondTourCharts() {
             const isMobile = window.innerWidth < 768;
             const FONT_COLOR = '#e0e0e0';
             const GRID_COLOR = 'rgba(224, 224, 224, 0.1)';
 
-            // --- 1. Graphiques Scénario Triangulaire ---
+            // --- 1. Graphiques Scénario Triangulaire (Statique) ---
             const bedierTotalTri = 8569;
             const laurentTotalTri = 5729;
             const jmTotalTri = 4933;
@@ -1139,22 +1234,15 @@
                 }
             });
 
-            // --- 2. Graphiques Scénario Fusion ---
-            const bedierTotalFus = 8569;
-            const laurentTotalFus = 9804;
-            const totalExprimesFus = bedierTotalFus + laurentTotalFus;
-            
-            const bedierPctFus = ((bedierTotalFus / totalExprimesFus) * 100).toFixed(2);
-            const laurentPctFus = ((laurentTotalFus / totalExprimesFus) * 100).toFixed(2);
-
+            // --- 2. Graphiques Scénario Fusion (Dynamiques - Scénario B) ---
             const ctxResultsFus = document.getElementById('projectedResultsChartFus').getContext('2d');
-            new Chart(ctxResultsFus, {
+            ctxResultsFusChart = new Chart(ctxResultsFus, {
                 type: 'bar',
                 data: {
                     labels: ['J. Bédier', 'L. Virapoullé'],
                     datasets: [{
                         label: '% des voix',
-                        data: [bedierPctFus, laurentPctFus],
+                        data: [0, 0], // Initialisé à 0, géré par updateScenarioBFusion
                         backgroundColor: ['#10b981', '#f59e0b'], 
                         borderRadius: 8
                     }]
@@ -1164,7 +1252,7 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
-                        tooltip: { callbacks: { label: function(context) { const totals = [bedierTotalFus, laurentTotalFus]; return context.raw + '% (' + totals[context.dataIndex] + ' voix)'; } } }
+                        tooltip: { callbacks: { label: function(context) { return context.raw + '%'; } } } // Remplacé dynamiquement
                     },
                     scales: {
                         x: { ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } },
@@ -1174,16 +1262,17 @@
             });
 
             const ctxCompositionFus = document.getElementById('compositionChartFus').getContext('2d');
-            new Chart(ctxCompositionFus, {
+            ctxCompositionFusChart = new Chart(ctxCompositionFus, {
                 type: 'bar',
                 data: {
                     labels: ['J. Bédier', 'L. Virapoullé'],
                     datasets: [
-                        { label: 'Base 1er tour', data: [6516, 4712], backgroundColor: '#1e40af' },
-                        { label: 'Report JM Virapoullé', data: [0, 3838], backgroundColor: '#ef4444' },
-                        { label: 'Report E. Fruteau', data: [1611, 358], backgroundColor: '#a855f7' },
-                        { label: 'Report S. Soupramanien', data: [0, 454], backgroundColor: '#14b8a6' },
-                        { label: 'Report Autres', data: [442, 442], backgroundColor: '#64748b' }
+                        { label: 'Base 1er tour', data: [6516, 4712], backgroundColor: '#1e40af' }, // 0
+                        { label: 'Report JM Virapoullé', data: [0, 3838], backgroundColor: '#ef4444' }, // 1
+                        { label: 'Report E. Fruteau', data: [1611, 358], backgroundColor: '#a855f7' }, // 2
+                        { label: 'Report S. Soupramanien', data: [0, 454], backgroundColor: '#14b8a6' }, // 3
+                        { label: 'Report Autres', data: [442, 442], backgroundColor: '#64748b' }, // 4
+                        { label: '🛡️ Sursaut Front Anti-RN', data: [0, 0], backgroundColor: '#10b981' } // 5 (Nouveau)
                     ]
                 },
                 options: {
@@ -1199,6 +1288,9 @@
                     }
                 }
             });
+
+            // Initialiser les valeurs du Scénario B au démarrage
+            updateScenarioBFusion();
         }
 
         // Démarrage Global
