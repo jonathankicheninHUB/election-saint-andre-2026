@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prédiction et Analyse Électorale V5 - Multi-Candidats</title>
-    <!-- Librairies externes : TailwindCSS, Chart.js et html2pdf pour la génération de PDF -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
@@ -105,15 +103,6 @@
         }
         .cloud-active {
             animation: pulse-green 2s infinite;
-        }
-
-        /* CORRECTION DU BUG PDF : Le conteneur ne doit pas être "display: none" 
-           sinon html2canvas plante. Il est placé hors-écran. */
-        #pdf-template-container {
-            position: absolute;
-            left: -9999px;
-            top: 0;
-            z-index: -50;
         }
     </style>
 </head>
@@ -361,21 +350,13 @@
         <!-- ========================================== -->
         <div id="tab-2" class="hidden space-y-6">
             
-            <!-- BOUTONS D'ACTION HAUT (Sélecteur de scénario + Génération PDF) -->
-            <div class="flex flex-col gap-4">
+            <!-- BOUTONS D'ACTION HAUT (Sélecteur de scénario) -->
+            <div class="flex justify-center items-center mb-2">
                 <!-- SÉLECTEUR DE SCÉNARIO -->
-                <div class="flex flex-col md:flex-row justify-center items-center gap-3 md:gap-4 bg-slate-800 p-4 rounded-xl shadow-inner border border-slate-700">
+                <div class="flex flex-col md:flex-row justify-center items-center gap-3 md:gap-4 bg-slate-800 p-4 rounded-xl shadow-inner border border-slate-700 w-full md:w-auto">
                     <span class="text-gray-400 font-bold uppercase text-xs tracking-wider">Hypothèse :</span>
                     <button id="btn-scen-triangulaire" onclick="toggleScenario2ndTour('triangulaire')" class="w-full md:w-auto px-6 py-2 rounded-full bg-purple-600 text-white font-bold shadow-lg ring-2 ring-purple-400 text-xs md:text-sm transition-all">Scénario A : Triangulaire (Maintien JM)</button>
                     <button id="btn-scen-fusion" onclick="toggleScenario2ndTour('fusion')" class="w-full md:w-auto px-6 py-2 rounded-full bg-slate-700 text-gray-300 font-bold hover:bg-slate-600 text-xs md:text-sm transition-all">Scénario B : Duel (Ralliement Laurent)</button>
-                </div>
-
-                <!-- BOUTON GÉNÉRER PDF -->
-                <div class="flex justify-center">
-                    <button onclick="generatePDFReport(this)" class="w-full md:w-auto bg-red-600 hover:bg-red-500 text-white font-bold py-3 md:py-2 px-6 rounded-xl md:rounded-full shadow-lg transition-transform transform hover:scale-105 border border-red-400 flex items-center justify-center gap-2 text-sm md:text-base">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                        Exporter le Rapport PDF
-                    </button>
                 </div>
             </div>
 
@@ -605,11 +586,6 @@
 
     </div>
 
-    <!-- CONTENEUR CACHÉ POUR LA GÉNÉRATION DU PDF (DESIGN PREMIUM) -->
-    <div id="pdf-template-container">
-        <!-- Le contenu sera injecté ici par JavaScript -->
-    </div>
-
     <!-- SCRIPT DE TYPE MODULE POUR UTILISER FIREBASE ET CHART.JS -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -657,171 +633,6 @@
                 contTri.classList.add('hidden');
                 btnFus.className = "w-full md:w-auto px-6 py-2 rounded-full bg-blue-600 text-white font-bold shadow-lg ring-2 ring-blue-400 text-xs md:text-sm transition-all";
                 btnTri.className = "w-full md:w-auto px-6 py-2 rounded-full bg-slate-700 text-gray-300 font-bold hover:bg-slate-600 text-xs md:text-sm transition-all";
-            }
-        };
-
-        // ==========================================
-        // GÉNÉRATION DU RAPPORT PDF (CORRIGÉ ET ROBUSTE)
-        // ==========================================
-        window.generatePDFReport = function(btnElement) {
-            try {
-                // 1. Indication de chargement pour éviter les clics multiples
-                const originalText = btnElement.innerHTML;
-                btnElement.innerHTML = `<span class="animate-pulse">⏳</span> Génération en cours...`;
-                btnElement.disabled = true;
-
-                // 2. Déterminer le scénario actif
-                const isTriangulaire = !document.getElementById('content-triangulaire').classList.contains('hidden');
-                const scenarioName = isTriangulaire ? "Scénario A : Triangulaire (Maintien JM)" : "Scénario B : Duel Unifié (Front Anti-RN)";
-                
-                // 3. Récupérer le diagnostic et le tableau du scénario actif
-                const diagnosticText = isTriangulaire 
-                    ? document.getElementById('triangulaire-result-text').innerText 
-                    : document.getElementById('fusion-result-text').innerText;
-                    
-                let tableBodyHTML = isTriangulaire 
-                    ? document.getElementById('table-body-triangulaire').innerHTML 
-                    : document.getElementById('table-body-fusion').innerHTML;
-
-                // CORRECTION MAJEURE : On remplace les classes CSS sombres de Tailwind par des couleurs claires
-                // Cela garantit que le tableau s'imprime parfaitement sur fond blanc
-                tableBodyHTML = tableBodyHTML
-                    .replace(/text-white/g, 'text-gray-900')
-                    .replace(/text-gray-200/g, 'text-gray-800')
-                    .replace(/text-gray-300/g, 'text-gray-700')
-                    .replace(/text-gray-400/g, 'text-gray-600')
-                    .replace(/bg-slate-800/g, 'bg-gray-100')
-                    .replace(/border-slate-600/g, 'border-gray-300')
-                    .replace(/border-slate-700/g, 'border-gray-200')
-                    .replace(/bg-blue-900\/20/g, 'bg-blue-50')
-                    .replace(/bg-purple-900\/10/g, 'bg-purple-50')
-                    .replace(/bg-teal-900\/10/g, 'bg-teal-50')
-                    .replace(/bg-emerald-900\/20/g, 'bg-emerald-50')
-                    .replace(/hover:bg-slate-700\/50/g, ''); // On retire le hover pour le PDF
-
-                // En-têtes de table spécifiques selon le scénario (Adaptés pour le blanc)
-                const tableHeaderHTML = isTriangulaire 
-                    ? `<tr class="bg-gray-200 text-gray-700 text-xs uppercase"><th class="p-3 text-left border-b border-gray-300">Provenance</th><th class="p-3 text-center border-b border-gray-300">Vers J. Bédier</th><th class="p-3 text-center border-b border-gray-300">Vers L. Virapoullé</th><th class="p-3 text-center border-b border-gray-300">Vers JM. Virapoullé</th><th class="p-3 text-center border-b border-gray-300">Abstention</th></tr>`
-                    : `<tr class="bg-gray-200 text-gray-700 text-xs uppercase"><th class="p-3 text-left border-b border-gray-300">Provenance</th><th class="p-3 text-center border-b border-gray-300">Vers J. Bédier</th><th class="p-3 text-center border-b border-gray-300">Vers L. Virapoullé</th><th class="p-3 text-center border-b border-gray-300">Abstention</th></tr>`;
-
-                // 4. Capturer les graphiques en images Base64 (sécurisé si le graphique n'est pas prêt)
-                const resultChart = isTriangulaire ? ctxResultsTriChart : ctxResultsFusChart;
-                const compChart = isTriangulaire ? ctxCompositionTriChart : ctxCompositionFusChart;
-                
-                const resultChartImg = resultChart ? resultChart.toBase64Image() : '';
-                const compChartImg = compChart ? compChart.toBase64Image() : '';
-
-                // 5. Préparer le conteneur HTML avec un style "Premium Imprimable" en utilisant Tailwind
-                const pdfContainer = document.getElementById('pdf-template-container');
-                const currentDate = new Date().toLocaleDateString('fr-FR');
-                
-                pdfContainer.innerHTML = `
-                    <div class="bg-white text-gray-900 font-sans p-10" style="width: 800px; box-sizing: border-box;">
-                        
-                        <!-- En-tête Premium -->
-                        <div class="bg-blue-800 p-8 rounded-xl text-white mb-8 shadow-sm flex justify-between items-center">
-                            <div>
-                                <h1 class="text-2xl font-extrabold uppercase tracking-wide m-0">Rapport d'Analyse Stratégique</h1>
-                                <h2 class="text-lg font-normal text-blue-200 m-0 mt-2">Commune de Saint-André - Projection 2nd Tour</h2>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm font-bold m-0">Date : ${currentDate}</p>
-                                <p class="text-xs text-blue-200 m-0 mt-1">Auteur : Jonathan Kichenin</p>
-                            </div>
-                        </div>
-
-                        <!-- Configuration des Réglettes -->
-                        <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-8">
-                            <h3 class="text-lg font-bold text-blue-900 border-b border-gray-300 pb-2 mb-4 uppercase tracking-wide">1. Paramètres du Scénario</h3>
-                            <p class="font-bold text-indigo-700 text-lg mb-4">${scenarioName}</p>
-                            
-                            <div class="flex justify-between text-sm leading-relaxed">
-                                <ul class="w-1/2 space-y-2">
-                                    <li><span class="text-gray-500">Fidélité au leader (JMV) :</span> <strong class="text-gray-900">${document.getElementById('displayLambda').innerText}</strong></li>
-                                    <li><span class="text-gray-500">Attractivité Laurent :</span> <strong class="text-gray-900">${document.getElementById('displayTau').innerText}</strong></li>
-                                    <li><span class="text-gray-500">Usure/Prime Sortant :</span> <strong class="text-gray-900">${document.getElementById('displayEpsilon').innerText}</strong></li>
-                                </ul>
-                                <ul class="w-1/2 space-y-2">
-                                    <li><span class="text-gray-500">Participation Globale :</span> <strong class="text-gray-900">${document.getElementById('displayPi').innerText}</strong></li>
-                                    <li><span class="text-gray-500">Sursaut Participation :</span> <strong class="text-blue-600">${document.getElementById('globalSursautValue').innerText}</strong></li>
-                                    ${!isTriangulaire ? `<li><span class="text-gray-500">Front Anti-RN ciblée :</span> <strong class="text-emerald-600">${document.getElementById('frontRnValue').innerText}</strong></li>` : ''}
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!-- Résultat et Diagnostic -->
-                        <div class="mb-8">
-                            <h3 class="text-lg font-bold text-blue-900 border-b border-gray-300 pb-2 mb-4 uppercase tracking-wide">2. Diagnostic de la Projection</h3>
-                            <div class="bg-blue-50 border-l-4 border-blue-500 p-5 rounded font-medium text-blue-900 text-base">
-                                ${diagnosticText}
-                            </div>
-                        </div>
-
-                        <!-- Graphiques (Insérés comme images) -->
-                        <div class="mb-8 flex gap-6">
-                            <div class="flex-1 border border-gray-200 rounded-xl p-4 text-center bg-white shadow-sm">
-                                <p class="font-bold text-gray-700 mb-3 text-sm">Résultat Projeté (%)</p>
-                                <div class="bg-slate-900 p-3 rounded-lg">
-                                    <img src="${resultChartImg}" class="w-full h-auto max-h-[220px] object-contain mx-auto">
-                                </div>
-                            </div>
-                            <div class="flex-1 border border-gray-200 rounded-xl p-4 text-center bg-white shadow-sm">
-                                <p class="font-bold text-gray-700 mb-3 text-sm">Origine des Voix (Composition)</p>
-                                <div class="bg-slate-900 p-3 rounded-lg">
-                                    <img src="${compChartImg}" class="w-full h-auto max-h-[220px] object-contain mx-auto">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tableau de détail -->
-                        <div>
-                            <h3 class="text-lg font-bold text-blue-900 border-b border-gray-300 pb-2 mb-4 uppercase tracking-wide">3. Détail Mathématique des Reports</h3>
-                            <div class="border border-gray-300 rounded-lg overflow-hidden">
-                                <table class="w-full text-left text-sm border-collapse">
-                                    <thead>
-                                        ${tableHeaderHTML}
-                                    </thead>
-                                    <tbody class="divide-y divide-gray-200">
-                                        ${tableBodyHTML}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <!-- Pied de page -->
-                        <div class="mt-10 pt-4 border-t border-gray-300 text-center text-xs text-gray-500">
-                            <strong>Analyse Électorale V5</strong> - Document à usage interne et stratégique.<br>
-                            Généré automatiquement par le modèle de simulation dynamique de Saint-André.
-                        </div>
-                    </div>
-                `;
-
-                // 6. Options de haute qualité pour html2pdf
-                const opt = {
-                    margin:       10,
-                    filename:     `Analyse_St_Andre_2nd_Tour_${isTriangulaire ? 'Triangulaire' : 'Fusion'}.pdf`,
-                    image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { scale: 2, useCORS: true, logging: false }, 
-                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                };
-
-                // 7. Lancer la génération (html2pdf lit le conteneur caché)
-                html2pdf().set(opt).from(pdfContainer.firstElementChild).save().then(() => {
-                    // Restaurer le bouton
-                    btnElement.innerHTML = originalText;
-                    btnElement.disabled = false;
-                }).catch(err => {
-                    console.error("Erreur PDF:", err);
-                    alert("Une erreur est survenue lors de la création du PDF. Veuillez réessayer.");
-                    btnElement.innerHTML = originalText;
-                    btnElement.disabled = false;
-                });
-
-            } catch (error) {
-                console.error("Erreur générale génération PDF:", error);
-                alert("Erreur lors de la préparation du document PDF.");
-                btnElement.innerHTML = `<span>📄</span> Exporter le Rapport PDF`;
-                btnElement.disabled = false;
             }
         };
 
