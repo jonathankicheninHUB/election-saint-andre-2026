@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prédiction et Analyse Électorale V5 - Multi-Candidats</title>
+    <!-- Librairies externes : TailwindCSS, Chart.js et html2pdf pour la génération de PDF -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
         body { 
@@ -102,6 +105,11 @@
         }
         .cloud-active {
             animation: pulse-green 2s infinite;
+        }
+
+        /* Classes spécifiques pour la structure temporaire du PDF (cachées à l'écran) */
+        #pdf-template-container {
+            display: none;
         }
     </style>
 </head>
@@ -349,11 +357,22 @@
         <!-- ========================================== -->
         <div id="tab-2" class="hidden space-y-6">
             
-            <!-- SÉLECTEUR DE SCÉNARIO (BOUTONS) -->
-            <div class="flex flex-col md:flex-row justify-center items-center gap-3 md:gap-4 bg-slate-800 p-4 rounded-xl shadow-inner border border-slate-700">
-                <span class="text-gray-400 font-bold uppercase text-xs tracking-wider">Hypothèse :</span>
-                <button id="btn-scen-triangulaire" onclick="toggleScenario2ndTour('triangulaire')" class="w-full md:w-auto px-6 py-2 rounded-full bg-purple-600 text-white font-bold shadow-lg ring-2 ring-purple-400 text-xs md:text-sm transition-all">Scénario A : Triangulaire (Maintien JM)</button>
-                <button id="btn-scen-fusion" onclick="toggleScenario2ndTour('fusion')" class="w-full md:w-auto px-6 py-2 rounded-full bg-slate-700 text-gray-300 font-bold hover:bg-slate-600 text-xs md:text-sm transition-all">Scénario B : Duel (Ralliement Laurent)</button>
+            <!-- BOUTONS D'ACTION HAUT (Sélecteur de scénario + Génération PDF) -->
+            <div class="flex flex-col gap-4">
+                <!-- SÉLECTEUR DE SCÉNARIO -->
+                <div class="flex flex-col md:flex-row justify-center items-center gap-3 md:gap-4 bg-slate-800 p-4 rounded-xl shadow-inner border border-slate-700">
+                    <span class="text-gray-400 font-bold uppercase text-xs tracking-wider">Hypothèse :</span>
+                    <button id="btn-scen-triangulaire" onclick="toggleScenario2ndTour('triangulaire')" class="w-full md:w-auto px-6 py-2 rounded-full bg-purple-600 text-white font-bold shadow-lg ring-2 ring-purple-400 text-xs md:text-sm transition-all">Scénario A : Triangulaire (Maintien JM)</button>
+                    <button id="btn-scen-fusion" onclick="toggleScenario2ndTour('fusion')" class="w-full md:w-auto px-6 py-2 rounded-full bg-slate-700 text-gray-300 font-bold hover:bg-slate-600 text-xs md:text-sm transition-all">Scénario B : Duel (Ralliement Laurent)</button>
+                </div>
+
+                <!-- BOUTON GÉNÉRER PDF -->
+                <div class="flex justify-center">
+                    <button onclick="generatePDFReport()" class="w-full md:w-auto bg-red-600 hover:bg-red-500 text-white font-bold py-3 md:py-2 px-6 rounded-xl md:rounded-full shadow-lg transition-transform transform hover:scale-105 border border-red-400 flex items-center justify-center gap-2 text-sm md:text-base">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        Exporter le Rapport PDF
+                    </button>
+                </div>
             </div>
 
             <!-- NOUVEAU : RÉSERVE GLOBALE DE PARTICIPATION AU 2ND TOUR -->
@@ -426,7 +445,7 @@
                             <span class="w-1.5 h-5 bg-green-500 rounded mr-2"></span> Résultat Projeté
                         </h2>
                         <p class="text-xs md:text-sm text-gray-400 mb-4" id="triangulaire-result-text">La division des oppositions favorise le sortant.</p>
-                        <div class="relative w-full h-64 md:h-[350px]">
+                        <div class="relative w-full h-64 md:h-[350px] bg-slate-800 rounded-lg p-2">
                             <canvas id="projectedResultsChartTri"></canvas>
                         </div>
                     </div>
@@ -437,7 +456,7 @@
                             <span class="w-1.5 h-5 bg-purple-500 rounded mr-2"></span> Composition des votes
                         </h2>
                         <p class="text-xs md:text-sm text-gray-400 mb-4">Origine des voix du 2nd tour (Triangulaire)</p>
-                        <div class="relative w-full h-64 md:h-[350px]">
+                        <div class="relative w-full h-64 md:h-[350px] bg-slate-800 rounded-lg p-2">
                             <canvas id="compositionChartTri"></canvas>
                         </div>
                     </div>
@@ -449,7 +468,7 @@
                         <h2 class="text-lg md:text-xl font-bold text-gray-100">Détail des reports (Triangulaire)</h2>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse min-w-[700px]">
+                        <table class="w-full text-left border-collapse min-w-[700px]" id="table-triangulaire">
                             <thead>
                                 <tr class="text-[10px] md:text-xs uppercase text-gray-400 bg-slate-800 border-b border-slate-700">
                                     <th class="px-3 py-3 md:px-6 md:py-4 font-bold">Provenance</th>
@@ -538,7 +557,7 @@
                             <span class="w-1.5 h-5 bg-green-500 rounded mr-2"></span> Résultat Projeté
                         </h2>
                         <p class="text-xs md:text-sm text-gray-400 mb-4" id="fusion-result-text">Marge de victoire estimée.</p>
-                        <div class="relative w-full h-64 md:h-[350px]">
+                        <div class="relative w-full h-64 md:h-[350px] bg-slate-800 rounded-lg p-2">
                             <canvas id="projectedResultsChartFus"></canvas>
                         </div>
                     </div>
@@ -549,7 +568,7 @@
                             <span class="w-1.5 h-5 bg-purple-500 rounded mr-2"></span> Composition des votes
                         </h2>
                         <p class="text-xs md:text-sm text-gray-400 mb-4">Origine des voix du 2nd tour (Fusion)</p>
-                        <div class="relative w-full h-64 md:h-[350px]">
+                        <div class="relative w-full h-64 md:h-[350px] bg-slate-800 rounded-lg p-2">
                             <canvas id="compositionChartFus"></canvas>
                         </div>
                     </div>
@@ -561,7 +580,7 @@
                         <h2 class="text-lg md:text-xl font-bold text-gray-100">Détail des reports (Fusion)</h2>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse min-w-[600px]">
+                        <table class="w-full text-left border-collapse min-w-[600px]" id="table-fusion">
                             <thead>
                                 <tr class="text-[10px] md:text-xs uppercase text-gray-400 bg-slate-800 border-b border-slate-700">
                                     <th class="px-3 py-3 md:px-6 md:py-4 font-bold">Provenance</th>
@@ -580,6 +599,11 @@
 
         </div>
 
+    </div>
+
+    <!-- CONTENEUR CACHÉ POUR LA GÉNÉRATION DU PDF (DESIGN PREMIUM) -->
+    <div id="pdf-template-container">
+        <!-- Le contenu sera injecté ici par JavaScript -->
     </div>
 
     <!-- SCRIPT DE TYPE MODULE POUR UTILISER FIREBASE ET CHART.JS -->
@@ -630,6 +654,165 @@
                 btnFus.className = "w-full md:w-auto px-6 py-2 rounded-full bg-blue-600 text-white font-bold shadow-lg ring-2 ring-blue-400 text-xs md:text-sm transition-all";
                 btnTri.className = "w-full md:w-auto px-6 py-2 rounded-full bg-slate-700 text-gray-300 font-bold hover:bg-slate-600 text-xs md:text-sm transition-all";
             }
+        };
+
+        // ==========================================
+        // GÉNÉRATION DU RAPPORT PDF (DESIGN PREMIUM)
+        // ==========================================
+        window.generatePDFReport = function() {
+            // 1. Déterminer le scénario actif
+            const isTriangulaire = !document.getElementById('content-triangulaire').classList.contains('hidden');
+            const scenarioName = isTriangulaire ? "Scénario A : Triangulaire (Maintien JM)" : "Scénario B : Duel Unifié (Front Anti-RN)";
+            
+            // 2. Récupérer le diagnostic et le tableau du scénario actif
+            const diagnosticText = isTriangulaire 
+                ? document.getElementById('triangulaire-result-text').innerText 
+                : document.getElementById('fusion-result-text').innerText;
+                
+            const tableBodyHTML = isTriangulaire 
+                ? document.getElementById('table-body-triangulaire').innerHTML 
+                : document.getElementById('table-body-fusion').innerHTML;
+
+            // En-têtes de table spécifiques selon le scénario
+            const tableHeaderHTML = isTriangulaire 
+                ? `<tr><th style="padding:12px 15px; border-bottom:2px solid #e2e8f0; text-align:left; color:#1e293b; font-weight:700;">Provenance</th><th style="padding:12px 15px; border-bottom:2px solid #e2e8f0; text-align:center; color:#1e293b; font-weight:700;">Vers J. Bédier</th><th style="padding:12px 15px; border-bottom:2px solid #e2e8f0; text-align:center; color:#1e293b; font-weight:700;">Vers L. Virapoullé</th><th style="padding:12px 15px; border-bottom:2px solid #e2e8f0; text-align:center; color:#1e293b; font-weight:700;">Vers JM. Virapoullé</th><th style="padding:12px 15px; border-bottom:2px solid #e2e8f0; text-align:center; color:#64748b; font-weight:600;">Abstention</th></tr>`
+                : `<tr><th style="padding:12px 15px; border-bottom:2px solid #e2e8f0; text-align:left; color:#1e293b; font-weight:700;">Provenance</th><th style="padding:12px 15px; border-bottom:2px solid #e2e8f0; text-align:center; color:#1e293b; font-weight:700;">Vers J. Bédier</th><th style="padding:12px 15px; border-bottom:2px solid #e2e8f0; text-align:center; color:#1e293b; font-weight:700;">Vers L. Virapoullé</th><th style="padding:12px 15px; border-bottom:2px solid #e2e8f0; text-align:center; color:#64748b; font-weight:600;">Abstention</th></tr>`;
+
+            // 3. Capturer les graphiques en images Base64 (PNG par défaut pour garder la netteté)
+            const resultChart = isTriangulaire ? ctxResultsTriChart : ctxResultsFusChart;
+            const compChart = isTriangulaire ? ctxCompositionTriChart : ctxCompositionFusChart;
+            
+            const resultChartImg = resultChart.toBase64Image();
+            const compChartImg = compChart.toBase64Image();
+
+            // 4. Préparer le conteneur HTML avec un style "Premium Imprimable"
+            const pdfContainer = document.getElementById('pdf-template-container');
+            const currentDate = new Date().toLocaleDateString('fr-FR');
+            
+            pdfContainer.innerHTML = `
+                <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1e293b; background-color: #ffffff; width: 100%; padding: 40px; box-sizing: border-box;">
+                    
+                    <!-- En-tête Premium -->
+                    <div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: 35px 30px; border-radius: 12px; color: white; margin-bottom: 35px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h1 style="margin: 0; font-size: 28px; text-transform: uppercase; letter-spacing: 1px; font-weight: 800;">Rapport d'Analyse Stratégique</h1>
+                                <h2 style="margin: 8px 0 0 0; font-size: 18px; font-weight: 400; opacity: 0.9;">Commune de Saint-André - Projection 2nd Tour</h2>
+                            </div>
+                            <div style="text-align: right;">
+                                <p style="margin: 0; font-size: 14px; font-weight: bold;">Date : ${currentDate}</p>
+                                <p style="margin: 4px 0 0 0; font-size: 12px; opacity: 0.8;">Auteur : Jonathan Kichenin</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Configuration des Réglettes -->
+                    <div style="background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; padding: 25px; margin-bottom: 35px;">
+                        <h3 style="color: #0f172a; font-size: 16px; margin-top: 0; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">1. Paramètres du Scénario</h3>
+                        <p style="font-weight: bold; color: #4338ca; font-size: 18px; margin-bottom: 20px;">Hypothèse : ${scenarioName}</p>
+                        
+                        <div style="display: flex; justify-content: space-between; font-size: 14px; line-height: 1.6;">
+                            <ul style="list-style-type: none; padding: 0; margin: 0; width: 48%;">
+                                <li><span style="color: #64748b;">Fidélité au leader (JMV) :</span> <strong style="color:#0f172a;">${document.getElementById('displayLambda').innerText}</strong></li>
+                                <li><span style="color: #64748b;">Attractivité Laurent (Pool) :</span> <strong style="color:#0f172a;">${document.getElementById('displayTau').innerText}</strong></li>
+                                <li><span style="color: #64748b;">Usure/Prime Sortant Bédier :</span> <strong style="color:#0f172a;">${document.getElementById('displayEpsilon').innerText}</strong></li>
+                            </ul>
+                            <ul style="list-style-type: none; padding: 0; margin: 0; width: 48%;">
+                                <li><span style="color: #64748b;">Participation Globale :</span> <strong style="color:#0f172a;">${document.getElementById('displayPi').innerText}</strong></li>
+                                <li><span style="color: #64748b;">Sursaut Participation :</span> <strong style="color:#0284c7;">${document.getElementById('globalSursautValue').innerText}</strong></li>
+                                ${!isTriangulaire ? `<li><span style="color: #64748b;">Front Anti-RN ciblée :</span> <strong style="color:#059669;">${document.getElementById('frontRnValue').innerText}</strong></li>` : ''}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Résultat et Diagnostic -->
+                    <div style="margin-bottom: 35px;">
+                        <h3 style="color: #0f172a; font-size: 16px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 15px;">2. Diagnostic de la Projection</h3>
+                        <div style="background-color: #eff6ff; border-left: 5px solid #3b82f6; padding: 20px; border-radius: 4px; font-size: 16px; font-weight: 500; color: #1e3a8a; line-height: 1.5;">
+                            ${diagnosticText}
+                        </div>
+                    </div>
+
+                    <!-- Graphiques (Insérés comme images) -->
+                    <div style="margin-bottom: 35px;">
+                        <h3 style="color: #0f172a; font-size: 16px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 15px;">3. Visualisation des Forces</h3>
+                        <div style="display: flex; gap: 20px;">
+                            <!-- Image Graphique 1 -->
+                            <div style="flex: 1; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; background: #fff; text-align: center;">
+                                <p style="font-weight: bold; color: #475569; margin-top: 0; margin-bottom: 10px; font-size: 14px;">Résultat Projeté (%)</p>
+                                <!-- On force un fond noir sur l'image car le graphique d'origine a des polices claires conçues pour fond sombre -->
+                                <div style="background-color: #1e293b; padding: 10px; border-radius: 6px;">
+                                    <img src="${resultChartImg}" style="width: 100%; height: auto; max-height: 220px; object-fit: contain;">
+                                </div>
+                            </div>
+                            <!-- Image Graphique 2 -->
+                            <div style="flex: 1; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; background: #fff; text-align: center;">
+                                <p style="font-weight: bold; color: #475569; margin-top: 0; margin-bottom: 10px; font-size: 14px;">Origine des Voix (Composition)</p>
+                                <div style="background-color: #1e293b; padding: 10px; border-radius: 6px;">
+                                    <img src="${compChartImg}" style="width: 100%; height: auto; max-height: 220px; object-fit: contain;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tableau de détail (Nettoyé pour impression claire) -->
+                    <div style="page-break-inside: avoid;">
+                        <h3 style="color: #0f172a; font-size: 16px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 15px;">4. Détail Mathématique des Reports</h3>
+                        <div style="border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden;">
+                            <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
+                                <thead style="background-color: #f8fafc;">
+                                    ${tableHeaderHTML}
+                                </thead>
+                                <tbody>
+                                    <!-- Remplacement des classes CSS sombres par des styles clairs pour le papier -->
+                                    ${tableBodyHTML
+                                        .replace(/text-gray-200/g, 'color: #334155')
+                                        .replace(/text-white/g, 'color: #0f172a')
+                                        .replace(/text-gray-400/g, 'color: #64748b')
+                                        .replace(/text-gray-500/g, 'color: #94a3b8')
+                                        .replace(/text-green-400/g, 'color: #15803d; font-weight: bold;') 
+                                        .replace(/text-amber-400/g, 'color: #b45309; font-weight: bold;') 
+                                        .replace(/text-amber-500/g, 'color: #b45309; font-weight: bold;')
+                                        .replace(/text-red-400/g, 'color: #b91c1c; font-weight: bold;')   
+                                        .replace(/text-red-500/g, 'color: #b91c1c; font-weight: bold;')
+                                        .replace(/text-emerald-400/g, 'color: #047857; font-weight: bold;') 
+                                        .replace(/text-blue-400/g, 'color: #1d4ed8; font-weight: bold;') 
+                                        .replace(/bg-slate-800/g, 'background-color: #f1f5f9; border-top: 2px solid #cbd5e1;') 
+                                        .replace(/bg-blue-900\/20/g, 'background-color: #eff6ff;')
+                                        .replace(/bg-emerald-900\/20/g, 'background-color: #ecfdf5;')
+                                        .replace(/<tr class="hover.*?">/g, '<tr><td colspan="5" style="border-bottom:1px solid #e2e8f0; padding:0; height:0;"></td></tr><tr>') // Ajoute des lignes séparatrices
+                                        .replace(/<td/g, '<td style="padding:10px 15px;"')
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Pied de page -->
+                    <div style="margin-top: 40px; border-top: 1px solid #cbd5e1; padding-top: 15px; text-align: center; color: #94a3b8; font-size: 11px;">
+                        <strong>Analyse Électorale V5</strong> - Document à usage interne et stratégique.<br>
+                        Généré automatiquement par le modèle de simulation dynamique de Saint-André.
+                    </div>
+                </div>
+            `;
+
+            // 5. Temporairement afficher le conteneur pour que html2pdf puisse le capturer
+            pdfContainer.style.display = 'block';
+
+            // 6. Options de haute qualité pour html2pdf
+            const opt = {
+                margin:       [10, 0, 10, 0], // Marges [Haut, Droite, Bas, Gauche]
+                filename:     `Analyse_St_Andre_2nd_Tour_${isTriangulaire ? 'Triangulaire' : 'Fusion'}.pdf`,
+                image:        { type: 'jpeg', quality: 1 },
+                html2canvas:  { scale: 2, useCORS: true, logging: false }, // Scale 2 pour des textes et graphiques nets
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Lancer la génération
+            html2pdf().set(opt).from(pdfContainer.firstElementChild).save().then(() => {
+                // 7. Recacher le conteneur une fois le téléchargement lancé
+                pdfContainer.style.display = 'none';
+            });
         };
 
         // ==========================================
@@ -1253,7 +1436,7 @@
                         <td class="px-3 py-3 md:px-6 md:py-4 font-medium text-emerald-400">🛡️ Front anti-RN (Abstentionnistes)</td>
                         <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-emerald-400">+ ${sursautRN}</td>
                         <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
-                        <td class="px-3 py-3 md:px-6 md:py-4 text-center text-red-400">- ${sursautRN} abs.</td>
+                        <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">-</td>
                     </tr>
                 `;
             }
