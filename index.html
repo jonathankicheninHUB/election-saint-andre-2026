@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moteur d'Analyse Électorale - La Réunion</title>
+    <title>Prédiction et Analyse Électorale V5 - Multi-Candidats</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
     
@@ -32,9 +32,9 @@
         .card:hover {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
-        .header-bg { background-color: #4f46e5; }
-        .header-ss-bg { background-color: #059669; } /* Vert pour Sainte-Suzanne */
-        
+        .header-bg { 
+            background-color: #4f46e5; 
+        }
         .kpi-value {
             font-size: 2rem; 
             font-weight: 800;
@@ -68,780 +68,1546 @@
             cursor: pointer;
             box-shadow: 0 0 5px rgba(99, 102, 241, 0.6);
         }
-        .range-slider-ss::-webkit-slider-thumb { background: #10b981; box-shadow: 0 0 5px rgba(16, 185, 129, 0.6); }
-
-        /* Couleurs SAINT ANDRÉ */
-        .sa-bar-M { background-color: #10b981; } 
-        .sa-bar-O { background-color: #ef4444; } 
-        .sa-bar-L { background-color: #f59e0b; } 
-        .sa-bar-F { background-color: #a855f7; } 
-        .sa-bar-SV { background-color: #ec4899; } 
-        .sa-bar-SOU { background-color: #14b8a6; } 
-        .sa-bar-SAU { background-color: #06b6d4; } 
-        .sa-bar-C { background-color: #84cc16; } 
-
-        .sa-text-M { color: #10b981; }
-        .sa-text-O { color: #ef4444; }
-        .sa-text-L { color: #f59e0b; }
-        .sa-text-F { color: #a855f7; }
+        .range-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #6366f1;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(99, 102, 241, 0.6);
+        }
         
-        /* Couleurs SAINTE SUZANNE */
-        .ss-bar-G { background-color: #ef4444; } /* Gironcel (Rouge PCR) */
-        .ss-bar-A { background-color: #3b82f6; } /* Alamélou (Bleu Opp) */
-        .ss-bar-K { background-color: #f59e0b; } /* Alek (Orange) */
-        .ss-bar-O { background-color: #94a3b8; } /* Autres */
+        /* Couleurs des Candidats */
+        .result-bar-M { background-color: #10b981; } 
+        .result-bar-O { background-color: #ef4444; } 
+        .result-bar-L { background-color: #f59e0b; } 
+        .result-bar-F { background-color: #a855f7; } 
+        .result-bar-SV { background-color: #ec4899; } 
+        .result-bar-SOU { background-color: #14b8a6; } 
+        .result-bar-SAU { background-color: #06b6d4; } 
+        .result-bar-C { background-color: #84cc16; } 
 
-        .ss-text-G { color: #ef4444; }
-        .ss-text-A { color: #3b82f6; }
-        .ss-text-K { color: #f59e0b; }
+        .text-c-M { color: #10b981; }
+        .text-c-O { color: #ef4444; }
+        .text-c-L { color: #f59e0b; }
+        .text-c-F { color: #a855f7; }
+        .text-c-SV { color: #ec4899; }
+        .text-c-SOU { color: #14b8a6; }
+        .text-c-SAU { color: #06b6d4; }
+        .text-c-C { color: #84cc16; }
 
         @keyframes pulse-green {
             0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
             70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
             100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
-        .cloud-active { animation: pulse-green 2s infinite; }
+        .cloud-active {
+            animation: pulse-green 2s infinite;
+        }
     </style>
 </head>
 <body class="p-2 md:p-8 min-h-screen flex items-start justify-center overflow-x-hidden">
 
-    <div class="w-full max-w-7xl container-bg p-4 md:p-10 relative">
+    <div class="w-full max-w-7xl container-bg p-4 md:p-10">
         
-        <!-- SÉLECTEUR DE VILLE GLOBAL -->
-        <div class="absolute top-6 left-6 md:left-10 z-50">
-            <label class="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1 block">📍 Territoire d'Analyse :</label>
-            <select id="citySelector" onchange="switchCity()" class="bg-slate-800 text-white font-bold py-2 px-4 rounded-lg border border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg text-sm cursor-pointer hover:bg-slate-700 transition-colors">
-                <option value="sa">Saint-André (Modèle 8 Candidats)</option>
-                <option value="ss">Sainte-Suzanne (Modèle 3 Candidats)</option>
-            </select>
+        <!-- HEADER -->
+        <header class="header-bg text-white p-4 md:p-8 rounded-t-xl mb-6 shadow-lg flex flex-col items-center relative">
+            <h1 class="text-2xl md:text-3xl font-extrabold mb-2 uppercase tracking-tighter text-center">Prédiction et Analyse V5 : Scrutin à 8 Candidats</h1>
+            <p class="text-xs md:text-md font-light opacity-90 text-center mb-1">Modèle Réaliste : Dynamique complète de l'électorat</p>
+            <p class="text-[10px] md:text-xs text-indigo-200 font-medium tracking-wide mb-2 md:mb-0">Version initiale : Novembre 2025 | Créé par <strong>Jonathan Kichenin</strong></p>
+            
+            <div id="cloud-indicator" class="mt-2 md:mt-0 md:absolute md:top-4 md:right-4 bg-slate-800 text-xs px-3 py-1 rounded-full flex items-center justify-center gap-2 border border-slate-600 hidden w-max mx-auto md:w-auto">
+                <div class="w-2 h-2 rounded-full bg-green-500 cloud-active"></div>
+                <span>Cloud Connecté</span>
+            </div>
+        </header>
+
+        <!-- NAVIGATION DES ONGLETS -->
+        <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-8 border-b border-slate-700 pb-4">
+            <button id="btn-tab-1" onclick="switchTab(1)" class="px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-indigo-600 text-white shadow-lg">1er Tour (Simulation)</button>
+            <button id="btn-tab-2" onclick="switchTab(2)" class="px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600">2nd Tour (Scénarios 2026)</button>
+            <button id="btn-tab-3" onclick="switchTab(3)" class="px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600">Backtesting 2020 (Validation)</button>
         </div>
 
-        <!-- ==================================================================================== -->
-        <!-- ============================== BLOC : SAINT-ANDRÉ ================================== -->
-        <!-- ==================================================================================== -->
-        <div id="bloc-sa" class="block pt-16 md:pt-0">
-            <!-- HEADER SA -->
-            <header class="header-bg text-white p-4 md:p-8 rounded-xl mb-6 shadow-lg flex flex-col items-center relative mt-12 md:mt-0">
-                <h1 class="text-2xl md:text-3xl font-extrabold mb-2 uppercase tracking-tighter text-center">SAINT-ANDRÉ : Prédiction et Analyse</h1>
-                <p class="text-xs md:text-md font-light opacity-90 text-center mb-1">Modèle Déterministe : Flux de Votes & Polarisation</p>
-                <p class="text-[10px] md:text-xs text-indigo-200 font-medium tracking-wide mb-2 md:mb-0">Auteur : Jonathan Kichenin</p>
-            </header>
+        <!-- ========================================== -->
+        <!-- ONGLET 1 : PREMIER TOUR (Le Tableau de bord) -->
+        <!-- ========================================== -->
+        <div id="tab-1" class="space-y-6">
+            
+            <section class="card border-t-4 border-blue-500 bg-slate-800/50">
+                <h2 class="text-lg md:text-xl font-bold text-blue-400 mb-3 flex items-center gap-2">
+                    <span>🎯</span> Objectif et Démarche Mathématique
+                </h2>
+                <div class="text-xs md:text-sm text-gray-300 space-y-3 leading-relaxed">
+                    <p>
+                        <strong class="text-gray-100">L'Objectif :</strong> Cet exercice interactif vise à objectiver les dynamiques électorales complexes de la commune de Saint-André. Plutôt que de se fier à de simples sondages, ce tableau de bord permet d'expérimenter et de visualiser comment de légères variations de comportements (mobilisation, fidélité d'un clan, captation des indécis) peuvent bouleverser l'issue d'un scrutin fragmenté à 8 candidats.
+                    </p>
+                    <p>
+                        <strong class="text-gray-100">La Démarche (Algorithme) :</strong> Conçu par <strong>Jonathan Kichenin</strong>, le modèle repose sur un algorithme déterministe de flux de votes. Il s'appuie sur les socles électoraux historiques (2014-2020) qu'il soumet à des contraintes actuelles. Il applique un facteur de volatilité (usure ou prime) au maire sortant, scinde mathématiquement les bases familiales selon vos réglages, et redistribue un "pool" de voix flottantes (les indécis) selon des coefficients d'attractivité. L'équation finale ajuste proportionnellement tous les résultats en fonction de la participation globale ($\pi$) pour garantir une projection exacte à 100% des suffrages exprimés.
+                    </p>
+                </div>
+            </section>
 
-            <!-- NAVIGATION DES ONGLETS SA -->
-            <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-8 border-b border-slate-700 pb-4">
-                <button id="btn-sa-tab-1" onclick="switchTabSA(1)" class="px-4 py-2 rounded-full font-bold text-xs md:text-sm transition-colors bg-indigo-600 text-white shadow-lg">1er Tour (2026)</button>
-                <button id="btn-sa-tab-2" onclick="switchTabSA(2)" class="px-4 py-2 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600">2nd Tour (Scénarios)</button>
-                <button id="btn-sa-tab-3" onclick="switchTabSA(3)" class="px-4 py-2 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600">Backtesting 2020</button>
-            </div>
+            <section class="card border-l-4 border-amber-500">
+                <h2 class="text-lg md:text-xl font-bold text-gray-100 mb-4 pb-2 border-b border-slate-700 uppercase tracking-wide">I. Mécanique du Calcul</h2>
+                <div id="recalculated-base-table" class="overflow-x-auto w-full pb-2">
+                    <!-- Le tableau sera généré ici dynamiquement -->
+                </div>
+                <p class="mt-4 text-xs md:text-sm text-gray-400 italic">
+                    *Le tableau se trie automatiquement en temps réel. Les voix sont partagées entre les bases historiques, la scission familiale, et le pool d'indécis.
+                </p>
+            </section>
 
-            <!-- ONGLET 1 SA : 1er TOUR -->
-            <div id="sa-tab-1" class="space-y-6">
-                <!-- Inputs SA -->
-                <div class="card border-t-4 border-indigo-500">
-                     <h3 class="text-lg md:text-xl font-bold text-gray-100 mb-6 pb-2 border-b border-slate-700">Paramètres Stratégiques (1er Tour)</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+                <div class="card lg:col-span-2">
+                     <h3 class="text-lg md:text-xl font-bold text-gray-100 mb-6 pb-2 border-b border-slate-700 uppercase tracking-wide">II. Simulation Interactive</h3>
                      
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 md:mb-8 bg-indigo-900/40 p-4 rounded-xl border border-indigo-900/60">
                         <div>
-                            <label class="block text-xs md:text-sm font-bold text-red-400 mb-2">1. Fidélité au leader (J.M. Virapoullé)</label>
+                            <label for="fidelityFactor" class="block text-xs md:text-sm font-bold text-red-400 mb-2">1. Fidélité au leader (J.M. Virapoullé)</label>
+                            <!-- Repère historique : 49% -> ((0.49 - 0.10) / 0.80) * 100 = 48.75% -->
                             <div class="relative pt-6 pb-1">
-                                <button onclick="resetSlider('sa-fidelityFactor', 0.49)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 48.75%; top: -2px; transform: translateX(-50%);">
-                                    <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded border border-amber-500/30 cursor-pointer">📍 Réf. 2020</span>
-                                    <div class="w-0.5 h-2 bg-amber-400 mt-0.5"></div>
+                                <button onclick="resetSlider('fidelityFactor', 0.49)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 48.75%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer au Modèle 2020 (49%)">
+                                    <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Réf. 2020</span>
+                                    <div class="w-0.5 h-2 bg-amber-400 opacity-70 group-hover:opacity-100 group-hover:bg-amber-500 mt-0.5"></div>
                                 </button>
-                                <input type="range" id="sa-fidelityFactor" value="0.49" min="0.10" max="0.90" step="0.01" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider" oninput="runSimulationSA()">
+                                <input type="range" id="fidelityFactor" value="0.49" min="0.10" max="0.90" step="0.01" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="runSimulation()">
                             </div>
-                            <div class="flex justify-between text-[10px] text-indigo-400 mt-1"><span>Rejet</span><span id="sa-displayLambda" class="font-bold text-white text-sm">49%</span><span>Unité</span></div>
+                            <div class="flex justify-between text-[10px] md:text-xs text-indigo-400 mt-1">
+                                <span>Rejet (10%)</span>
+                                <span id="displayLambda" class="font-bold text-base md:text-lg text-white">49%</span>
+                                <span>Uni (90%)</span>
+                            </div>
                         </div>
                         <div>
-                             <label class="block text-xs md:text-sm font-bold text-amber-500 mb-2">2. Attractivité de Laurent (Pool)</label>
+                             <label for="transferFactor" class="block text-xs md:text-sm font-bold text-amber-500 mb-2">2. Attractivité de Laurent (Pool)</label>
+                             <!-- Repère historique : 6% -> (0.06 / 0.80) * 100 = 7.5% -->
                              <div class="relative pt-6 pb-1">
-                                 <button onclick="resetSlider('sa-transferFactor', 0.06)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 7.5%; top: -2px; transform: translateX(-50%);">
-                                     <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded border border-amber-500/30 cursor-pointer">📍 Base</span>
-                                     <div class="w-0.5 h-2 bg-amber-400 mt-0.5"></div>
+                                 <button onclick="resetSlider('transferFactor', 0.06)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 7.5%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer au Modèle (6%)">
+                                     <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Réf. Modèle</span>
+                                     <div class="w-0.5 h-2 bg-amber-400 opacity-70 group-hover:opacity-100 group-hover:bg-amber-500 mt-0.5"></div>
                                  </button>
-                                 <input type="range" id="sa-transferFactor" value="0.06" min="0" max="0.80" step="0.01" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider" oninput="runSimulationSA()">
+                                 <input type="range" id="transferFactor" value="0.06" min="0" max="0.80" step="0.01" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="runSimulation()">
                              </div>
-                             <div class="flex justify-between text-[10px] text-indigo-400 mt-1"><span>Nulle</span><span id="sa-displayTau" class="font-bold text-white text-sm">6%</span><span>Forte</span></div>
+                             <div class="flex justify-between text-[10px] md:text-xs text-indigo-400 mt-1">
+                                 <span>Nulle (0%)</span>
+                                 <span id="displayTau" class="font-bold text-base md:text-lg text-white">6%</span>
+                                 <span>Forte (80%)</span>
+                             </div>
                         </div>
                      </div>
 
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 md:mb-8 px-0 md:px-4">
                         <div>
-                            <label class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Usure/Prime Sortant (Bédier) : <span class="font-bold text-green-400" id="sa-displayEpsilon">1.05</span></label>
+                            <label for="erosionFactor" class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Usure/Prime Sortant : <span class="font-bold text-green-400" id="displayEpsilon">1.05</span></label>
+                            <!-- Repère historique : 1.05 -> ((1.05 - 0.7) / 0.6) * 100 = 58.33% -->
                             <div class="relative pt-6 pb-1">
-                                <button onclick="resetSlider('sa-erosionFactor', 1.05)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 58.33%; top: -2px; transform: translateX(-50%);">
-                                    <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded border border-amber-500/30 cursor-pointer">📍 Stable</span>
-                                    <div class="w-0.5 h-2 bg-amber-400 mt-0.5"></div>
+                                <button onclick="resetSlider('erosionFactor', 1.05)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 58.33%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer au Modèle Base (1.05)">
+                                    <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Modèle Initial</span>
+                                    <div class="w-0.5 h-2 bg-amber-400 opacity-70 group-hover:opacity-100 group-hover:bg-amber-500 mt-0.5"></div>
                                 </button>
-                                <input type="range" id="sa-erosionFactor" value="1.05" min="0.7" max="1.3" step="0.01" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider" oninput="runSimulationSA()">
+                                <input type="range" id="erosionFactor" value="1.05" min="0.7" max="1.3" step="0.01" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="runSimulation()">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Participation Globale : <span class="font-bold text-blue-400" id="sa-displayPi">1.05</span></label>
+                            <label for="participationFactor" class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Participation Globale : <span class="font-bold text-blue-400" id="displayPi">1.05</span></label>
+                            <!-- Repère historique : 1.05 -> ((1.05 - 0.8) / 0.4) * 100 = 62.5% -->
                             <div class="relative pt-6 pb-1">
-                                <button onclick="resetSlider('sa-participationFactor', 1.05)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 62.5%; top: -2px; transform: translateX(-50%);">
-                                    <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded border border-amber-500/30 cursor-pointer">📍 Base</span>
-                                    <div class="w-0.5 h-2 bg-amber-400 mt-0.5"></div>
+                                <button onclick="resetSlider('participationFactor', 1.05)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 62.5%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer à la Base (1.05)">
+                                    <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Base Votants</span>
+                                    <div class="w-0.5 h-2 bg-amber-400 opacity-70 group-hover:opacity-100 group-hover:bg-amber-500 mt-0.5"></div>
                                 </button>
-                                <input type="range" id="sa-participationFactor" value="1.05" min="0.8" max="1.2" step="0.01" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider" oninput="runSimulationSA()">
+                                <input type="range" id="participationFactor" value="1.05" min="0.8" max="1.2" step="0.01" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="runSimulation()">
                             </div>
                         </div>
+                     </div>
+
+                     <div class="flex justify-center mb-6 md:mb-8 w-full">
+                         <button onclick="saveCurrentScenario()" class="w-full md:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 md:py-2 px-4 md:px-6 rounded-xl md:rounded-full shadow-lg transition-transform transform hover:scale-105 border border-indigo-400 flex items-center justify-center gap-2 text-sm md:text-base">
+                             <span>💾</span> Enregistrer et Partager le Scénario
+                         </button>
+                     </div>
+                     
+                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center mb-6">
+                          <div class="p-3 bg-slate-700 rounded-lg">
+                             <p class="text-[10px] md:text-xs text-gray-400 uppercase font-semibold">Votants Totaux</p>
+                             <div id="kpi-total-votes" class="kpi-value text-white mt-1">0</div>
+                          </div>
+                          <div class="p-3 bg-slate-800 border-2 border-slate-700 rounded-lg">
+                             <p class="text-[10px] md:text-xs text-gray-400 uppercase font-semibold">Tête vs Second</p>
+                             <div id="kpi-vote-gap" class="kpi-value text-white mt-1">0</div>
+                          </div>
+                          <div class="p-3 bg-slate-700 rounded-lg">
+                             <p class="text-[10px] md:text-xs text-gray-400 uppercase font-semibold">Seuil (50%)</p>
+                             <div id="kpi-seuil" class="kpi-value text-gray-400 mt-1">0</div>
+                          </div>
+                     </div>
+                     
+                     <div class="pt-4 flex flex-col gap-3" id="bars-container">
+                         <!-- Bédier -->
+                         <div id="wrapper-M">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                                <span class="text-c-M truncate">Joé Bédier (Sortant)</span>
+                                <span id="percent-M" class="font-extrabold text-c-M whitespace-nowrap">0.00 %</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                                <div id="bar-M" class="h-3 rounded-full result-bar-M transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+                         </div>
+                         <!-- JM Virapoullé -->
+                         <div id="wrapper-O">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                                <span class="text-c-O truncate">J.M. Virapoullé</span>
+                                <span id="percent-O" class="font-extrabold text-c-O whitespace-nowrap">0.00 %</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                                <div id="bar-O" class="h-3 rounded-full result-bar-O transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+                         </div>
+                         <!-- Laurent Virapoullé -->
+                         <div id="wrapper-L">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                                <span class="text-c-L truncate">Laurent Virapoullé</span>
+                                <span id="percent-L" class="font-extrabold text-c-L whitespace-nowrap">0.00 %</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                                <div id="bar-L" class="h-3 rounded-full result-bar-L transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+                         </div>
+                         <!-- Fruteau -->
+                         <div id="wrapper-F">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                                <span class="text-c-F truncate">Eric Fruteau</span>
+                                <span id="percent-F" class="font-extrabold text-c-F whitespace-nowrap">0.00 %</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                                <div id="bar-F" class="h-3 rounded-full result-bar-F transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+                         </div>
+                         <!-- Settama-Vidon -->
+                         <div id="wrapper-SV">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                                <span class="text-c-SV truncate">Settama-Vidon</span>
+                                <span id="percent-SV" class="font-extrabold text-c-SV whitespace-nowrap">0.00 %</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                                <div id="bar-SV" class="h-3 rounded-full result-bar-SV transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+                         </div>
+                         <!-- Soupramanien -->
+                         <div id="wrapper-SOU">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                                <span class="text-c-SOU truncate">Soupramanien</span>
+                                <span id="percent-SOU" class="font-extrabold text-c-SOU whitespace-nowrap">0.00 %</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                                <div id="bar-SOU" class="h-3 rounded-full result-bar-SOU transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+                         </div>
+                         <!-- Sautron -->
+                         <div id="wrapper-SAU">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                                <span class="text-c-SAU truncate">Sautron</span>
+                                <span id="percent-SAU" class="font-extrabold text-c-SAU whitespace-nowrap">0.00 %</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                                <div id="bar-SAU" class="h-3 rounded-full result-bar-SAU transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+                         </div>
+                         <!-- Cotaya -->
+                         <div id="wrapper-C">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                                <span class="text-c-C truncate">Cotaya</span>
+                                <span id="percent-C" class="font-extrabold text-c-C whitespace-nowrap">0.00 %</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden mt-1">
+                                <div id="bar-C" class="h-3 rounded-full result-bar-C transition-all duration-500" style="width: 0%;"></div>
+                            </div>
+                         </div>
+                     </div>
+
+                     <div class="mt-6 p-4 rounded-lg border-l-4 border-indigo-500 bg-indigo-900/40">
+                         <p class="text-xs md:text-sm font-bold text-indigo-300 mb-1">Diagnostic du Scrutin :</p>
+                         <p id="analysis-text" class="text-xs md:text-sm text-gray-200 leading-relaxed"></p>
                      </div>
                 </div>
 
-                <!-- Resultats 1er Tour SA -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="card lg:col-span-2">
-                        <div class="grid grid-cols-3 gap-2 text-center mb-6">
-                            <div class="p-2 bg-slate-700 rounded"><p class="text-[10px] text-gray-400">Votants</p><div id="sa-kpi-total" class="text-xl font-bold text-white">0</div></div>
-                            <div class="p-2 bg-slate-800 border border-slate-600 rounded"><p class="text-[10px] text-gray-400">Tête vs Second</p><div id="sa-kpi-gap" class="text-xl font-bold text-white">0</div></div>
-                            <div class="p-2 bg-slate-700 rounded"><p class="text-[10px] text-gray-400">Seuil (50%)</p><div id="sa-kpi-seuil" class="text-xl font-bold text-gray-400">0</div></div>
-                        </div>
-                        <div class="space-y-3" id="sa-bars-container">
-                            <!-- Barres générées en JS -->
-                        </div>
-                    </div>
-                    <div class="card lg:col-span-1">
-                        <h3 class="text-lg font-bold text-gray-100 mb-4 border-b border-slate-700 pb-2">Radar des Forces</h3>
-                        <div class="chart-container" style="min-height: 200px;"><canvas id="sa-radarChart"></canvas></div>
+                <!-- RADAR -->
+                <div class="card lg:col-span-1 flex flex-col">
+                    <h3 class="text-lg md:text-xl font-bold text-gray-100 mb-4 pb-2 border-b border-slate-700 uppercase tracking-wide">III. Radar Stratégique</h3>
+                    <p class="text-xs md:text-sm text-gray-400 mb-4">
+                        Forces en présence modifiant l'équilibre politique.
+                    </p>
+                    <div class="chart-container" style="min-height: 250px;">
+                        <canvas id="factorImpactChart"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- ONGLET 2 SA : 2nd TOUR -->
-            <div id="sa-tab-2" class="hidden space-y-6">
-                <!-- Sélecteur Scénario SA -->
-                <div class="flex flex-col md:flex-row justify-center items-center gap-3 bg-slate-800 p-4 rounded-xl border border-slate-700">
-                    <span class="text-gray-400 font-bold uppercase text-xs">Hypothèse :</span>
-                    <button id="sa-btn-scen-tri" onclick="toggleScenSA('tri')" class="px-6 py-2 rounded-full bg-purple-600 text-white font-bold text-xs shadow-lg transition-all">Triangulaire (Maintien JM)</button>
-                    <button id="sa-btn-scen-fus" onclick="toggleScenSA('fus')" class="px-6 py-2 rounded-full bg-slate-700 text-gray-300 font-bold hover:bg-slate-600 text-xs transition-all">Duel (Fusion L. / JM)</button>
+            <!-- SECTION : HISTORIQUE CLOUD -->
+            <section class="card border-t-4 border-teal-500 mt-4 md:mt-8">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 pb-2 border-b border-slate-700 gap-2">
+                    <h2 class="text-lg md:text-xl font-bold text-gray-100 uppercase tracking-wide">IV. Scénarios Partagés</h2>
+                    <button onclick="clearAllScenarios()" class="text-xs text-red-400 hover:text-red-300 underline hidden" id="btn-clear-local">Effacer l'historique local</button>
                 </div>
-
-                <!-- Sursaut SA -->
-                <div class="bg-slate-800 p-4 rounded-xl shadow-inner border border-slate-600">
-                    <label class="block text-sm font-bold text-blue-400 mb-2">Sursaut de Participation Global : <span id="sa-sursautValue" class="text-white ml-2">+1 500 voix</span></label>
-                    <div class="relative pt-6 pb-1">
-                        <button onclick="resetSlider('sa-sursautSlider', 1500)" class="absolute flex flex-col items-center z-20 focus:outline-none" style="left: 50%; top: -2px; transform: translateX(-50%);">
-                            <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1 py-0.5 rounded border border-amber-500/30 cursor-pointer">📍 Réf. Hist.</span>
-                            <div class="w-0.5 h-2 bg-amber-400 mt-0.5"></div>
-                        </button>
-                        <input type="range" id="sa-sursautSlider" min="0" max="3000" value="1500" step="50" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider" oninput="update2ndTourSA()">
-                    </div>
-                </div>
-
-                <!-- Front Anti-RN SA (Visible que pour Duel) -->
-                <div id="sa-antiRnBloc" class="hidden bg-slate-800 p-4 rounded-xl shadow-inner border border-slate-600">
-                    <label class="block text-sm font-bold text-emerald-400 mb-2">Mobilisation ciblée "Front anti-RN" : <span id="sa-antiRnValue" class="text-white ml-2">+0 voix</span></label>
-                    <div class="relative pt-6 pb-1">
-                        <button onclick="resetSlider('sa-antiRnSlider', 1380)" class="absolute flex flex-col items-center z-20 focus:outline-none" style="left: 92%; top: -2px; transform: translateX(-50%);">
-                            <span class="text-[9px] font-bold text-emerald-400 bg-slate-800 px-1 py-0.5 rounded border border-emerald-500/30 cursor-pointer">📍 Légis. 24</span>
-                            <div class="w-0.5 h-2 bg-emerald-400 mt-0.5"></div>
-                        </button>
-                        <input type="range" id="sa-antiRnSlider" min="0" max="1500" value="0" step="10" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider" oninput="update2ndTourSA()">
-                    </div>
-                </div>
-
-                <!-- Charts 2nd Tour SA -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="card"><h3 class="text-lg font-bold text-gray-100 mb-2">Résultat Projeté</h3><p id="sa-res-text" class="text-xs text-gray-400 mb-4"></p><div class="chart-container"><canvas id="sa-chart-res"></canvas></div></div>
-                    <div class="card"><h3 class="text-lg font-bold text-gray-100 mb-2">Composition</h3><p class="text-xs text-gray-400 mb-4">Origine des voix</p><div class="chart-container"><canvas id="sa-chart-comp"></canvas></div></div>
-                </div>
-
-                <!-- Table SA -->
-                <div class="card overflow-x-auto p-0">
-                    <table class="w-full text-left border-collapse text-xs md:text-sm">
-                        <thead id="sa-table-head" class="bg-slate-800 text-gray-400 uppercase"></thead>
-                        <tbody id="sa-table-body" class="text-gray-200 divide-y divide-slate-700"></tbody>
+                
+                <div class="overflow-x-auto w-full pb-2">
+                    <table class="min-w-full text-xs md:text-sm text-left">
+                        <thead class="text-gray-400 uppercase bg-slate-800">
+                            <tr>
+                                <th class="px-3 py-3 rounded-tl-lg whitespace-nowrap">Nom du Scénario</th>
+                                <th class="px-3 py-3 whitespace-nowrap">Vainqueur</th>
+                                <th class="px-3 py-3 whitespace-nowrap">Fidélité (JMV)</th>
+                                <th class="px-3 py-3 whitespace-nowrap">Attract. (Lau)</th>
+                                <th class="px-3 py-3 whitespace-nowrap">Usure Bédier</th>
+                                <th class="px-3 py-3 whitespace-nowrap">Particip.</th>
+                                <th class="px-3 py-3 text-right rounded-tr-lg whitespace-nowrap">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scenario-list-body" class="divide-y divide-slate-700">
+                            <tr>
+                                <td colspan="7" class="px-4 py-6 text-center text-gray-500 italic">Chargement des scénarios partagés...</td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
-            </div>
-
-            <!-- ONGLET 3 SA : BACKTESTING 2020 -->
-            <div id="sa-tab-3" class="hidden space-y-6">
-                <section class="card border-t-4 border-emerald-500">
-                    <h2 class="text-lg md:text-xl font-bold text-emerald-400 mb-3">🔬 Backtesting Saint-André 2020</h2>
-                    <p class="text-xs md:text-sm text-gray-300">Validation du modèle mathématique sur les résultats officiels de 2020 (Bédier vs Virapoullé). Pool de report = 10 270 voix.</p>
-                </section>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="card space-y-6">
-                        <div>
-                            <label class="block text-sm font-bold text-cyan-400 mb-2">Capture Bédier : <span id="sa-bt-bedier-val" class="text-white ml-2">60.2%</span></label>
-                            <div class="relative pt-6 pb-1">
-                                <button onclick="resetSlider('sa-bt-bedier-sl', 60.16)" class="absolute flex flex-col items-center z-20 focus:outline-none" style="left: 60.16%; top: -2px; transform: translateX(-50%);"><span class="text-[9px] text-emerald-400 bg-slate-800 px-1 border border-emerald-500/30 rounded cursor-pointer">📍 Réel</span><div class="w-0.5 h-2 bg-emerald-400"></div></button>
-                                <input type="range" id="sa-bt-bedier-sl" min="0" max="100" value="60.16" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer range-slider" oninput="updateBtsSA()">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-blue-400 mb-2">Capture Virapoullé : <span id="sa-bt-jmv-val" class="text-white ml-2">39.8%</span></label>
-                            <div class="relative pt-6 pb-1">
-                                <button onclick="resetSlider('sa-bt-jmv-sl', 39.84)" class="absolute flex flex-col items-center z-20 focus:outline-none" style="left: 39.84%; top: -2px; transform: translateX(-50%);"><span class="text-[9px] text-emerald-400 bg-slate-800 px-1 border border-emerald-500/30 rounded cursor-pointer">📍 Réel</span><div class="w-0.5 h-2 bg-emerald-400"></div></button>
-                                <input type="range" id="sa-bt-jmv-sl" min="0" max="100" value="39.84" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer range-slider" oninput="updateBtsSA()">
-                            </div>
-                        </div>
-                        <table class="w-full text-left text-sm mt-4"><thead class="text-gray-400"><tr><th>Candidat</th><th>Modèle</th><th>Réel</th></tr></thead>
-                        <tbody class="text-white"><tr class="border-t border-slate-700"><td>Bédier</td><td id="sa-bt-b-proj" class="text-emerald-400 font-bold"></td><td>10 703</td></tr><tr><td>Virapoullé</td><td id="sa-bt-j-proj" class="text-emerald-400 font-bold"></td><td>9 813</td></tr></tbody></table>
-                    </div>
-                    <div class="card"><div class="chart-container"><canvas id="sa-bt-chart"></canvas></div></div>
-                </div>
-            </div>
+            </section>
         </div>
 
-        <!-- ==================================================================================== -->
-        <!-- ============================= BLOC : SAINTE-SUZANNE ================================ -->
-        <!-- ==================================================================================== -->
-        <div id="bloc-ss" class="hidden pt-16 md:pt-0">
-            <!-- HEADER SS -->
-            <header class="header-ss-bg text-white p-4 md:p-8 rounded-xl mb-6 shadow-lg flex flex-col items-center relative mt-12 md:mt-0">
-                <h1 class="text-2xl md:text-3xl font-extrabold mb-2 uppercase tracking-tighter text-center">SAINTE-SUZANNE : Prédiction et Analyse</h1>
-                <p class="text-xs md:text-md font-light opacity-90 text-center mb-1">Modèle Déterministe Transposé (Validation & Projections)</p>
-                <p class="text-[10px] md:text-xs text-green-200 font-medium tracking-wide mb-2 md:mb-0">Auteur : Jonathan Kichenin</p>
-            </header>
-
-            <!-- NAVIGATION DES ONGLETS SS -->
-            <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-8 border-b border-slate-700 pb-4">
-                <button id="btn-ss-tab-1" onclick="switchTabSS(1)" class="px-4 py-2 rounded-full font-bold text-xs md:text-sm transition-colors bg-emerald-600 text-white shadow-lg">1er Tour (2026)</button>
-                <button id="btn-ss-tab-2" onclick="switchTabSS(2)" class="px-4 py-2 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600">2nd Tour (Scénarios)</button>
-                <button id="btn-ss-tab-3" onclick="switchTabSS(3)" class="px-4 py-2 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600">Backtesting 2020</button>
-            </div>
-
-            <!-- ONGLET 1 SS : 1er TOUR -->
-            <div id="ss-tab-1" class="space-y-6">
-                <!-- Inputs SS -->
-                <div class="card border-t-4 border-emerald-500">
-                     <h3 class="text-lg md:text-xl font-bold text-gray-100 mb-6 pb-2 border-b border-slate-700">Paramètres Stratégiques (1er Tour Ste-Suzanne)</h3>
-                     
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <label class="block text-xs md:text-sm font-bold text-red-400 mb-2">1. Fidélité au Sortant (M. Gironcel - PCR)</label>
-                            <div class="relative pt-6 pb-1">
-                                <button onclick="resetSlider('ss-fidelityFactor', 0.85)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 83.3%; top: -2px; transform: translateX(-50%);">
-                                    <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded border border-amber-500/30 cursor-pointer">📍 Historique</span>
-                                    <div class="w-0.5 h-2 bg-amber-400 mt-0.5"></div>
-                                </button>
-                                <input type="range" id="ss-fidelityFactor" value="0.85" min="0.10" max="1.00" step="0.01" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider range-slider-ss" oninput="runSimulationSS()">
-                            </div>
-                            <div class="flex justify-between text-[10px] text-emerald-400 mt-1"><span>Forte usure</span><span id="ss-displayLambda" class="font-bold text-white text-sm">85%</span><span>Base Solide</span></div>
-                        </div>
-                        <div>
-                             <label class="block text-xs md:text-sm font-bold text-blue-400 mb-2">2. Dynamique Challenger (Alek / Opp.)</label>
-                             <div class="relative pt-6 pb-1">
-                                 <button onclick="resetSlider('ss-transferFactor', 0.40)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 40%; top: -2px; transform: translateX(-50%);">
-                                     <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded border border-amber-500/30 cursor-pointer">📍 Neutre</span>
-                                     <div class="w-0.5 h-2 bg-amber-400 mt-0.5"></div>
-                                 </button>
-                                 <input type="range" id="ss-transferFactor" value="0.40" min="0" max="1.00" step="0.01" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider range-slider-ss" oninput="runSimulationSS()">
-                             </div>
-                             <div class="flex justify-between text-[10px] text-emerald-400 mt-1"><span>Faible</span><span id="ss-displayTau" class="font-bold text-white text-sm">40%</span><span>Percée Massive</span></div>
-                        </div>
-                     </div>
-
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <label class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Volatilité / Usure : <span class="font-bold text-green-400" id="ss-displayEpsilon">1.00</span></label>
-                            <div class="relative pt-6 pb-1">
-                                <button onclick="resetSlider('ss-erosionFactor', 1.00)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 50%; top: -2px; transform: translateX(-50%);">
-                                    <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded border border-amber-500/30 cursor-pointer">📍 Stable</span>
-                                    <div class="w-0.5 h-2 bg-amber-400 mt-0.5"></div>
-                                </button>
-                                <input type="range" id="ss-erosionFactor" value="1.00" min="0.7" max="1.3" step="0.01" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider range-slider-ss" oninput="runSimulationSS()">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Participation Globale : <span class="font-bold text-blue-400" id="ss-displayPi">1.00</span></label>
-                            <div class="relative pt-6 pb-1">
-                                <button onclick="resetSlider('ss-participationFactor', 1.00)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 50%; top: -2px; transform: translateX(-50%);">
-                                    <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded border border-amber-500/30 cursor-pointer">📍 Base 2020</span>
-                                    <div class="w-0.5 h-2 bg-amber-400 mt-0.5"></div>
-                                </button>
-                                <input type="range" id="ss-participationFactor" value="1.00" min="0.8" max="1.2" step="0.01" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider range-slider-ss" oninput="runSimulationSS()">
-                            </div>
-                        </div>
-                     </div>
-                </div>
-
-                <!-- Resultats 1er Tour SS -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="card lg:col-span-2">
-                        <div class="grid grid-cols-3 gap-2 text-center mb-6">
-                            <div class="p-2 bg-slate-700 rounded"><p class="text-[10px] text-gray-400">Votants</p><div id="ss-kpi-total" class="text-xl font-bold text-white">0</div></div>
-                            <div class="p-2 bg-slate-800 border border-slate-600 rounded"><p class="text-[10px] text-gray-400">Tête vs Second</p><div id="ss-kpi-gap" class="text-xl font-bold text-white">0</div></div>
-                            <div class="p-2 bg-slate-700 rounded"><p class="text-[10px] text-gray-400">Seuil (50%)</p><div id="ss-kpi-seuil" class="text-xl font-bold text-gray-400">0</div></div>
-                        </div>
-                        <div class="space-y-3" id="ss-bars-container">
-                            <!-- Barres générées en JS -->
-                        </div>
-                    </div>
-                    <div class="card lg:col-span-1">
-                        <h3 class="text-lg font-bold text-gray-100 mb-4 border-b border-slate-700 pb-2">Diagnostic</h3>
-                        <p id="ss-analysis-text" class="text-sm text-gray-300 leading-relaxed"></p>
-                    </div>
+        <!-- ========================================== -->
+        <!-- ONGLET 2 : SECOND TOUR 2026 (Choix de Scénarios) -->
+        <!-- ========================================== -->
+        <div id="tab-2" class="hidden space-y-6">
+            
+            <!-- BOUTONS D'ACTION HAUT -->
+            <div class="flex justify-center items-center mb-2">
+                <!-- SÉLECTEUR DE SCÉNARIO -->
+                <div class="flex flex-col md:flex-row justify-center items-center gap-3 md:gap-4 bg-slate-800 p-4 rounded-xl shadow-inner border border-slate-700 w-full md:w-auto">
+                    <span class="text-gray-400 font-bold uppercase text-xs tracking-wider">Hypothèse :</span>
+                    <button id="btn-scen-triangulaire" onclick="toggleScenario2ndTour('triangulaire')" class="w-full md:w-auto px-6 py-2 rounded-full bg-purple-600 text-white font-bold shadow-lg ring-2 ring-purple-400 text-xs md:text-sm transition-all">Scénario A : Triangulaire (Maintien JM)</button>
+                    <button id="btn-scen-fusion" onclick="toggleScenario2ndTour('fusion')" class="w-full md:w-auto px-6 py-2 rounded-full bg-slate-700 text-gray-300 font-bold hover:bg-slate-600 text-xs md:text-sm transition-all">Scénario B : Duel (Ralliement Laurent)</button>
                 </div>
             </div>
 
-            <!-- ONGLET 2 SS : 2nd TOUR -->
-            <div id="ss-tab-2" class="hidden space-y-6">
-                <!-- Sélecteur Scénario SS -->
-                <div class="flex flex-col md:flex-row justify-center items-center gap-3 bg-slate-800 p-4 rounded-xl border border-slate-700">
-                    <span class="text-gray-400 font-bold uppercase text-xs">Hypothèse 2026 :</span>
-                    <button id="ss-btn-scen-tri" onclick="toggleScenSS('tri')" class="px-6 py-2 rounded-full bg-blue-600 text-white font-bold text-xs shadow-lg transition-all">Triangulaire (Maintien des 3)</button>
-                    <button id="ss-btn-scen-fus" onclick="toggleScenSS('fus')" class="px-6 py-2 rounded-full bg-slate-700 text-gray-300 font-bold hover:bg-slate-600 text-xs transition-all">Duel (Union Alamélou + Alek)</button>
+            <!-- RÉSERVE GLOBALE DE PARTICIPATION AU 2ND TOUR -->
+            <div class="bg-slate-800 border border-slate-600 p-4 md:p-6 rounded-xl shadow-inner">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="text-xl">📈</span>
+                    <h3 class="text-base md:text-lg font-bold text-gray-100">Sursaut de Participation Global (Réserve du 2nd Tour)</h3>
                 </div>
-
-                <!-- Sursaut SS -->
-                <div class="bg-slate-800 p-4 rounded-xl shadow-inner border border-slate-600">
-                    <label class="block text-sm font-bold text-emerald-400 mb-2">Sursaut de Participation Global (SS) : <span id="ss-sursautValue" class="text-white ml-2">+1 311 voix</span></label>
+                <p class="text-xs md:text-sm text-gray-400 mb-4 leading-relaxed">
+                    Historiquement à Saint-André, un second tour disputé réveille des abstentionnistes du 1er tour. Ces voix supplémentaires (+1 500 en moyenne) se répartissent entre les candidats en lice.
+                </p>
+                <div>
+                    <label for="globalSursautSlider" class="block text-sm font-bold text-blue-400 mb-2">
+                        Nouveaux Votants : <span id="globalSursautValue" class="text-xl font-extrabold text-white ml-2">+1 500 voix</span>
+                    </label>
+                    <!-- Repère historique : 1500 -> (1500 / 3000) * 100 = 50% -->
                     <div class="relative pt-6 pb-1">
-                        <button onclick="resetSlider('ss-sursautSlider', 1311)" class="absolute flex flex-col items-center z-20 focus:outline-none" style="left: 43.7%; top: -2px; transform: translateX(-50%);">
-                            <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1 py-0.5 rounded border border-amber-500/30 cursor-pointer">📍 Réf. 2020</span>
-                            <div class="w-0.5 h-2 bg-amber-400 mt-0.5"></div>
+                        <button onclick="resetSlider('globalSursautSlider', 1500)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 50%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer à la Moyenne Historique (+1500 voix)">
+                            <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Moyenne Hist.</span>
+                            <div class="w-0.5 h-2 bg-amber-400 opacity-70 group-hover:opacity-100 group-hover:bg-amber-500 mt-0.5"></div>
                         </button>
-                        <input type="range" id="ss-sursautSlider" min="0" max="3000" value="1311" step="10" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider range-slider-ss" oninput="update2ndTourSS()">
+                        <input type="range" id="globalSursautSlider" min="0" max="3000" value="1500" step="50" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="updateAllSecondTour()">
                     </div>
-                </div>
-
-                <!-- Charts 2nd Tour SS -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="card"><h3 class="text-lg font-bold text-gray-100 mb-2">Résultat Projeté</h3><p id="ss-res-text" class="text-xs text-gray-400 mb-4"></p><div class="chart-container"><canvas id="ss-chart-res"></canvas></div></div>
-                    <div class="card"><h3 class="text-lg font-bold text-gray-100 mb-2">Composition</h3><p class="text-xs text-gray-400 mb-4">Origine des voix</p><div class="chart-container"><canvas id="ss-chart-comp"></canvas></div></div>
-                </div>
-
-                <!-- Table SS -->
-                <div class="card overflow-x-auto p-0">
-                    <table class="w-full text-left border-collapse text-xs md:text-sm">
-                        <thead id="ss-table-head" class="bg-slate-800 text-gray-400 uppercase"></thead>
-                        <tbody id="ss-table-body" class="text-gray-200 divide-y divide-slate-700"></tbody>
-                    </table>
+                    <div class="flex justify-between text-[10px] md:text-xs text-gray-500 mt-1">
+                        <span>Stabilité (+0)</span>
+                        <span>Forte Hausse (+3 000)</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- ONGLET 3 SS : BACKTESTING 2020 -->
-            <div id="ss-tab-3" class="hidden space-y-6">
-                <section class="card border-t-4 border-amber-500">
-                    <h2 class="text-lg md:text-xl font-bold text-amber-400 mb-3">🔬 Backtesting Sainte-Suzanne 2020</h2>
-                    <p class="text-xs md:text-sm text-gray-300">Validation de la formule mathématique sur l'élection de 2020 (Gironcel vs Union Alamélou/Alek). Le Pool de report disponible (éliminés + sursaut de participation) était exactement de 1 757 voix.</p>
-                </section>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="card space-y-6">
-                        <div>
-                            <label class="block text-sm font-bold text-red-400 mb-2">Capture Gironcel (Sortant) : <span id="ss-bt-g-val" class="text-white ml-2">87.6%</span></label>
-                            <div class="relative pt-6 pb-1">
-                                <button onclick="resetSlider('ss-bt-g-sl', 87.6)" class="absolute flex flex-col items-center z-20 focus:outline-none" style="left: 87.6%; top: -2px; transform: translateX(-50%);"><span class="text-[9px] text-amber-400 bg-slate-800 px-1 border border-amber-500/30 rounded cursor-pointer">📍 Réel</span><div class="w-0.5 h-2 bg-amber-400"></div></button>
-                                <input type="range" id="ss-bt-g-sl" min="0" max="100" value="87.6" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer range-slider range-slider-ss" oninput="updateBtsSS()">
-                            </div>
+            <!-- CONTENU : SCÉNARIO TRIANGULAIRE -->
+            <div id="content-triangulaire" class="space-y-6">
+                <!-- Hypotheses Section -->
+                <div class="card border-t-4 border-purple-500">
+                    <h2 class="text-lg md:text-xl font-bold mb-4 flex items-center text-purple-400">
+                        <svg class="w-5 h-5 md:w-6 md:h-6 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                        Les hypothèses de report (Scénario de Triangulaire)
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs md:text-sm">
+                        <!-- JM Virapoullé -->
+                        <div class="bg-red-900/20 p-4 rounded-lg border border-red-800">
+                            <strong class="block text-red-400 mb-1">JM. Virapoullé (4 516)</strong>
+                            <p class="text-gray-300 mb-2">Maintien au 2nd Tour (Triangulaire).</p>
+                            <ul class="list-disc list-inside text-gray-400">
+                                <li>Conserve sa base électorale du 1er tour.</li>
+                            </ul>
                         </div>
-                        <div>
-                            <label class="block text-sm font-bold text-blue-400 mb-2">Capture Opposition (Union) : <span id="ss-bt-u-val" class="text-white ml-2">12.4%</span></label>
-                            <div class="relative pt-6 pb-1">
-                                <button onclick="resetSlider('ss-bt-u-sl', 12.4)" class="absolute flex flex-col items-center z-20 focus:outline-none" style="left: 12.4%; top: -2px; transform: translateX(-50%);"><span class="text-[9px] text-amber-400 bg-slate-800 px-1 border border-amber-500/30 rounded cursor-pointer">📍 Réel</span><div class="w-0.5 h-2 bg-amber-400"></div></button>
-                                <input type="range" id="ss-bt-u-sl" min="0" max="100" value="12.4" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer range-slider range-slider-ss" oninput="updateBtsSS()">
-                            </div>
+                        <!-- Fruteau -->
+                        <div class="bg-purple-900/20 p-4 rounded-lg border border-purple-800">
+                            <strong class="block text-purple-400 mb-1">E. Fruteau (3 580)</strong>
+                            <p class="text-gray-300 mb-2">Se retire, dispersion des voix.</p>
+                            <ul class="list-disc list-inside text-gray-400">
+                                <li>45% vers J. Bédier</li>
+                                <li>10% vers L. Virapoullé</li>
+                                <li>5% vers JM. Virapoullé</li>
+                            </ul>
                         </div>
-                        <table class="w-full text-left text-sm mt-4"><thead class="text-gray-400"><tr><th>Candidat</th><th>Modèle</th><th>Réel</th></tr></thead>
-                        <tbody class="text-white"><tr class="border-t border-slate-700"><td>Gironcel</td><td id="ss-bt-g-proj" class="text-amber-400 font-bold"></td><td>5 474</td></tr><tr><td>Union Opp.</td><td id="ss-bt-u-proj" class="text-amber-400 font-bold"></td><td>5 021</td></tr></tbody></table>
+                        <!-- Soupramanien -->
+                        <div class="bg-teal-900/20 p-4 rounded-lg border border-teal-800">
+                            <strong class="block text-teal-400 mb-1">S. Soupramanien (909)</strong>
+                            <p class="text-gray-300 mb-2">Se retire, sans consigne.</p>
+                            <ul class="list-disc list-inside text-gray-400">
+                                <li>40% vers L. Virapoullé</li>
+                                <li>10% vers JM. Virapoullé</li>
+                                <li>50% vers Abstention</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="card"><div class="chart-container"><canvas id="ss-bt-chart"></canvas></div></div>
+                    <p class="text-[10px] md:text-xs text-gray-500 mt-4 italic">* Autres petites listes (1474 voix) estimées à 30% Bédier, 20% Laurent, 10% JM, 40% Abstention. Le Sursaut de participation est réparti : 35% Bédier, 45% Laurent, 20% JMV.</p>
+                </div>
+
+                <!-- Projected Results Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                    <!-- Final Score Chart -->
+                    <div class="card">
+                        <h2 class="text-lg md:text-xl font-bold mb-1 flex items-center text-gray-100">
+                            <span class="w-1.5 h-5 bg-green-500 rounded mr-2"></span> Résultat Projeté
+                        </h2>
+                        <p class="text-xs md:text-sm text-gray-400 mb-4" id="triangulaire-result-text">La division des oppositions favorise le sortant.</p>
+                        <div class="relative w-full h-64 md:h-[350px] bg-slate-800 rounded-lg p-2">
+                            <canvas id="projectedResultsChartTri"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Composition Chart -->
+                    <div class="card">
+                        <h2 class="text-lg md:text-xl font-bold mb-1 flex items-center text-gray-100">
+                            <span class="w-1.5 h-5 bg-purple-500 rounded mr-2"></span> Composition des votes
+                        </h2>
+                        <p class="text-xs md:text-sm text-gray-400 mb-4">Origine des voix du 2nd tour (Triangulaire)</p>
+                        <div class="relative w-full h-64 md:h-[350px] bg-slate-800 rounded-lg p-2">
+                            <canvas id="compositionChartTri"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Calculation Table -->
+                <div class="card p-0 overflow-hidden border-t-4 border-slate-600">
+                    <div class="p-4 md:p-6 border-b border-slate-700 bg-slate-800/50">
+                        <h2 class="text-lg md:text-xl font-bold text-gray-100">Détail des reports (Triangulaire)</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[700px]" id="table-triangulaire">
+                            <thead>
+                                <tr class="text-[10px] md:text-xs uppercase text-gray-400 bg-slate-800 border-b border-slate-700">
+                                    <th class="px-3 py-3 md:px-6 md:py-4 font-bold">Provenance</th>
+                                    <th class="px-3 py-3 md:px-6 md:py-4 font-bold text-center">Vers J. Bédier</th>
+                                    <th class="px-3 py-3 md:px-6 md:py-4 font-bold text-center">Vers L. Virapoullé</th>
+                                    <th class="px-3 py-3 md:px-6 md:py-4 font-bold text-center">Vers JM. Virapoullé</th>
+                                    <th class="px-3 py-3 md:px-6 md:py-4 font-bold text-center text-gray-500">Abstention / Perdu</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body-triangulaire" class="divide-y divide-slate-700 text-xs md:text-sm text-gray-200">
+                                <!-- Contenu généré dynamiquement -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTENU : SCÉNARIO FUSION (DUEL) + FRONT ANTI-RN -->
+            <div id="content-fusion" class="hidden space-y-6">
+                <!-- Hypotheses Section -->
+                <div class="card border-t-4 border-blue-500">
+                    <h2 class="text-lg md:text-xl font-bold mb-4 flex items-center text-blue-400">
+                        <svg class="w-5 h-5 md:w-6 md:h-6 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                        Les hypothèses de report (Scénario de Duel Unifié)
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs md:text-sm">
+                        <!-- JM Virapoullé -->
+                        <div class="bg-blue-900/20 p-4 rounded-lg border border-blue-800">
+                            <strong class="block text-blue-400 mb-1">JM. Virapoullé (4 516)</strong>
+                            <p class="text-gray-300 mb-2">Rejoint L. Virapoullé.</p>
+                            <ul class="list-disc list-inside text-gray-400">
+                                <li>85% vers L. Virapoullé</li>
+                                <li>15% vers Abstention</li>
+                            </ul>
+                        </div>
+                        <!-- Fruteau -->
+                        <div class="bg-purple-900/20 p-4 rounded-lg border border-purple-800">
+                            <strong class="block text-purple-400 mb-1">E. Fruteau (3 580)</strong>
+                            <p class="text-gray-300 mb-2">Se retire, sans consigne.</p>
+                            <ul class="list-disc list-inside text-gray-400">
+                                <li>45% vers J. Bédier</li>
+                                <li>10% vers L. Virapoullé</li>
+                                <li>45% vers Abstention</li>
+                            </ul>
+                        </div>
+                        <!-- Soupramanien -->
+                        <div class="bg-teal-900/20 p-4 rounded-lg border border-teal-800">
+                            <strong class="block text-teal-400 mb-1">S. Soupramanien (909)</strong>
+                            <p class="text-gray-300 mb-2">Se retire, sans consigne.</p>
+                            <ul class="list-disc list-inside text-gray-400">
+                                <li>50% vers L. Virapoullé</li>
+                                <li>50% vers Abstention</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="text-[10px] md:text-xs text-gray-500 mt-4 italic">* Autres petites listes (1474 voix) estimées à 30% Bédier, 30% Laurent, 40% Abstention. Le Sursaut de participation est réparti : 45% Bédier, 55% Laurent.</p>
+                    
+                    <!-- FRONT ANTI-RN (Spécifique au Duel) -->
+                    <div class="mt-6 bg-slate-800 border border-slate-600 p-4 md:p-6 rounded-xl">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-xl">🛡️</span>
+                            <h3 class="text-base md:text-lg font-bold text-gray-100">Le Facteur Polarisant : "Front anti-RN"</h3>
+                        </div>
+                        <p class="text-xs md:text-sm text-gray-400 mb-4 leading-relaxed">
+                            Dans un scénario de duel très polarisé (Gauche sortante vs Droite unie), le sortant pourrait déclencher un "vote barrage". Ce paramètre simule une **réserve d'abstentionnistes supplémentaires** qui se déplaceraient *uniquement* pour bloquer la droite, s'ajoutant au sursaut global.
+                        </p>
+                        
+                        <div>
+                            <label for="frontRnSlider" class="block text-sm font-bold text-emerald-400 mb-2">
+                                Mobilisation Front anti-RN ciblée : <span id="frontRnValue" class="text-xl font-extrabold text-white ml-2">+0 voix</span>
+                            </label>
+                            <!-- Repère historique Législatives 2024 : 1380 -> (1380 / 1500) * 100 = 92% -->
+                            <div class="relative pt-6 pb-1">
+                                <button onclick="resetSlider('frontRnSlider', 1380)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 92%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer au sursaut des Législatives 2024 (+1380 voix)">
+                                    <span class="text-[9px] font-bold text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-emerald-500/30 group-hover:bg-emerald-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Réf. Légis. 24</span>
+                                    <div class="w-0.5 h-2 bg-emerald-400 opacity-70 group-hover:opacity-100 group-hover:bg-emerald-500 mt-0.5"></div>
+                                </button>
+                                <input type="range" id="frontRnSlider" min="0" max="1500" value="0" step="10" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="updateAllSecondTour()">
+                            </div>
+                            <div class="flex justify-between text-[10px] md:text-xs text-gray-500 mt-1">
+                                <span>Aucun Barrage (+0 voix)</span>
+                                <span>Barrage Massif (+1 500 voix)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projected Results Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                    <!-- Final Score Chart -->
+                    <div class="card">
+                        <h2 class="text-lg md:text-xl font-bold mb-1 flex items-center text-gray-100">
+                            <span class="w-1.5 h-5 bg-green-500 rounded mr-2"></span> Résultat Projeté
+                        </h2>
+                        <p class="text-xs md:text-sm text-gray-400 mb-4" id="fusion-result-text">Marge de victoire estimée.</p>
+                        <div class="relative w-full h-64 md:h-[350px] bg-slate-800 rounded-lg p-2">
+                            <canvas id="projectedResultsChartFus"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Composition Chart -->
+                    <div class="card">
+                        <h2 class="text-lg md:text-xl font-bold mb-1 flex items-center text-gray-100">
+                            <span class="w-1.5 h-5 bg-purple-500 rounded mr-2"></span> Composition des votes
+                        </h2>
+                        <p class="text-xs md:text-sm text-gray-400 mb-4">Origine des voix du 2nd tour (Fusion)</p>
+                        <div class="relative w-full h-64 md:h-[350px] bg-slate-800 rounded-lg p-2">
+                            <canvas id="compositionChartFus"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Calculation Table -->
+                <div class="card p-0 overflow-hidden border-t-4 border-slate-600">
+                    <div class="p-4 md:p-6 border-b border-slate-700 bg-slate-800/50">
+                        <h2 class="text-lg md:text-xl font-bold text-gray-100">Détail des reports (Fusion)</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[600px]" id="table-fusion">
+                            <thead>
+                                <tr class="text-[10px] md:text-xs uppercase text-gray-400 bg-slate-800 border-b border-slate-700">
+                                    <th class="px-3 py-3 md:px-6 md:py-4 font-bold">Provenance</th>
+                                    <th class="px-3 py-3 md:px-6 md:py-4 font-bold text-center">Vers J. Bédier</th>
+                                    <th class="px-3 py-3 md:px-6 md:py-4 font-bold text-center">Vers L. Virapoullé</th>
+                                    <th class="px-3 py-3 md:px-6 md:py-4 font-bold text-center text-gray-500">Abstention / Perdu</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body-fusion" class="divide-y divide-slate-700 text-xs md:text-sm text-gray-200">
+                                <!-- Contenu généré dynamiquement -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ONGLET 3 : BACKTESTING 2020 (Validation) -->
+        <!-- ========================================== -->
+        <div id="tab-3" class="hidden space-y-6">
+            
+            <section class="card border-t-4 border-emerald-500 bg-slate-800/50">
+                <h2 class="text-lg md:text-xl font-bold text-emerald-400 mb-3 flex items-center gap-2">
+                    <span>🔬</span> Backtesting : Validation du Modèle sur 2020
+                </h2>
+                <div class="text-xs md:text-sm text-gray-300 space-y-3 leading-relaxed">
+                    <p>
+                        <strong class="text-gray-100">Le Principe du Backtesting :</strong> Pour s'assurer qu'un modèle mathématique est fiable pour prédire l'avenir (2026), on lui demande d'abord de "prédire" le passé en lui donnant les données d'entrée officielles. S'il retrouve le résultat connu, la formule est validée.
+                    </p>
+                    <p>
+                        <strong class="text-gray-100">Données Officielles de l'État (Mars & Juin 2020) :</strong><br>
+                        Au 1er tour, <strong>J.M. Virapoullé (5 722 voix)</strong> devançait <strong>Joé Bédier (4 524 voix)</strong>.<br>
+                        Les listes éliminées et les nouveaux votants du second tour ont constitué un "Pool" géant de <strong>10 270 voix</strong> à redistribuer.<br>
+                        Utilisez les curseurs ci-dessous pour voir comment l'élection a réellement basculé au second tour !
+                    </p>
+                </div>
+            </section>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Contrôles du Backtesting -->
+                <div class="space-y-6">
+                    <div class="card">
+                        <h3 class="text-lg font-bold text-gray-100 mb-4 border-b border-slate-700 pb-2">Taux de Capture sur le Pool (10 270 voix)</h3>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold text-cyan-400 mb-2">
+                                Part captée par Joé Bédier : <span id="bedierCaptureValue" class="text-xl font-extrabold text-white ml-2">60.2%</span>
+                            </label>
+                            <!-- Repère historique : 60.16% -->
+                            <div class="relative pt-6 pb-1">
+                                <button onclick="resetSlider('bedierCaptureSlider', 60.16)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 60.16%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer à la vraie valeur 2020 (60.16%)">
+                                    <span class="text-[9px] font-bold text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-emerald-500/30 group-hover:bg-emerald-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Modèle Exact</span>
+                                    <div class="w-0.5 h-2 bg-emerald-400 opacity-70 group-hover:opacity-100 group-hover:bg-emerald-500 mt-0.5"></div>
+                                </button>
+                                <input type="range" id="bedierCaptureSlider" min="0" max="100" value="60.16" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="updateBacktesting2020()">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-bold text-blue-400 mb-2">
+                                Part captée par J.M. Virapoullé : <span id="jmvCaptureValue" class="text-xl font-extrabold text-white ml-2">39.8%</span>
+                            </label>
+                            <!-- Repère historique : 39.84% -->
+                            <div class="relative pt-6 pb-1">
+                                <button onclick="resetSlider('jmvCaptureSlider', 39.84)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 39.84%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer à la vraie valeur 2020 (39.84%)">
+                                    <span class="text-[9px] font-bold text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-emerald-500/30 group-hover:bg-emerald-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Modèle Exact</span>
+                                    <div class="w-0.5 h-2 bg-emerald-400 opacity-70 group-hover:opacity-100 group-hover:bg-emerald-500 mt-0.5"></div>
+                                </button>
+                                <input type="range" id="jmvCaptureSlider" min="0" max="100" value="39.84" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="updateBacktesting2020()">
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-gray-500 mt-4 italic">*Les punaises vertes indiquent le comportement mathématique exact et validé des électeurs en 2020.</p>
+                    </div>
+
+                    <!-- Tableau Comparatif -->
+                    <div class="card overflow-hidden p-0">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-slate-800 text-gray-400 text-xs uppercase">
+                                <tr>
+                                    <th class="p-3 border-b border-slate-700">Candidat</th>
+                                    <th class="p-3 border-b border-slate-700 text-center">Score Officiel 2020</th>
+                                    <th class="p-3 border-b border-slate-700 text-center text-emerald-400">Modèle (Calculé)</th>
+                                    <th class="p-3 border-b border-slate-700 text-center">Marge d'Erreur</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm text-gray-200 divide-y divide-slate-700">
+                                <tr class="hover:bg-slate-700/50">
+                                    <td class="p-3 font-bold text-cyan-400">Joé Bédier</td>
+                                    <td class="p-3 text-center">10 703 voix</td>
+                                    <td class="p-3 text-center font-bold text-emerald-400" id="bt-bedier-proj">--</td>
+                                    <td class="p-3 text-center text-gray-400" id="bt-bedier-err">--</td>
+                                </tr>
+                                <tr class="hover:bg-slate-700/50">
+                                    <td class="p-3 font-bold text-blue-400">J.M. Virapoullé</td>
+                                    <td class="p-3 text-center">9 813 voix</td>
+                                    <td class="p-3 text-center font-bold text-emerald-400" id="bt-jmv-proj">--</td>
+                                    <td class="p-3 text-center text-gray-400" id="bt-jmv-err">--</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Graphique Backtesting -->
+                <div class="card flex flex-col">
+                    <h3 class="text-lg font-bold text-gray-100 mb-2 border-b border-slate-700 pb-2">Preuve de Fiabilité du Modèle</h3>
+                    <p class="text-xs text-gray-400 mb-4">Comparaison entre la réalité des urnes et la prédiction de la formule mathématique.</p>
+                    <div class="relative w-full h-64 md:h-full flex-grow bg-slate-800 rounded-lg p-2">
+                        <canvas id="backtestingChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <!-- SCRIPTS -->
-    <script>
-        // ==========================================
-        // VARIABLES GLOBALES ET CONFIGURATION
-        // ==========================================
-        const FONT_COLOR = '#e0e0e0';
-        const GRID_COLOR = 'rgba(224, 224, 224, 0.1)';
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Mode Actuel
-        let currentCity = 'sa'; 
-
-        // Données Saint-André
-        const SA_DATA = {
-            base_bedier: 5500, pot_clan: 8500, pool: 2500,
-            base_fruteau: 3500, base_settama: 800, base_soup: 600, base_sau: 400, base_cot: 300,
-            candidats: [
-                {id: 'M', name: 'Joé Bédier', color: '#10b981', colorClass: 'sa-text-M', bgClass: 'sa-bar-M'},
-                {id: 'O', name: 'J.M. Virapoullé', color: '#ef4444', colorClass: 'sa-text-O', bgClass: 'sa-bar-O'},
-                {id: 'L', name: 'L. Virapoullé', color: '#f59e0b', colorClass: 'sa-text-L', bgClass: 'sa-bar-L'},
-                {id: 'F', name: 'Eric Fruteau', color: '#a855f7', colorClass: 'sa-text-F', bgClass: 'sa-bar-F'},
-                {id: 'SV', name: 'Settama-Vidon', color: '#ec4899'},
-                {id: 'SOU', name: 'Soupramanien', color: '#14b8a6'},
-                {id: 'SAU', name: 'Sautron', color: '#06b6d4'},
-                {id: 'C', name: 'Cotaya', color: '#84cc16'}
-            ]
+        // ==========================================
+        // GESTION DES ONGLETS
+        // ==========================================
+        window.switchTab = function(tabIndex) {
+            [1, 2, 3].forEach(i => {
+                const tab = document.getElementById(`tab-${i}`);
+                const btn = document.getElementById(`btn-tab-${i}`);
+                if (i === tabIndex) {
+                    tab.classList.remove('hidden');
+                    btn.className = "px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-indigo-600 text-white shadow-lg";
+                } else {
+                    tab.classList.add('hidden');
+                    btn.className = "px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600";
+                }
+            });
         };
 
-        // Données Sainte-Suzanne
-        const SS_DATA = {
-            base_gironcel_2020: 3935, base_alamelou_2020: 2813, base_alek_2020: 1990, pool_autres: 446, pool_sursaut: 1500,
-            candidats: [
-                {id: 'G', name: 'M. Gironcel (PCR)', color: '#ef4444', colorClass: 'ss-text-G', bgClass: 'ss-bar-G'},
-                {id: 'A', name: 'D. Alamélou (Opp)', color: '#3b82f6', colorClass: 'ss-text-A', bgClass: 'ss-bar-A'},
-                {id: 'K', name: 'Alek (C&O)', color: '#f59e0b', colorClass: 'ss-text-K', bgClass: 'ss-bar-K'},
-                {id: 'O', name: 'Autres', color: '#94a3b8', colorClass: 'text-gray-400', bgClass: 'ss-bar-O'}
-            ]
-        };
+        window.toggleScenario2ndTour = function(type) {
+            const btnTri = document.getElementById('btn-scen-triangulaire');
+            const btnFus = document.getElementById('btn-scen-fusion');
+            const contTri = document.getElementById('content-triangulaire');
+            const contFus = document.getElementById('content-fusion');
 
-        let radarChartSA = null;
-        let chartRes2ndSA = null, chartComp2ndSA = null, btChartSA = null;
-        let chartRes2ndSS = null, chartComp2ndSS = null, btChartSS = null;
-
-        // ==========================================
-        // GESTION NAVIGATION ET UI
-        // ==========================================
-        function switchCity() {
-            currentCity = document.getElementById('citySelector').value;
-            if(currentCity === 'sa') {
-                document.getElementById('bloc-sa').classList.remove('hidden');
-                document.getElementById('bloc-ss').classList.add('hidden');
-                document.body.style.backgroundColor = '#0f172a'; // Base color
-                switchTabSA(1);
+            if (type === 'triangulaire') {
+                contTri.classList.remove('hidden');
+                contFus.classList.add('hidden');
+                btnTri.className = "w-full md:w-auto px-6 py-2 rounded-full bg-purple-600 text-white font-bold shadow-lg ring-2 ring-purple-400 text-xs md:text-sm transition-all";
+                btnFus.className = "w-full md:w-auto px-6 py-2 rounded-full bg-slate-700 text-gray-300 font-bold hover:bg-slate-600 text-xs md:text-sm transition-all";
             } else {
-                document.getElementById('bloc-sa').classList.add('hidden');
-                document.getElementById('bloc-ss').classList.remove('hidden');
-                document.body.style.backgroundColor = '#064e3b'; // Emeraude très sombre
-                switchTabSS(1);
+                contFus.classList.remove('hidden');
+                contTri.classList.add('hidden');
+                btnFus.className = "w-full md:w-auto px-6 py-2 rounded-full bg-blue-600 text-white font-bold shadow-lg ring-2 ring-blue-400 text-xs md:text-sm transition-all";
+                btnTri.className = "w-full md:w-auto px-6 py-2 rounded-full bg-slate-700 text-gray-300 font-bold hover:bg-slate-600 text-xs md:text-sm transition-all";
             }
-        }
-
-        function switchTabSA(index) {
-            [1,2,3].forEach(i => {
-                document.getElementById(`sa-tab-${i}`).classList.toggle('hidden', i !== index);
-                document.getElementById(`btn-sa-tab-${i}`).className = i === index ? "px-4 py-2 rounded-full font-bold text-xs md:text-sm transition-colors bg-indigo-600 text-white shadow-lg" : "px-4 py-2 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600";
-            });
-        }
-        function switchTabSS(index) {
-            [1,2,3].forEach(i => {
-                document.getElementById(`ss-tab-${i}`).classList.toggle('hidden', i !== index);
-                document.getElementById(`btn-ss-tab-${i}`).className = i === index ? "px-4 py-2 rounded-full font-bold text-xs md:text-sm transition-colors bg-emerald-600 text-white shadow-lg" : "px-4 py-2 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600";
-            });
-        }
-
-        window.resetSlider = function(id, val) { 
-            const el = document.getElementById(id); 
-            if(el){ el.value = val; el.dispatchEvent(new Event('input')); } 
         };
 
         // ==========================================
-        // MOTEUR SAINT-ANDRÉ (SA)
+        // FONCTION DE RÉINITIALISATION DES RÉGLETTES
         // ==========================================
-        function runSimulationSA() {
-            const fid = parseFloat(document.getElementById('sa-fidelityFactor').value);
-            const att = parseFloat(document.getElementById('sa-transferFactor').value);
-            const usu = parseFloat(document.getElementById('sa-erosionFactor').value);
-            const part = parseFloat(document.getElementById('sa-participationFactor').value);
+        window.resetSlider = function(sliderId, value) {
+            const slider = document.getElementById(sliderId);
+            if(slider) {
+                slider.value = value;
+                const event = new Event('input', { bubbles: true });
+                slider.dispatchEvent(event);
+            }
+        };
 
-            document.getElementById('sa-displayLambda').innerText = Math.round(fid*100)+'%';
-            document.getElementById('sa-displayTau').innerText = Math.round(att*100)+'%';
-            document.getElementById('sa-displayEpsilon').innerText = usu.toFixed(2);
-            document.getElementById('sa-displayPi').innerText = part.toFixed(2);
+        // ==========================================
+        // MOTEUR DE CALCUL RÉALISTE (1er TOUR)
+        // ==========================================
+        const POTENTIEL_CLAN_VIRAPOULLE = 8500; 
+        const BASE_BEDIER_2020 = 5500;
+        const BASE_FRUTEAU = 3500;
+        const BASE_SETTAMA = 800;
+        const BASE_SOUPRAMANIEN = 600;
+        const BASE_SAUTRON = 400;
+        const BASE_COTAYA = 300;
+        const POOL_DISPONIBLE = 2500; 
 
-            let vO = SA_DATA.pot_clan * fid, vL = SA_DATA.pot_clan * (1-fid);
-            let vM = SA_DATA.base_bedier * usu;
-            
-            let poolL = SA_DATA.pool * att, poolM = SA_DATA.pool * 0.15, poolO = SA_DATA.pool * 0.10 * fid;
-            let poolF = SA_DATA.pool * 0.15, poolSV = SA_DATA.pool * 0.05, poolSOU = SA_DATA.pool * 0.03, poolSAU = SA_DATA.pool * 0.02, poolC = SA_DATA.pool * 0.01;
+        let currentStateData = {};
+        let radarChart = null;
+        
+        // Variables graphiques 2nd Tour & Backtesting
+        let ctxResultsTriChart = null;
+        let ctxCompositionTriChart = null;
+        let ctxResultsFusChart = null;
+        let ctxCompositionFusChart = null;
+        let backtestChart = null;
 
-            let tM = vM + poolM, tO = vO + poolO, tL = vL + poolL;
-            let tF = SA_DATA.base_fruteau + poolF, tSV = SA_DATA.base_settama + poolSV, tSOU = SA_DATA.base_soup + poolSOU, tSAU = SA_DATA.base_sau + poolSAU, tC = SA_DATA.base_cot + poolC;
+        // Firebase Cloud
+        let db, auth, currentUser, cloudAppId;
+        let globalScenarios = [];
+        let isCloudActive = false;
 
-            let rawTotal = tM+tO+tL+tF+tSV+tSOU+tSAU+tC;
-            let scale = (rawTotal * part) / rawTotal;
+        async function initCloudDatabase() {
+            try {
+                const configString = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
+                if (configString) {
+                    const firebaseConfig = JSON.parse(configString);
+                    cloudAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                    const app = initializeApp(firebaseConfig);
+                    auth = getAuth(app);
+                    db = getFirestore(app);
+                    isCloudActive = true;
+                    document.getElementById('cloud-indicator').classList.remove('hidden');
 
-            let res = {
-                M: Math.round(tM*scale), O: Math.round(tO*scale), L: Math.round(tL*scale), F: Math.round(tF*scale),
-                SV: Math.round(tSV*scale), SOU: Math.round(tSOU*scale), SAU: Math.round(tSAU*scale), C: Math.round(tC*scale),
-                Total: Math.round(rawTotal*part)
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+
+                    onAuthStateChanged(auth, (u) => {
+                        if (u) {
+                            currentUser = u;
+                            listenToCloudScenarios();
+                        }
+                    });
+                } else {
+                    document.getElementById('btn-clear-local').classList.remove('hidden');
+                    renderScenariosTable();
+                }
+            } catch (e) {
+                console.error("Le Cloud n'est pas disponible.", e);
+                document.getElementById('btn-clear-local').classList.remove('hidden');
+                renderScenariosTable(); 
+            }
+        }
+
+        function listenToCloudScenarios() {
+            if (!currentUser || !isCloudActive) return;
+            const scenariosRef = collection(db, 'artifacts', cloudAppId, 'public', 'data', 'scenarios');
+            onSnapshot(scenariosRef, (snapshot) => {
+                globalScenarios = [];
+                snapshot.forEach((doc) => {
+                    globalScenarios.push({ id: doc.id, ...doc.data() });
+                });
+                globalScenarios.sort((a, b) => b.timestamp - a.timestamp);
+                renderScenariosTable();
+            }, (error) => {
+                console.error("Erreur de synchronisation:", error);
+            });
+        }
+
+        function project2026() {
+            const fideliteJMV = parseFloat(document.getElementById('fidelityFactor').value);
+            const attractiviteLaurent = parseFloat(document.getElementById('transferFactor').value);
+            const usureBedier = parseFloat(document.getElementById('erosionFactor').value);
+            const participation = parseFloat(document.getElementById('participationFactor').value);
+
+            let voixJMV_socle = POTENTIEL_CLAN_VIRAPOULLE * fideliteJMV;
+            let voixLaurent_socle = POTENTIEL_CLAN_VIRAPOULLE * (1 - fideliteJMV);
+            let voixBedier = BASE_BEDIER_2020 * usureBedier;
+            let voixFruteau = BASE_FRUTEAU; 
+            let voixSettama = BASE_SETTAMA;
+            let voixSoupramanien = BASE_SOUPRAMANIEN;
+            let voixSautron = BASE_SAUTRON;
+            let voixCotaya = BASE_COTAYA;
+
+            let voixLaurent_pool = POOL_DISPONIBLE * attractiviteLaurent;
+            let voixBedier_pool = POOL_DISPONIBLE * 0.15; 
+            let voixJMV_pool = POOL_DISPONIBLE * 0.10 * fideliteJMV; 
+            let voixFruteau_pool = POOL_DISPONIBLE * 0.15; 
+            let voixSettama_pool = POOL_DISPONIBLE * 0.05;
+            let voixSoupramanien_pool = POOL_DISPONIBLE * 0.03;
+            let voixSautron_pool = POOL_DISPONIBLE * 0.02;
+            let voixCotaya_pool = POOL_DISPONIBLE * 0.01;
+
+            let total_M = voixBedier + voixBedier_pool;
+            let total_O = voixJMV_socle + voixJMV_pool;
+            let total_L = voixLaurent_socle + voixLaurent_pool;
+            let total_F = voixFruteau + voixFruteau_pool;
+            let total_SV = voixSettama + voixSettama_pool;
+            let total_SOU = voixSoupramanien + voixSoupramanien_pool;
+            let total_SAU = voixSautron + voixSautron_pool;
+            let total_C = voixCotaya + voixCotaya_pool;
+
+            const sommeBrute = total_M + total_O + total_L + total_F + total_SV + total_SOU + total_SAU + total_C;
+            const totalEstime = sommeBrute * participation;
+            const scale = totalEstime / sommeBrute;
+
+            const resultats = {
+                M: Math.round(total_M * scale),
+                O: Math.round(total_O * scale),
+                L: Math.round(total_L * scale),
+                F: Math.round(total_F * scale),
+                SV: Math.round(total_SV * scale),
+                SOU: Math.round(total_SOU * scale),
+                SAU: Math.round(total_SAU * scale),
+                C: Math.round(total_C * scale),
+                Total: Math.round(totalEstime),
+                details: {
+                    M: { socle: Math.round(voixBedier * scale), pool: Math.round(voixBedier_pool * scale) },
+                    O: { socle: Math.round(voixJMV_socle * scale), pool: Math.round(voixJMV_pool * scale) },
+                    L: { socle: Math.round(voixLaurent_socle * scale), pool: Math.round(voixLaurent_pool * scale) },
+                    F: { socle: Math.round(voixFruteau * scale), pool: Math.round(voixFruteau_pool * scale) },
+                    SV: { socle: Math.round(voixSettama * scale), pool: Math.round(voixSettama_pool * scale) },
+                    SOU: { socle: Math.round(voixSoupramanien * scale), pool: Math.round(voixSoupramanien_pool * scale) },
+                    SAU: { socle: Math.round(voixSautron * scale), pool: Math.round(voixSautron_pool * scale) },
+                    C: { socle: Math.round(voixCotaya * scale), pool: Math.round(voixCotaya_pool * scale) }
+                }
             };
 
-            document.getElementById('sa-kpi-total').innerText = res.Total.toLocaleString('fr-FR');
-            let sorted = SA_DATA.candidats.map(c => ({...c, val: res[c.id]})).sort((a,b)=>b.val-a.val);
-            document.getElementById('sa-kpi-gap').innerText = (sorted[0].val - sorted[1].val).toLocaleString('fr-FR');
-            document.getElementById('sa-kpi-seuil').innerText = Math.floor(res.Total/2+1).toLocaleString('fr-FR');
+            updateUI(resultats, fideliteJMV, attractiviteLaurent, usureBedier, participation);
+        }
 
-            let barsHtml = '';
-            sorted.forEach((c, i) => {
-                let pct = ((c.val/res.Total)*100).toFixed(1);
-                barsHtml += `
-                    <div style="order:${i}">
-                        <div class="flex justify-between text-xs font-semibold text-gray-200 mb-1"><span class="${c.colorClass || ''}">${c.name}</span><span class="${c.colorClass || ''}">${pct}%</span></div>
-                        <div class="w-full bg-slate-700 rounded-full h-2"><div class="h-2 rounded-full ${c.bgClass || 'bg-gray-500'}" style="width:${pct}%; background-color:${c.color || ''}"></div></div>
-                    </div>`;
+        function formatNum(n) { return Math.round(n).toLocaleString('fr-FR'); }
+
+        function updateUI(res, fideliteJMV, attractiviteLaurent, usureBedier, participation) {
+            document.getElementById('displayLambda').innerText = Math.round(fideliteJMV * 100) + '%';
+            document.getElementById('displayTau').innerText = Math.round(attractiviteLaurent * 100) + '%';
+            document.getElementById('displayEpsilon').innerText = usureBedier.toFixed(2);
+            document.getElementById('displayPi').innerText = participation.toFixed(2);
+            document.getElementById('kpi-total-votes').innerText = formatNum(res.Total);
+            
+            const scores = [
+                { name: 'Joé Bédier', val: res.M, id: 'M', colorClass: 'text-c-M' },
+                { name: 'J.M. Virapoullé', val: res.O, id: 'O', colorClass: 'text-c-O' },
+                { name: 'L. Virapoullé', val: res.L, id: 'L', colorClass: 'text-c-L' },
+                { name: 'Eric Fruteau', val: res.F, id: 'F', colorClass: 'text-c-F' },
+                { name: 'Settama-Vidon', val: res.SV, id: 'SV', colorClass: 'text-c-SV' },
+                { name: 'Soupramanien', val: res.SOU, id: 'SOU', colorClass: 'text-c-SOU' },
+                { name: 'Sautron', val: res.SAU, id: 'SAU', colorClass: 'text-c-SAU' },
+                { name: 'Cotaya', val: res.C, id: 'C', colorClass: 'text-c-C' }
+            ].sort((a, b) => b.val - a.val); 
+            
+            const gap = scores[0].val - scores[1].val;
+            document.getElementById('kpi-vote-gap').innerText = formatNum(gap);
+            document.getElementById('kpi-seuil').innerText = formatNum(Math.floor(res.Total/2)+1);
+
+            scores.forEach((candidate, index) => {
+                const percentage = (candidate.val / res.Total) * 100;
+                document.getElementById(`bar-${candidate.id}`).style.width = percentage + '%';
+                document.getElementById(`percent-${candidate.id}`).innerText = percentage.toFixed(1) + '%';
+                document.getElementById(`wrapper-${candidate.id}`).style.order = index;
             });
-            document.getElementById('sa-bars-container').innerHTML = barsHtml;
 
-            if(radarChartSA) {
-                radarChartSA.data.datasets[0].data = [fid, att, usu-0.2, part-0.2];
-                radarChartSA.update();
-            }
-
-            // Update 2nd Tour SA silently
-            window.saFirstTourRes = res;
-            if(window.saCurrentScen) update2ndTourSA();
-        }
-
-        let saCurrentScen = 'fus';
-        window.toggleScenSA = function(type) {
-            saCurrentScen = type;
-            document.getElementById('sa-antiRnBloc').classList.toggle('hidden', type !== 'fus');
-            document.getElementById('sa-btn-scen-tri').className = type === 'tri' ? "px-6 py-2 rounded-full bg-purple-600 text-white font-bold text-xs shadow-lg" : "px-6 py-2 rounded-full bg-slate-700 text-gray-300 font-bold hover:bg-slate-600 text-xs";
-            document.getElementById('sa-btn-scen-fus').className = type === 'fus' ? "px-6 py-2 rounded-full bg-blue-600 text-white font-bold text-xs shadow-lg" : "px-6 py-2 rounded-full bg-slate-700 text-gray-300 font-bold hover:bg-slate-600 text-xs";
-            update2ndTourSA();
-        }
-
-        window.update2ndTourSA = function() {
-            if(!window.saFirstTourRes) return;
-            const sursaut = parseInt(document.getElementById('sa-sursautSlider').value);
-            document.getElementById('sa-sursautValue').innerText = `+${sursaut} voix`;
-            const antiRn = saCurrentScen === 'fus' ? parseInt(document.getElementById('sa-antiRnSlider').value) : 0;
-            if(saCurrentScen === 'fus') document.getElementById('sa-antiRnValue').innerText = `+${antiRn} voix`;
-
-            let bM = window.saFirstTourRes.M, bO = window.saFirstTourRes.O, bL = window.saFirstTourRes.L;
-            let repF = window.saFirstTourRes.F, repS = window.saFirstTourRes.SOU, repA = window.saFirstTourRes.SV + window.saFirstTourRes.SAU + window.saFirstTourRes.C;
-
-            let tM, tL, tO, labels, dataRes, dataComp;
-            let tHtml = ``;
-
-            if(saCurrentScen === 'tri') {
-                tM = bM + (repF*0.45) + (repA*0.30) + (sursaut*0.35);
-                tL = bL + (repS*0.40) + (repA*0.20) + (sursaut*0.45);
-                tO = bO + (repF*0.05) + (repS*0.10) + (repA*0.10) + (sursaut*0.20);
-                
-                labels = ['J. Bédier', 'L. Virapoullé', 'JM. Virapoullé'];
-                let tot = tM+tL+tO;
-                dataRes = [(tM/tot*100).toFixed(1), (tL/tot*100).toFixed(1), (tO/tot*100).toFixed(1)];
-                dataComp = [
-                    {l:'Base T1', d:[bM, bL, bO], c:'#1e40af'},
-                    {l:'Report Fruteau', d:[repF*0.45, 0, repF*0.05], c:'#a855f7'},
-                    {l:'Report Autres', d:[repA*0.30, repS*0.40+repA*0.20, repS*0.10+repA*0.10], c:'#64748b'},
-                    {l:'Sursaut', d:[sursaut*0.35, sursaut*0.45, sursaut*0.20], c:'#3b82f6'}
-                ];
-                document.getElementById('sa-res-text').innerHTML = tM>tL && tM>tO ? `<span class="text-green-400">Bédier favori.</span>` : `<span class="text-amber-400">Opposition en tête.</span>`;
-                
-                document.getElementById('sa-table-head').innerHTML = `<tr><th>Provenance</th><th>Bédier</th><th>Laurent</th><th>JM</th></tr>`;
-                tHtml = `<tr><td>Bases T1</td><td>${bM}</td><td>${bL}</td><td>${bO}</td></tr>`;
-
-            } else { // FUS
-                tM = bM + (repF*0.45) + (repA*0.30) + (sursaut*0.45) + antiRn;
-                tL = bL + bO*0.85 + (repF*0.10) + (repS*0.50) + (repA*0.30) + (sursaut*0.55);
-                
-                labels = ['J. Bédier', 'L. Virapoullé (Union)'];
-                let tot = tM+tL;
-                dataRes = [(tM/tot*100).toFixed(1), (tL/tot*100).toFixed(1)];
-                dataComp = [
-                    {l:'Base T1', d:[bM, bL], c:'#1e40af'},
-                    {l:'Ralliement JM', d:[0, bO*0.85], c:'#ef4444'},
-                    {l:'Report Fruteau', d:[repF*0.45, repF*0.10], c:'#a855f7'},
-                    {l:'Sursaut', d:[sursaut*0.45, sursaut*0.55], c:'#3b82f6'},
-                    {l:'Anti-RN', d:[antiRn, 0], c:'#10b981'}
-                ];
-                document.getElementById('sa-res-text').innerHTML = tM>tL ? `<span class="text-green-400">Bédier l'emporte.</span>` : `<span class="text-blue-400">Laurent l'emporte.</span>`;
-                
-                document.getElementById('sa-table-head').innerHTML = `<tr><th>Provenance</th><th>Bédier</th><th>Laurent (Union)</th></tr>`;
-                tHtml = `<tr><td>Bases T1</td><td>${bM}</td><td>${bL}</td></tr>`;
-            }
-
-            document.getElementById('sa-table-body').innerHTML = tHtml;
-
-            if(chartRes2ndSA) {
-                chartRes2ndSA.data.labels = labels;
-                chartRes2ndSA.data.datasets[0].data = dataRes;
-                chartRes2ndSA.update();
-                
-                chartComp2ndSA.data.labels = labels;
-                chartComp2ndSA.data.datasets = dataComp.map(ds => ({label: ds.l, data: ds.d, backgroundColor: ds.c}));
-                chartComp2ndSA.update();
-            }
-        }
-
-        window.updateBtsSA = function() {
-            let vBedier = 4524 + Math.round(10270 * (parseFloat(document.getElementById('sa-bt-bedier-sl').value)/100));
-            let vJMV = 5722 + Math.round(10270 * (parseFloat(document.getElementById('sa-bt-jmv-sl').value)/100));
-            document.getElementById('sa-bt-bedier-val').innerText = document.getElementById('sa-bt-bedier-sl').value + '%';
-            document.getElementById('sa-bt-jmv-val').innerText = document.getElementById('sa-bt-jmv-sl').value + '%';
-            document.getElementById('sa-bt-b-proj').innerText = vBedier.toLocaleString('fr-FR');
-            document.getElementById('sa-bt-j-proj').innerText = vJMV.toLocaleString('fr-FR');
-            
-            if(btChartSA) {
-                btChartSA.data.datasets[0].data = [vBedier, vJMV];
-                btChartSA.update();
-            }
-        }
-
-        // ==========================================
-        // MOTEUR SAINTE-SUZANNE (SS)
-        // ==========================================
-        function runSimulationSS() {
-            const fidG = parseFloat(document.getElementById('ss-fidelityFactor').value); // Fidélité Gironcel
-            const dynAlek = parseFloat(document.getElementById('ss-transferFactor').value); // Attraction Alek vs Alamelou
-            const usu = parseFloat(document.getElementById('ss-erosionFactor').value);
-            const part = parseFloat(document.getElementById('ss-participationFactor').value);
-
-            document.getElementById('ss-displayLambda').innerText = Math.round(fidG*100)+'%';
-            document.getElementById('ss-displayTau').innerText = Math.round(dynAlek*100)+'%';
-            document.getElementById('ss-displayEpsilon').innerText = usu.toFixed(2);
-            document.getElementById('ss-displayPi').innerText = part.toFixed(2);
-
-            // Modèle SS 2026 :
-            let baseG = SS_DATA.base_gironcel_2020 * usu * fidG; 
-            let baseAla = SS_DATA.base_alamelou_2020 * (1 - dynAlek*0.3); // Alamelou perd un peu vers Alek si dynamique forte
-            let baseAlek = SS_DATA.base_alek_2020 + (SS_DATA.base_alamelou_2020 * dynAlek*0.3) + (SS_DATA.base_gironcel_2020 * usu * (1-fidG)); // Alek récupère les déçus
-            
-            let pool = SS_DATA.pool_autres * part; 
-            let poolG = pool * 0.2, poolAla = pool * 0.3, poolAlek = pool * 0.4, poolO = pool * 0.1;
-
-            let tG = baseG + poolG;
-            let tAla = baseAla + poolAla;
-            let tAlek = baseAlek + poolAlek;
-            let tO = poolO;
-
-            let rawTotal = tG + tAla + tAlek + tO;
-            let scale = (rawTotal * part) / rawTotal;
-
-            let res = {
-                G: Math.round(tG*scale), A: Math.round(tAla*scale), K: Math.round(tAlek*scale), O: Math.round(tO*scale),
-                Total: Math.round(rawTotal*part)
+            currentStateData = {
+                sliders: {
+                    fidelity: fideliteJMV,
+                    transfer: attractiviteLaurent,
+                    erosion: usureBedier,
+                    participation: participation
+                },
+                winner: scores[0].name,
+                winnerColor: scores[0].colorClass
             };
 
-            document.getElementById('ss-kpi-total').innerText = res.Total.toLocaleString('fr-FR');
-            let sorted = SS_DATA.candidats.map(c => ({...c, val: res[c.id]})).sort((a,b)=>b.val-a.val);
-            document.getElementById('ss-kpi-gap').innerText = (sorted[0].val - sorted[1].val).toLocaleString('fr-FR');
-            document.getElementById('ss-kpi-seuil').innerText = Math.floor(res.Total/2+1).toLocaleString('fr-FR');
-
-            let barsHtml = '';
-            sorted.forEach((c, i) => {
-                let pct = ((c.val/res.Total)*100).toFixed(1);
-                barsHtml += `
-                    <div style="order:${i}">
-                        <div class="flex justify-between text-xs font-semibold text-gray-200 mb-1"><span class="${c.colorClass || ''}">${c.name}</span><span class="${c.colorClass || ''}">${pct}%</span></div>
-                        <div class="w-full bg-slate-700 rounded-full h-2"><div class="h-2 rounded-full ${c.bgClass || 'bg-gray-500'}" style="width:${pct}%; background-color:${c.color || ''}"></div></div>
-                    </div>`;
-            });
-            document.getElementById('ss-bars-container').innerHTML = barsHtml;
-
-            document.getElementById('ss-analysis-text').innerHTML = sorted[0].id === 'G' 
-                ? `<strong>Gironcel maintient son avance.</strong> Le fractionnement de l'opposition le protège.` 
-                : `<strong>L'opposition passe devant !</strong> La dynamique de ${sorted[0].name} menace le PCR.`;
-
-            // Update 2nd Tour SS silently
-            window.ssFirstTourRes = res;
-            if(window.ssCurrentScen) update2ndTourSS();
-        }
-
-        let ssCurrentScen = 'fus';
-        window.toggleScenSS = function(type) {
-            ssCurrentScen = type;
-            document.getElementById('ss-btn-scen-tri').className = type === 'tri' ? "px-6 py-2 rounded-full bg-blue-600 text-white font-bold text-xs shadow-lg" : "px-6 py-2 rounded-full bg-slate-700 text-gray-300 font-bold hover:bg-slate-600 text-xs";
-            document.getElementById('ss-btn-scen-fus').className = type === 'fus' ? "px-6 py-2 rounded-full bg-emerald-600 text-white font-bold text-xs shadow-lg" : "px-6 py-2 rounded-full bg-slate-700 text-gray-300 font-bold hover:bg-slate-600 text-xs";
-            update2ndTourSS();
-        }
-
-        window.update2ndTourSS = function() {
-            if(!window.ssFirstTourRes) return;
-            const sursaut = parseInt(document.getElementById('ss-sursautSlider').value);
-            document.getElementById('ss-sursautValue').innerText = `+${sursaut} voix`;
-
-            let bG = window.ssFirstTourRes.G, bA = window.ssFirstTourRes.A, bK = window.ssFirstTourRes.K, repO = window.ssFirstTourRes.O;
-
-            let tG, tA, tK, labels, dataRes, dataComp;
-            let tHtml = ``;
-
-            if(ssCurrentScen === 'tri') {
-                tG = bG + (repO*0.30) + (sursaut*0.40);
-                tA = bA + (repO*0.35) + (sursaut*0.20);
-                tK = bK + (repO*0.35) + (sursaut*0.40);
-                
-                labels = ['Gironcel (PCR)', 'Alamélou', 'Alek'];
-                let tot = tG+tA+tK;
-                dataRes = [(tG/tot*100).toFixed(1), (tA/tot*100).toFixed(1), (tK/tot*100).toFixed(1)];
-                dataComp = [
-                    {l:'Base T1', d:[bG, bA, bK], c:'#1e40af'},
-                    {l:'Report Autres', d:[repO*0.30, repO*0.35, repO*0.35], c:'#64748b'},
-                    {l:'Sursaut 2nd T', d:[sursaut*0.40, sursaut*0.20, sursaut*0.40], c:'#3b82f6'}
-                ];
-                document.getElementById('ss-res-text').innerHTML = tG>tA && tG>tK ? `<span class="text-red-400">Gironcel vainqueur (Triangulaire).</span>` : `<span class="text-blue-400">L'opposition l'emporte.</span>`;
-                
-                document.getElementById('ss-table-head').innerHTML = `<tr><th>Provenance</th><th>Gironcel</th><th>Alamélou</th><th>Alek</th></tr>`;
-                tHtml = `<tr><td>Bases T1</td><td>${bG}</td><td>${bA}</td><td>${bK}</td></tr>`;
-
-            } else { // FUS : Gironcel vs (Alamélou + Alek)
-                tG = bG + (repO*0.40) + (sursaut*0.80); // Comme en 2020, Gironcel rafle le sursaut
-                tA = bA + bK*0.75 + (repO*0.40) + (sursaut*0.20); // Alek transfère 75% à Alamelou
-                
-                labels = ['Gironcel (PCR)', 'Union Opp. (Ala+Alek)'];
-                let tot = tG+tA;
-                dataRes = [(tG/tot*100).toFixed(1), (tA/tot*100).toFixed(1)];
-                dataComp = [
-                    {l:'Base T1', d:[bG, bA], c:'#1e40af'},
-                    {l:'Ralliement Alek', d:[0, bK*0.75], c:'#f59e0b'},
-                    {l:'Report Autres', d:[repO*0.40, repO*0.40], c:'#64748b'},
-                    {l:'Sursaut 2nd T', d:[sursaut*0.80, sursaut*0.20], c:'#10b981'}
-                ];
-                document.getElementById('ss-res-text').innerHTML = tG>tA ? `<span class="text-red-400">Gironcel résiste à l'Union.</span>` : `<span class="text-blue-400">L'Union l'emporte.</span>`;
-                
-                document.getElementById('ss-table-head').innerHTML = `<tr><th>Provenance</th><th>Gironcel</th><th>Union Opp.</th></tr>`;
-                tHtml = `<tr><td>Bases T1</td><td>${bG}</td><td>${bA}</td></tr>`;
-            }
-
-            document.getElementById('ss-table-body').innerHTML = tHtml;
-
-            if(chartRes2ndSS) {
-                chartRes2ndSS.data.labels = labels;
-                chartRes2ndSS.data.datasets[0].data = dataRes;
-                chartRes2ndSS.update();
-                
-                chartComp2ndSS.data.labels = labels;
-                chartComp2ndSS.data.datasets = dataComp.map(ds => ({label: ds.l, data: ds.d, backgroundColor: ds.c}));
-                chartComp2ndSS.update();
-            }
-        }
-
-        window.updateBtsSS = function() {
-            // Pool exact 2020 : 1757
-            let vGir = 3935 + Math.round(1757 * (parseFloat(document.getElementById('ss-bt-g-sl').value)/100));
-            let vUni = 4803 + Math.round(1757 * (parseFloat(document.getElementById('ss-bt-u-sl').value)/100));
-            document.getElementById('ss-bt-g-val').innerText = document.getElementById('ss-bt-g-sl').value + '%';
-            document.getElementById('ss-bt-u-val').innerText = document.getElementById('ss-bt-u-sl').value + '%';
-            document.getElementById('ss-bt-g-proj').innerText = vGir.toLocaleString('fr-FR');
-            document.getElementById('ss-bt-u-proj').innerText = vUni.toLocaleString('fr-FR');
+            const analysisBox = document.getElementById('analysis-text');
+            const premier = scores[0];
+            const deuxieme = scores[1];
             
-            if(btChartSS) {
-                btChartSS.data.datasets[0].data = [vGir, vUni];
-                btChartSS.update();
+            let message = `<strong>${premier.name.toUpperCase()} EST EN TÊTE.</strong> `;
+            if (premier.id === 'M') {
+                message += `Le maire sortant résiste à la fragmentation. `;
+                if (deuxieme.id === 'L') message += `Laurent Virapoullé a doublé son frère et s'installe comme principal opposant.`;
+                else if (deuxieme.id === 'O') message += `Jean-Marie Virapoullé reste son adversaire direct.`;
+                else message += `${deuxieme.name} crée la surprise en se hissant à la seconde place.`;
+            } else if (premier.id === 'O') {
+                message += `Le clan Virapoullé reste uni derrière Jean-Marie, qui domine un scrutin extrêmement morcelé.`;
+            } else if (premier.id === 'L') {
+                message += `Coup de tonnerre politique : Laurent Virapoullé a siphonné le socle de son père et s'impose.`;
+            } else {
+                message += `Surprise politique : ${premier.name} prend la tête !`;
+            }
+            analysisBox.innerHTML = message;
+
+            let tableHtml = `
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-700 text-gray-300 text-[10px] md:text-xs uppercase">
+                            <th class="p-2 md:p-3 text-left rounded-tl-lg whitespace-nowrap">Candidat</th>
+                            <th class="p-2 md:p-3 text-right whitespace-nowrap">Socle Estimé</th>
+                            <th class="p-2 md:p-3 text-right whitespace-nowrap">Apport (Pool)</th>
+                            <th class="p-2 md:p-3 text-right bg-indigo-900/40 text-indigo-300 rounded-tr-lg whitespace-nowrap">Total Projeté</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-xs md:text-sm text-gray-200 divide-y divide-slate-700">
+            `;
+
+            scores.forEach((cand, index) => {
+                const det = res.details[cand.id];
+                const rowClass = index === 0 ? 'bg-slate-700/60' : 'hover:bg-slate-700/30';
+                const rankIcon = index === 0 ? '🏆 ' : `${index + 1}. `;
+                tableHtml += `
+                    <tr class="${rowClass} transition-colors">
+                        <td class="p-2 md:p-3 font-bold ${cand.colorClass} whitespace-nowrap">${rankIcon}${cand.name}</td>
+                        <td class="p-2 md:p-3 text-right text-gray-400 whitespace-nowrap">${formatNum(det.socle)} v.</td>
+                        <td class="p-2 md:p-3 text-right text-gray-500 whitespace-nowrap">${formatNum(det.pool)} v.</td>
+                        <td class="p-2 md:p-3 text-right font-bold text-sm md:text-lg bg-indigo-900/20 ${cand.colorClass} whitespace-nowrap">${formatNum(cand.val)}</td>
+                    </tr>
+                `;
+            });
+            tableHtml += `</tbody></table>`;
+            document.getElementById('recalculated-base-table').innerHTML = tableHtml;
+        }
+
+        window.runSimulation = function() {
+            project2026();
+        }
+
+        window.saveCurrentScenario = async function() {
+            const scenarioName = prompt("Nommez ce scénario (Il sera visible par tous) :");
+            if (!scenarioName) return;
+
+            const newScenario = {
+                name: scenarioName,
+                date: new Date().toLocaleString('fr-FR'),
+                timestamp: Date.now(),
+                data: currentStateData
+            };
+
+            if (isCloudActive && currentUser) {
+                try {
+                    const scenariosRef = collection(db, 'artifacts', cloudAppId, 'public', 'data', 'scenarios');
+                    await addDoc(scenariosRef, newScenario);
+                } catch (e) {
+                    console.error("Erreur cloud", e);
+                    alert("Erreur de sauvegarde dans le Cloud.");
+                }
+            } else {
+                let history = JSON.parse(localStorage.getItem('electionScenariosV5')) || [];
+                history.push(newScenario);
+                localStorage.setItem('electionScenariosV5', JSON.stringify(history));
+                renderScenariosTable();
             }
         }
 
+        window.loadScenario = function(identifier) {
+            let scenario = null;
+            if (isCloudActive) {
+                scenario = globalScenarios.find(s => s.id === identifier);
+            } else {
+                let history = JSON.parse(localStorage.getItem('electionScenariosV5')) || [];
+                scenario = history[identifier];
+            }
 
-        // ==========================================
-        // INITIALISATION CHARTS & START
-        // ==========================================
-        function initCharts() {
-            // Radar SA
-            radarChartSA = new Chart(document.getElementById('sa-radarChart').getContext('2d'), {
-                type: 'radar', data: { labels: ['Unité JMV', 'Séduc L.', 'Force Bédier', 'Particip.'], datasets: [{ label: 'Force', data: [0.49, 0.06, 0.85, 0.85], backgroundColor: 'rgba(99, 102, 241, 0.2)', borderColor: '#6366f1' }] },
-                options: { responsive: true, maintainAspectRatio: false, scales: { r: { suggestedMin: 0, suggestedMax: 1.2, ticks:{display:false} } }, plugins:{legend:{display:false}} }
-            });
-
-            // 2nd Tour SA
-            chartRes2ndSA = new Chart(document.getElementById('sa-chart-res').getContext('2d'), { type:'bar', data:{labels:[], datasets:[{data:[], backgroundColor:['#10b981','#3b82f6','#ef4444']}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}} });
-            chartComp2ndSA = new Chart(document.getElementById('sa-chart-comp').getContext('2d'), { type:'bar', data:{labels:[], datasets:[]}, options:{responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true}, y:{stacked:true}}} });
-            btChartSA = new Chart(document.getElementById('sa-bt-chart').getContext('2d'), { type:'bar', data:{labels:['Bédier','Virapoullé'], datasets:[{label:'Modèle', data:[0,0], backgroundColor:'#10b981'},{label:'Réel', data:[10703,9813], backgroundColor:'rgba(148, 163, 184, 0.3)', borderColor:'#94a3b8', borderWidth:2}]}, options:{responsive:true, maintainAspectRatio:false} });
-
-            // 2nd Tour SS
-            chartRes2ndSS = new Chart(document.getElementById('ss-chart-res').getContext('2d'), { type:'bar', data:{labels:[], datasets:[{data:[], backgroundColor:['#ef4444','#3b82f6','#f59e0b']}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}} });
-            chartComp2ndSS = new Chart(document.getElementById('ss-chart-comp').getContext('2d'), { type:'bar', data:{labels:[], datasets:[]}, options:{responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true}, y:{stacked:true}}} });
-            btChartSS = new Chart(document.getElementById('ss-bt-chart').getContext('2d'), { type:'bar', data:{labels:['Gironcel','Union Opp.'], datasets:[{label:'Modèle', data:[0,0], backgroundColor:'#ef4444'},{label:'Réel', data:[5474,5021], backgroundColor:'rgba(148, 163, 184, 0.3)', borderColor:'#94a3b8', borderWidth:2}]}, options:{responsive:true, maintainAspectRatio:false} });
+            if (scenario) {
+                const s = scenario.data.sliders;
+                document.getElementById('fidelityFactor').value = s.fidelity;
+                document.getElementById('transferFactor').value = s.transfer;
+                document.getElementById('erosionFactor').value = s.erosion;
+                document.getElementById('participationFactor').value = s.participation;
+                
+                if(radarChart) {
+                    radarChart.data.datasets[0].data = [s.fidelity, s.transfer, s.erosion - 0.2, s.participation - 0.2];
+                    radarChart.update();
+                }
+                
+                runSimulation();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
 
+        window.deleteScenario = async function(identifier) {
+            if(confirm("Supprimer ce scénario pour tout le monde ?")) {
+                if (isCloudActive && currentUser) {
+                    try {
+                        const docRef = doc(db, 'artifacts', cloudAppId, 'public', 'data', 'scenarios', identifier);
+                        await deleteDoc(docRef);
+                    } catch(e) {
+                        console.error("Erreur", e);
+                    }
+                } else {
+                    let history = JSON.parse(localStorage.getItem('electionScenariosV5')) || [];
+                    history.splice(identifier, 1);
+                    localStorage.setItem('electionScenariosV5', JSON.stringify(history));
+                    renderScenariosTable();
+                }
+            }
+        }
+
+        window.clearAllScenarios = function() {
+            if(confirm("Attention, ceci va effacer tout votre historique local. Confirmer ?")) {
+                localStorage.removeItem('electionScenariosV5');
+                renderScenariosTable();
+            }
+        }
+
+        function renderScenariosTable() {
+            const tbody = document.getElementById('scenario-list-body');
+            let history = isCloudActive ? globalScenarios : (JSON.parse(localStorage.getItem('electionScenariosV5')) || []);
+
+            if (history.length === 0) {
+                let msg = isCloudActive ? "Aucun scénario partagé. Soyez le premier !" : "Aucun scénario local enregistré.";
+                tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-6 text-center text-gray-500 italic whitespace-nowrap">${msg}</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            const listToRender = isCloudActive ? history : [...history].reverse();
+
+            listToRender.forEach((scenario, index) => {
+                const s = scenario.data.sliders;
+                const identifier = isCloudActive ? `'${scenario.id}'` : (history.length - 1 - index); 
+                
+                html += `
+                    <tr class="hover:bg-slate-700/50 transition-colors">
+                        <td class="px-3 py-3 font-medium text-white whitespace-nowrap">
+                            ${scenario.name}
+                            <div class="text-[10px] text-gray-500 font-normal">${scenario.date}</div>
+                        </td>
+                        <td class="px-3 py-3 font-bold ${scenario.data.winnerColor} whitespace-nowrap">${scenario.data.winner}</td>
+                        <td class="px-3 py-3 whitespace-nowrap">${Math.round(s.fidelity * 100)}%</td>
+                        <td class="px-3 py-3 whitespace-nowrap">${Math.round(s.transfer * 100)}%</td>
+                        <td class="px-3 py-3 whitespace-nowrap">${Number(s.erosion).toFixed(2)}</td>
+                        <td class="px-3 py-3 whitespace-nowrap">${Number(s.participation).toFixed(2)}</td>
+                        <td class="px-3 py-3 text-right space-x-2 whitespace-nowrap">
+                            <button onclick="loadScenario(${identifier})" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs py-1 px-2 md:px-3 rounded">Recharger</button>
+                            <button onclick="deleteScenario(${identifier})" class="text-red-400 hover:text-red-300 text-xs mt-2 md:mt-0">✖</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('factorImpactChart').getContext('2d');
+            const initialFidelity = 0.49;
+            const initialTransfer = 0.06;
+            const initialErosion = 1.05;
+            const initialParticipation = 1.05;
+
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Unité JMV', 'Séduction L.', 'Force Bédier', 'Particip.'],
+                    datasets: [{
+                        label: 'Force du Facteur',
+                        data: [initialFidelity, initialTransfer, initialErosion - 0.2, initialParticipation - 0.2],
+                        backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                        borderColor: '#6366f1',
+                        pointBackgroundColor: '#818cf8',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        r: { suggestedMin: 0, suggestedMax: 1.2, ticks: { display: false }, grid: { color: '#334155' }, angleLines: { color: '#334155' }, pointLabels: { color: '#e2e8f0', font: { size: 10, family: 'Inter' } } } 
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        document.querySelectorAll('.range-slider').forEach(slider => {
+            slider.addEventListener('input', () => {
+                if(radarChart && slider.id !== 'frontRnSlider' && slider.id !== 'globalSursautSlider' && slider.id !== 'bedierCaptureSlider' && slider.id !== 'jmvCaptureSlider') {
+                    radarChart.data.datasets[0].data = [
+                        document.getElementById('fidelityFactor').value,
+                        document.getElementById('transferFactor').value,
+                        document.getElementById('erosionFactor').value - 0.2,
+                        document.getElementById('participationFactor').value - 0.2
+                    ];
+                    radarChart.update();
+                }
+            });
+        });
+
+        // ==========================================
+        // MOTEUR DU SECOND TOUR (Dynamique Globale)
+        // ==========================================
+        
+        window.updateAllSecondTour = function() {
+            const sursautGlobal = parseInt(document.getElementById('globalSursautSlider').value, 10);
+            document.getElementById('globalSursautValue').textContent = '+' + sursautGlobal.toLocaleString('fr-FR') + ' voix';
+
+            // --- MISE A JOUR DU SCÉNARIO A (TRIANGULAIRE) ---
+            const bedierBaseTri = 6516;
+            const bedierRepFruteauTri = 1611;
+            const bedierRepAutresTri = 442;
+            const bedierSursautTri = Math.round(sursautGlobal * 0.35); // 35% du sursaut pour Bedier
+            const bedierTotalTri = bedierBaseTri + bedierRepFruteauTri + bedierRepAutresTri + bedierSursautTri;
+
+            const laurentBaseTri = 4712;
+            const laurentRepSoupTri = 364;
+            const laurentRepAutresTri = 295;
+            const laurentSursautTri = Math.round(sursautGlobal * 0.45); // 45% du sursaut pour Laurent
+            const laurentTotalTri = laurentBaseTri + laurentRepSoupTri + laurentRepAutresTri + laurentSursautTri;
+
+            const jmBaseTri = 4516;
+            const jmRepFruteauTri = 179;
+            const jmRepSoupTri = 91;
+            const jmRepAutresTri = 147;
+            const jmSursautTri = sursautGlobal - bedierSursautTri - laurentSursautTri; // Le reste (env. 20%)
+            const jmTotalTri = jmBaseTri + jmRepFruteauTri + jmRepSoupTri + jmRepAutresTri + jmSursautTri;
+
+            const totalExprimesTri = bedierTotalTri + laurentTotalTri + jmTotalTri;
+            const bedierPctTri = ((bedierTotalTri / totalExprimesTri) * 100).toFixed(2);
+            const laurentPctTri = ((laurentTotalTri / totalExprimesTri) * 100).toFixed(2);
+            const jmPctTri = ((jmTotalTri / totalExprimesTri) * 100).toFixed(2);
+
+            // Triangulaire : Graphiques
+            if(ctxResultsTriChart) {
+                ctxResultsTriChart.data.datasets[0].data = [bedierPctTri, laurentPctTri, jmPctTri];
+                ctxResultsTriChart.options.plugins.tooltip.callbacks.label = function(context) { 
+                    const totals = [bedierTotalTri, laurentTotalTri, jmTotalTri]; 
+                    return context.raw + '% (' + totals[context.dataIndex].toLocaleString('fr-FR') + ' voix)'; 
+                };
+                ctxResultsTriChart.update();
+            }
+            if(ctxCompositionTriChart) {
+                // Dataset 4 est le Sursaut
+                ctxCompositionTriChart.data.datasets[4].data = [bedierSursautTri, laurentSursautTri, jmSursautTri];
+                ctxCompositionTriChart.update();
+            }
+
+            // Triangulaire : Tableau et Résultat
+            const resTextTri = document.getElementById('triangulaire-result-text');
+            const scoresTri = [
+                {name: 'Joé Bédier', votes: bedierTotalTri, color: 'text-green-400'},
+                {name: 'L. Virapoullé', votes: laurentTotalTri, color: 'text-amber-500'},
+                {name: 'JM. Virapoullé', votes: jmTotalTri, color: 'text-red-500'}
+            ].sort((a,b) => b.votes - a.votes);
+            
+            resTextTri.innerHTML = `<span class="${scoresTri[0].color} font-bold">${scoresTri[0].name} l'emporte</span> d'une courte tête (+${(scoresTri[0].votes - scoresTri[1].votes).toLocaleString('fr-FR')} voix d'avance).`;
+
+            let tableHtmlTri = `
+                <tr class="hover:bg-slate-700/50 transition-colors">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Base J. Bédier (6 516)</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-green-400">+ 6 516</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">-</td>
+                </tr>
+                <tr class="hover:bg-slate-700/50 transition-colors">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Base L. Virapoullé (4 712)</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-amber-500">+ 4 712</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">-</td>
+                </tr>
+                <tr class="hover:bg-slate-700/50 transition-colors">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Base JM. Virapoullé (4 516)</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-red-400">+ 4 516</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">-</td>
+                </tr>
+                <tr class="hover:bg-slate-700/50 bg-purple-900/10 transition-colors">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report E. Fruteau</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-green-400">+ 1 611</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 358</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-red-400">+ 179</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 1 432</td>
+                </tr>
+                <tr class="hover:bg-slate-700/50 bg-teal-900/10 transition-colors">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report S. Soupramanien</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 364</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-red-400">+ 91</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 454</td>
+                </tr>
+                <tr class="hover:bg-slate-700/50 transition-colors border-b-2 border-slate-600">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report Autres listes</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-green-400">+ 442</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 295</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-red-400">+ 147</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 590</td>
+                </tr>`;
+            
+            if(sursautGlobal > 0) {
+                tableHtmlTri += `
+                <tr class="hover:bg-slate-700/50 bg-blue-900/20 transition-colors border-b-2 border-blue-500">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium text-blue-400">📈 Sursaut Participation</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-green-400">+ ${bedierSursautTri}</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-amber-500">+ ${laurentSursautTri}</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-red-500">+ ${jmSursautTri}</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">-</td>
+                </tr>`;
+            }
+
+            tableHtmlTri += `
+                <tr class="bg-slate-800 font-bold text-sm md:text-lg border-t-4 border-slate-600">
+                    <td class="px-3 py-4 md:px-6 md:py-4 text-white">TOTAL PROJETÉ</td>
+                    <td class="px-3 py-4 md:px-6 md:py-4 text-center text-green-400">${bedierTotalTri.toLocaleString('fr-FR')} voix</td>
+                    <td class="px-3 py-4 md:px-6 md:py-4 text-center text-amber-500">${laurentTotalTri.toLocaleString('fr-FR')} voix</td>
+                    <td class="px-3 py-4 md:px-6 md:py-4 text-center text-red-500">${jmTotalTri.toLocaleString('fr-FR')} voix</td>
+                    <td class="px-3 py-4 md:px-6 md:py-4 text-center text-gray-500 whitespace-nowrap">Reste abs.</td>
+                </tr>
+            `;
+            document.getElementById('table-body-triangulaire').innerHTML = tableHtmlTri;
+
+
+            // --- MISE A JOUR DU SCÉNARIO B (FUSION) ---
+            const sursautRN = parseInt(document.getElementById('frontRnSlider').value, 10);
+            document.getElementById('frontRnValue').textContent = '+' + sursautRN + ' voix';
+
+            const bedierBaseFus = 6516;
+            const bedierRepFruteauFus = 1611;
+            const bedierRepAutresFus = 442;
+            const bedierSursautFus = Math.round(sursautGlobal * 0.45); // 45% pour Bedier en duel
+            const bedierTotalFus = bedierBaseFus + bedierRepFruteauFus + bedierRepAutresFus + bedierSursautFus + sursautRN;
+
+            const laurentBaseFus = 4712;
+            const laurentRepJMVFus = 3838;
+            const laurentRepFruteauFus = 358;
+            const laurentRepSoupFus = 454;
+            const laurentRepAutresFus = 442;
+            const laurentSursautFus = sursautGlobal - bedierSursautFus; // 55%
+            const laurentTotalFus = laurentBaseFus + laurentRepJMVFus + laurentRepFruteauFus + laurentRepSoupFus + laurentRepAutresFus + laurentSursautFus;
+
+            const totalExprimesFus = bedierTotalFus + laurentTotalFus;
+            const bedierPctFus = ((bedierTotalFus / totalExprimesFus) * 100).toFixed(2);
+            const laurentPctFus = ((laurentTotalFus / totalExprimesFus) * 100).toFixed(2);
+
+            // Fusion : Graphiques
+            if(ctxResultsFusChart) {
+                ctxResultsFusChart.data.datasets[0].data = [bedierPctFus, laurentPctFus];
+                ctxResultsFusChart.options.plugins.tooltip.callbacks.label = function(context) { 
+                    const totals = [bedierTotalFus, laurentTotalFus]; 
+                    return context.raw + '% (' + totals[context.dataIndex].toLocaleString('fr-FR') + ' voix)'; 
+                };
+                ctxResultsFusChart.update();
+            }
+
+            if(ctxCompositionFusChart) {
+                ctxCompositionFusChart.data.datasets[5].data = [bedierSursautFus, laurentSursautFus]; // Index 5 = Sursaut
+                ctxCompositionFusChart.data.datasets[6].data = [sursautRN, 0]; // Index 6 = Anti RN
+                ctxCompositionFusChart.update();
+            }
+
+            // Fusion : Tableau et Résultat
+            const resTextFus = document.getElementById('fusion-result-text');
+            if(bedierTotalFus > laurentTotalFus) {
+                resTextFus.innerHTML = `<span class="text-green-400 font-bold">Joé Bédier l'emporte</span> avec +${(bedierTotalFus - laurentTotalFus).toLocaleString('fr-FR')} voix.`;
+            } else {
+                resTextFus.innerHTML = `<span class="text-amber-500 font-bold">Laurent Virapoullé l'emporte</span> avec +${(laurentTotalFus - bedierTotalFus).toLocaleString('fr-FR')} voix.`;
+            }
+
+            let tableHtmlFus = `
+                <tr class="hover:bg-slate-700/50 transition-colors">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Base J. Bédier (6 516)</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-green-400">+ 6 516</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">-</td>
+                </tr>
+                <tr class="hover:bg-slate-700/50 transition-colors">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Base L. Virapoullé (4 712)</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-amber-500">+ 4 712</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">-</td>
+                </tr>
+                <tr class="hover:bg-slate-700/50 bg-blue-900/10 transition-colors">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report JM. Virapoullé</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 3 838</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 678</td>
+                </tr>
+                <tr class="hover:bg-slate-700/50 bg-purple-900/10 transition-colors">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report E. Fruteau</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-green-400">+ 1 611</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 358</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 1 611</td>
+                </tr>
+                <tr class="hover:bg-slate-700/50 bg-teal-900/10 transition-colors">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report S. Soupramanien</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 454</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 455</td>
+                </tr>
+                <tr class="hover:bg-slate-700/50 transition-colors border-b-2 border-slate-600">
+                    <td class="px-3 py-3 md:px-6 md:py-4 font-medium">Report Autres listes</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-green-400">+ 442</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-amber-400">+ 442</td>
+                    <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">+ 590</td>
+                </tr>
+            `;
+
+            if(sursautGlobal > 0) {
+                tableHtmlFus += `
+                    <tr class="hover:bg-slate-700/50 bg-blue-900/20 transition-colors">
+                        <td class="px-3 py-3 md:px-6 md:py-4 font-medium text-blue-400">📈 Sursaut Participation</td>
+                        <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-green-400">+ ${bedierSursautFus}</td>
+                        <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-amber-500">+ ${laurentSursautFus}</td>
+                        <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">-</td>
+                    </tr>
+                `;
+            }
+
+            if(sursautRN > 0) {
+                tableHtmlFus += `
+                    <tr class="hover:bg-slate-700/50 bg-emerald-900/20 transition-colors border-t-2 border-emerald-500">
+                        <td class="px-3 py-3 md:px-6 md:py-4 font-medium text-emerald-400">🛡️ Front anti-RN (Abstentionnistes)</td>
+                        <td class="px-3 py-3 md:px-6 md:py-4 text-center font-bold text-emerald-400">+ ${sursautRN}</td>
+                        <td class="px-3 py-3 md:px-6 md:py-4 text-center">-</td>
+                        <td class="px-3 py-3 md:px-6 md:py-4 text-center text-gray-500">-</td>
+                    </tr>
+                `;
+            }
+
+            tableHtmlFus += `
+                <tr class="bg-slate-800 font-bold text-sm md:text-lg border-t-4 border-slate-600">
+                    <td class="px-3 py-4 md:px-6 md:py-4 text-white">TOTAL PROJETÉ</td>
+                    <td class="px-3 py-4 md:px-6 md:py-4 text-center text-green-400">${bedierTotalFus.toLocaleString('fr-FR')} voix</td>
+                    <td class="px-3 py-4 md:px-6 md:py-4 text-center text-amber-500">${laurentTotalFus.toLocaleString('fr-FR')} voix</td>
+                    <td class="px-3 py-4 md:px-6 md:py-4 text-center text-gray-500 whitespace-nowrap">Reste abs.</td>
+                </tr>
+            `;
+            
+            document.getElementById('table-body-fusion').innerHTML = tableHtmlFus;
+        };
+
+
+        function initSecondTourCharts() {
+            const isMobile = window.innerWidth < 768;
+            const FONT_COLOR = '#e0e0e0';
+            const GRID_COLOR = 'rgba(224, 224, 224, 0.1)';
+
+            // --- 1. Initialisation Vides Triangulaire ---
+            const ctxResultsTri = document.getElementById('projectedResultsChartTri').getContext('2d');
+            ctxResultsTriChart = new Chart(ctxResultsTri, {
+                type: 'bar',
+                data: {
+                    labels: ['J. Bédier', 'L. Virapoullé', 'J.M. Virapoullé'],
+                    datasets: [{ label: '% des voix', data: [0, 0, 0], backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], borderRadius: 8 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { return context.raw + '%'; } } } },
+                    scales: { x: { ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } }, y: { beginAtZero: true, max: 60, title: { display: !isMobile, text: 'Pourcentage (%)', color: FONT_COLOR }, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } } }
+                }
+            });
+
+            const ctxCompositionTri = document.getElementById('compositionChartTri').getContext('2d');
+            ctxCompositionTriChart = new Chart(ctxCompositionTri, {
+                type: 'bar',
+                data: {
+                    labels: ['J. Bédier', 'L. Virapoullé', 'J.M. Virapoullé'],
+                    datasets: [
+                        { label: 'Base 1er tour', data: [6516, 4712, 4516], backgroundColor: '#1e40af' },
+                        { label: 'Report E. Fruteau', data: [1611, 358, 179], backgroundColor: '#a855f7' },
+                        { label: 'Report S. Soupramanien', data: [0, 364, 91], backgroundColor: '#14b8a6' },
+                        { label: 'Report Autres', data: [442, 295, 147], backgroundColor: '#64748b' },
+                        { label: '📈 Sursaut Particip.', data: [0, 0, 0], backgroundColor: '#3b82f6' } // Sursaut Tri
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: isMobile ? 'bottom' : 'right', labels: { boxWidth: 10, font: { size: 10 }, color: FONT_COLOR } }, tooltip: { mode: 'index', intersect: false } },
+                    scales: { x: { stacked: true, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } }, y: { stacked: true, title: { display: !isMobile, text: 'Nombre de voix', color: FONT_COLOR }, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } } }
+                }
+            });
+
+            // --- 2. Initialisation Vides Fusion ---
+            const ctxResultsFus = document.getElementById('projectedResultsChartFus').getContext('2d');
+            ctxResultsFusChart = new Chart(ctxResultsFus, {
+                type: 'bar',
+                data: {
+                    labels: ['J. Bédier', 'L. Virapoullé'],
+                    datasets: [{ label: '% des voix', data: [0, 0], backgroundColor: ['#10b981', '#f59e0b'], borderRadius: 8 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { return context.raw + '%'; } } } },
+                    scales: { x: { ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } }, y: { beginAtZero: true, max: 60, title: { display: !isMobile, text: 'Pourcentage (%)', color: FONT_COLOR }, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } } }
+                }
+            });
+
+            const ctxCompositionFus = document.getElementById('compositionChartFus').getContext('2d');
+            ctxCompositionFusChart = new Chart(ctxCompositionFus, {
+                type: 'bar',
+                data: {
+                    labels: ['J. Bédier', 'L. Virapoullé'],
+                    datasets: [
+                        { label: 'Base 1er tour', data: [6516, 4712], backgroundColor: '#1e40af' }, // 0
+                        { label: 'Report JM Virapoullé', data: [0, 3838], backgroundColor: '#ef4444' }, // 1
+                        { label: 'Report E. Fruteau', data: [1611, 358], backgroundColor: '#a855f7' }, // 2
+                        { label: 'Report S. Soupramanien', data: [0, 454], backgroundColor: '#14b8a6' }, // 3
+                        { label: 'Report Autres', data: [442, 442], backgroundColor: '#64748b' }, // 4
+                        { label: '📈 Sursaut Particip.', data: [0, 0], backgroundColor: '#3b82f6' }, // 5 
+                        { label: '🛡️ Front Anti-RN', data: [0, 0], backgroundColor: '#10b981' } // 6 
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: isMobile ? 'bottom' : 'right', labels: { boxWidth: 10, font: { size: 10 }, color: FONT_COLOR } }, tooltip: { mode: 'index', intersect: false } },
+                    scales: { x: { stacked: true, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } }, y: { stacked: true, title: { display: !isMobile, text: 'Nombre de voix', color: FONT_COLOR }, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } } }
+                }
+            });
+
+            // Lancer le calcul global dynamique
+            updateAllSecondTour();
+        }
+
+        // ==========================================
+        // MOTEUR DU BACKTESTING 2020 (Validation)
+        // ==========================================
+        
+        window.updateBacktesting2020 = function() {
+            // Chiffres officiels de 2020
+            const bedierBase2020 = 4524;
+            const jmvBase2020 = 5722;
+            const pool2020 = 10270; // Eliminés (7934) + Nouveaux votants au 2nd tour (2336)
+            
+            const bedierReal2020 = 10703;
+            const jmvReal2020 = 9813;
+
+            // Récupérer les taux depuis les curseurs
+            const bedierRate = parseFloat(document.getElementById('bedierCaptureSlider').value) / 100;
+            const jmvRate = parseFloat(document.getElementById('jmvCaptureSlider').value) / 100;
+            
+            // Afficher les valeurs des curseurs
+            document.getElementById('bedierCaptureValue').textContent = (bedierRate * 100).toFixed(1) + '%';
+            document.getElementById('jmvCaptureValue').textContent = (jmvRate * 100).toFixed(1) + '%';
+            
+            // Calculer la projection
+            const bedierProj = bedierBase2020 + Math.round(pool2020 * bedierRate);
+            const jmvProj = jmvBase2020 + Math.round(pool2020 * jmvRate);
+            
+            // Mettre à jour le graphique s'il existe
+            if(backtestChart) {
+                backtestChart.data.datasets[0].data = [bedierProj, jmvProj];
+                backtestChart.update();
+            }
+            
+            // Mettre à jour le tableau HTML
+            document.getElementById('bt-bedier-proj').textContent = bedierProj.toLocaleString('fr-FR') + ' voix';
+            document.getElementById('bt-jmv-proj').textContent = jmvProj.toLocaleString('fr-FR') + ' voix';
+            
+            // Mettre à jour la marge d'erreur
+            const bedierErr = bedierProj - bedierReal2020;
+            const jmvErr = jmvProj - jmvReal2020;
+            
+            const bedierErrEl = document.getElementById('bt-bedier-err');
+            bedierErrEl.textContent = (bedierErr > 0 ? '+' : '') + bedierErr + ' voix';
+            bedierErrEl.className = Math.abs(bedierErr) < 50 ? "p-3 text-center text-emerald-400 font-bold" : "p-3 text-center text-red-400 font-bold";
+
+            const jmvErrEl = document.getElementById('bt-jmv-err');
+            jmvErrEl.textContent = (jmvErr > 0 ? '+' : '') + jmvErr + ' voix';
+            jmvErrEl.className = Math.abs(jmvErr) < 50 ? "p-3 text-center text-emerald-400 font-bold" : "p-3 text-center text-red-400 font-bold";
+        }
+
+        function initBacktestingChart() {
+            const ctxBT = document.getElementById('backtestingChart').getContext('2d');
+            const FONT_COLOR = '#e0e0e0';
+            const GRID_COLOR = 'rgba(224, 224, 224, 0.1)';
+
+            backtestChart = new Chart(ctxBT, {
+                type: 'bar',
+                data: {
+                    labels: ['Joé Bédier', 'J.M. Virapoullé'],
+                    datasets: [
+                        {
+                            label: 'Modèle (Calculé)',
+                            data: [0, 0], // Sera mis à jour
+                            backgroundColor: ['#10b981', '#3b82f6'],
+                            borderRadius: 8,
+                            order: 1
+                        },
+                        {
+                            label: 'Score Officiel (Urnes)',
+                            data: [10703, 9813],
+                            backgroundColor: 'rgba(148, 163, 184, 0.3)', // Gris transparent
+                            borderColor: '#94a3b8',
+                            borderWidth: 2,
+                            borderRadius: 8,
+                            order: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { color: FONT_COLOR } },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        x: { ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } },
+                        y: { 
+                            beginAtZero: false, 
+                            min: 8000, 
+                            max: 12000,
+                            ticks: { color: FONT_COLOR }, 
+                            grid: { color: GRID_COLOR } 
+                        }
+                    }
+                }
+            });
+
+            // Initialiser le premier calcul
+            updateBacktesting2020();
+        }
+
+        // Démarrage Global
         window.onload = () => {
-            initCharts();
-            runSimulationSA();
-            updateBtsSA();
-            runSimulationSS();
-            updateBtsSS();
-            switchCity(); // Init display
+            initChart();
+            runSimulation();
+            initCloudDatabase();
+            initSecondTourCharts();
+            initBacktestingChart();
         };
     </script>
 </body>
