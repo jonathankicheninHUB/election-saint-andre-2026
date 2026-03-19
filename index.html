@@ -149,12 +149,12 @@
             </section>
 
             <section class="card border-l-4 border-amber-500">
-                <h2 class="text-lg md:text-xl font-bold text-gray-100 mb-4 pb-2 border-b border-slate-700 uppercase tracking-wide">I. Mécanique du Calcul</h2>
+                <h2 class="text-lg md:text-xl font-bold text-gray-100 mb-4 pb-2 border-b border-slate-700 uppercase tracking-wide">I. Mécanique du Calcul et Comparatif</h2>
                 <div id="recalculated-base-table" class="overflow-x-auto w-full pb-2">
                     <!-- Le tableau sera généré ici dynamiquement -->
                 </div>
                 <p class="mt-4 text-xs md:text-sm text-gray-400 italic">
-                    *Le tableau se trie automatiquement en temps réel. Les voix sont partagées entre les bases historiques, la scission familiale, et le pool d'indécis.
+                    *Le tableau se trie automatiquement en temps réel. Les scores réels de 2020 servent de point de repère pour évaluer la progression (Écart) de chaque liste.
                 </p>
             </section>
 
@@ -246,7 +246,7 @@
                      <div class="pt-4 flex flex-col gap-3" id="bars-container">
                          <!-- Bédier -->
                          <div id="wrapper-M">
-                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2 mb-1">
                                 <span class="text-c-M truncate">Joé Bédier (Sortant)</span>
                                 <span id="percent-M" class="font-extrabold text-c-M whitespace-nowrap">0.00 %</span>
                             </div>
@@ -256,7 +256,7 @@
                          </div>
                          <!-- JM Virapoullé -->
                          <div id="wrapper-O">
-                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2 mb-1">
                                 <span class="text-c-O truncate">J.M. Virapoullé</span>
                                 <span id="percent-O" class="font-extrabold text-c-O whitespace-nowrap">0.00 %</span>
                             </div>
@@ -266,7 +266,7 @@
                          </div>
                          <!-- Laurent Virapoullé -->
                          <div id="wrapper-L">
-                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2 mb-1">
                                 <span class="text-c-L truncate">Laurent Virapoullé</span>
                                 <span id="percent-L" class="font-extrabold text-c-L whitespace-nowrap">0.00 %</span>
                             </div>
@@ -276,7 +276,7 @@
                          </div>
                          <!-- Fruteau -->
                          <div id="wrapper-F">
-                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2 mb-1">
                                 <span class="text-c-F truncate">Eric Fruteau</span>
                                 <span id="percent-F" class="font-extrabold text-c-F whitespace-nowrap">0.00 %</span>
                             </div>
@@ -286,7 +286,7 @@
                          </div>
                          <!-- Settama-Vidon -->
                          <div id="wrapper-SV">
-                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2 mb-1">
                                 <span class="text-c-SV truncate">Settama-Vidon</span>
                                 <span id="percent-SV" class="font-extrabold text-c-SV whitespace-nowrap">0.00 %</span>
                             </div>
@@ -296,7 +296,7 @@
                          </div>
                          <!-- Soupramanien -->
                          <div id="wrapper-SOU">
-                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2 mb-1">
                                 <span class="text-c-SOU truncate">Soupramanien</span>
                                 <span id="percent-SOU" class="font-extrabold text-c-SOU whitespace-nowrap">0.00 %</span>
                             </div>
@@ -306,7 +306,7 @@
                          </div>
                          <!-- Sautron -->
                          <div id="wrapper-SAU">
-                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2 mb-1">
                                 <span class="text-c-SAU truncate">Sautron</span>
                                 <span id="percent-SAU" class="font-extrabold text-c-SAU whitespace-nowrap">0.00 %</span>
                             </div>
@@ -316,7 +316,7 @@
                          </div>
                          <!-- Cotaya -->
                          <div id="wrapper-C">
-                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2">
+                            <div class="flex justify-between text-xs sm:text-sm font-semibold text-gray-200 gap-2 mb-1">
                                 <span class="text-c-C truncate">Cotaya</span>
                                 <span id="percent-C" class="font-extrabold text-c-C whitespace-nowrap">0.00 %</span>
                             </div>
@@ -343,39 +343,10 @@
                     </div>
                 </div>
             </div>
-
-            <!-- SECTION : HISTORIQUE CLOUD -->
-            <section class="card border-t-4 border-teal-500 mt-4 md:mt-8">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 pb-2 border-b border-slate-700 gap-2">
-                    <h2 class="text-lg md:text-xl font-bold text-gray-100 uppercase tracking-wide">IV. Scénarios Partagés</h2>
-                    <button onclick="clearAllScenarios()" class="text-xs text-red-400 hover:text-red-300 underline hidden" id="btn-clear-local">Effacer l'historique local</button>
-                </div>
-                
-                <div class="overflow-x-auto w-full pb-2">
-                    <table class="min-w-full text-xs md:text-sm text-left">
-                        <thead class="text-gray-400 uppercase bg-slate-800">
-                            <tr>
-                                <th class="px-3 py-3 rounded-tl-lg whitespace-nowrap">Nom du Scénario</th>
-                                <th class="px-3 py-3 whitespace-nowrap">Vainqueur</th>
-                                <th class="px-3 py-3 whitespace-nowrap">Fidélité (JMV)</th>
-                                <th class="px-3 py-3 whitespace-nowrap">Attract. (Lau)</th>
-                                <th class="px-3 py-3 whitespace-nowrap">Usure Bédier</th>
-                                <th class="px-3 py-3 whitespace-nowrap">Particip.</th>
-                                <th class="px-3 py-3 text-right rounded-tr-lg whitespace-nowrap">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="scenario-list-body" class="divide-y divide-slate-700">
-                            <tr>
-                                <td colspan="7" class="px-4 py-6 text-center text-gray-500 italic">Chargement des scénarios partagés...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
         </div>
 
         <!-- ========================================== -->
-        <!-- ONGLET 2 : SECOND TOUR 2026 (Choix de Scénarios) -->
+        <!-- ONGLET 2 : SECOND TOUR (Choix de Scénarios) -->
         <!-- ========================================== -->
         <div id="tab-2" class="hidden space-y-6">
             
@@ -422,7 +393,7 @@
                 <!-- Hypotheses Section -->
                 <div class="card border-t-4 border-purple-500">
                     <h2 class="text-lg md:text-xl font-bold mb-4 flex items-center text-purple-400">
-                        <svg class="w-5 h-5 md:w-6 md:h-6 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                        <svg class="w-5 h-5 md:w-6 md:h-6 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                         Les hypothèses de report (Scénario de Triangulaire)
                     </h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs md:text-sm">
@@ -512,7 +483,7 @@
                 <!-- Hypotheses Section -->
                 <div class="card border-t-4 border-blue-500">
                     <h2 class="text-lg md:text-xl font-bold mb-4 flex items-center text-blue-400">
-                        <svg class="w-5 h-5 md:w-6 md:h-6 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                        <svg class="w-5 h-5 md:w-6 md:h-6 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                         Les hypothèses de report (Scénario de Duel Unifié)
                     </h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs md:text-sm">
@@ -625,6 +596,34 @@
                 </div>
             </div>
 
+            <!-- NOUVEAU BLOC : CONSEILS STRATÉGIQUES SCÉNARIO B (FUSION) -->
+            <div class="mt-8 mb-6">
+                <h2 class="text-xl md:text-2xl font-bold text-gray-100 mb-6 flex items-center gap-2 border-b border-slate-700 pb-2">
+                    <span>💡</span> Recommandations Opérationnelles (Duel / Fusion)
+                </h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Camp Majorité -->
+                    <div class="bg-slate-800/80 rounded-xl border-t-4 border-green-500 p-6 shadow-lg">
+                        <h3 class="text-lg font-bold text-green-400 mb-4 flex items-center gap-2">🟢 Camp 1 : Majorité Sortante (J. Bédier)</h3>
+                        <div class="space-y-4 text-sm text-gray-300">
+                            <div><strong class="text-green-300">1. Le récit de l'alliance de circonstance :</strong> <span class="italic text-gray-400">Consigne :</span> Semer le doute chez les électeurs de l'opposition. Le discours doit attaquer la cohérence de la fusion ("Une alliance politicienne pour le pouvoir") pour faire baisser le taux de report naturel.</div>
+                            <div><strong class="text-green-300">2. Activer le "Bouclier" (Vote Barrage) :</strong> <span class="italic text-gray-400">Consigne :</span> Dramatiser l'enjeu du retour de la droite pour réveiller les abstentionnistes de gauche du 1er tour et faire grimper la réglette "Front anti-RN".</div>
+                            <div><strong class="text-green-300">3. Verrouiller le "Pool Fruteau" :</strong> <span class="italic text-gray-400">Consigne :</span> Donner des garanties claires (sociales, écologiques) à cet électorat juge de paix pour sécuriser un report de voix frôlant les 80-90% en votre faveur.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Camp Opposition -->
+                    <div class="bg-slate-800/80 rounded-xl border-t-4 border-blue-500 p-6 shadow-lg">
+                        <h3 class="text-lg font-bold text-blue-400 mb-4 flex items-center gap-2">🔵 Camp 2 : L'Opposition Unie (Virapoullé)</h3>
+                        <div class="space-y-4 text-sm text-gray-300">
+                            <div><strong class="text-blue-300">1. L'image de la "Réconciliation Sincère" :</strong> <span class="italic text-gray-400">Consigne :</span> La fusion administrative ne suffit pas. Les candidats et militants des deux camps doivent tracter ensemble sur le terrain pour rassurer les bases et assurer un report à 100%.</div>
+                            <div><strong class="text-blue-300">2. Rassurer pour endormir le camp adverse :</strong> <span class="italic text-gray-400">Consigne :</span> Campagne apaisée et modérée. Éviter toute déclaration clivante pour "casser" la dramatisation de Bédier et inciter la gauche déçue à l'abstention.</div>
+                            <div><strong class="text-blue-300">3. Traque aux abstentionnistes historiques :</strong> <span class="italic text-gray-400">Consigne :</span> Identifier via les listes d'émargement les électeurs de droite n'ayant pas voté au 1er tour et aller les chercher un par un avec le message d'une victoire possible.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- ========================================== -->
@@ -725,8 +724,43 @@
             </div>
         </div>
 
+        <!-- ========================================== -->
+        <!-- TABLEAU CLOUD (Sauvegardes) -->
+        <!-- ========================================== -->
+        <section class="card border-t-4 border-teal-500 mt-12 bg-slate-800/80">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 pb-2 border-b border-slate-700 gap-2">
+                <h2 class="text-lg font-bold text-gray-100 uppercase flex items-center gap-2"><span>☁️</span> Scénarios Partagés (Saint-André)</h2>
+                <div class="flex gap-4">
+                    <button onclick="saveCurrentScenario()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-full font-bold">💾 Sauvegarder l'analyse active</button>
+                    <button onclick="clearAllScenarios()" class="text-xs text-red-400 hover:text-red-300 underline hidden" id="btn-clear-local">Effacer l'historique local</button>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto w-full pb-2">
+                <table class="min-w-full text-xs md:text-sm text-left">
+                    <thead class="text-gray-400 uppercase bg-slate-900">
+                        <tr>
+                            <th class="p-3">Nom</th>
+                            <th class="p-3">Vainqueur T1</th>
+                            <th class="p-3">Fidélité</th>
+                            <th class="p-3">Attract.</th>
+                            <th class="p-3">Usure</th>
+                            <th class="p-3">Particip.</th>
+                            <th class="p-3 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scenario-list-body" class="divide-y divide-slate-700">
+                        <tr>
+                            <td colspan="7" class="p-4 text-center text-gray-500 italic">Chargement...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
     </div>
 
+    <!-- SCRIPT PRINCIPAL -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -806,6 +840,17 @@
         let db, auth, currentUser, cloudAppId;
         let globalScenarios = [];
         let isCloudActive = false;
+
+        const CANDIDATS = [
+            {id: 'M', name: 'Joé Bédier', colorClass: 'text-c-M', bgClass: 'bg-c-M', colorHex: '#10b981', reel2020: 4524},
+            {id: 'O', name: 'J.M. Virapoullé', colorClass: 'text-c-O', bgClass: 'bg-c-O', colorHex: '#ef4444', reel2020: 5722},
+            {id: 'L', name: 'L. Virapoullé', colorClass: 'text-c-L', bgClass: 'bg-c-L', colorHex: '#f59e0b', reel2020: 0},
+            {id: 'F', name: 'Eric Fruteau', colorClass: 'text-c-F', bgClass: 'bg-c-F', colorHex: '#a855f7', reel2020: 3580},
+            {id: 'SV', name: 'Settama-Vidon', colorClass: 'text-c-SV', bgClass: 'bg-c-SV', colorHex: '#ec4899', reel2020: 800},
+            {id: 'SOU', name: 'Soupramanien', colorClass: 'text-c-SOU', bgClass: 'bg-c-SOU', colorHex: '#14b8a6', reel2020: 909},
+            {id: 'SAU', name: 'Sautron', colorClass: 'text-c-SAU', bgClass: 'bg-c-SAU', colorHex: '#06b6d4', reel2020: 400},
+            {id: 'C', name: 'Cotaya', colorClass: 'text-c-C', bgClass: 'bg-c-C', colorHex: '#84cc16', reel2020: 300}
+        ];
 
         async function initCloudDatabase() {
             try {
@@ -928,23 +973,20 @@
             document.getElementById('displayPi').innerText = participation.toFixed(2);
             document.getElementById('kpi-total-votes').innerText = formatNum(res.Total);
             
-            const scores = [
-                { name: 'Joé Bédier', val: res.M, id: 'M', colorClass: 'text-c-M' },
-                { name: 'J.M. Virapoullé', val: res.O, id: 'O', colorClass: 'text-c-O' },
-                { name: 'L. Virapoullé', val: res.L, id: 'L', colorClass: 'text-c-L' },
-                { name: 'Eric Fruteau', val: res.F, id: 'F', colorClass: 'text-c-F' },
-                { name: 'Settama-Vidon', val: res.SV, id: 'SV', colorClass: 'text-c-SV' },
-                { name: 'Soupramanien', val: res.SOU, id: 'SOU', colorClass: 'text-c-SOU' },
-                { name: 'Sautron', val: res.SAU, id: 'SAU', colorClass: 'text-c-SAU' },
-                { name: 'Cotaya', val: res.C, id: 'C', colorClass: 'text-c-C' }
-            ].sort((a, b) => b.val - a.val); 
+            const scores = CANDIDATS.map(c => ({
+                name: c.name,
+                val: res[c.id],
+                id: c.id,
+                colorClass: c.colorClass,
+                reel2020: c.reel2020
+            })).sort((a, b) => b.val - a.val); 
             
             const gap = scores[0].val - scores[1].val;
             document.getElementById('kpi-vote-gap').innerText = formatNum(gap);
             document.getElementById('kpi-seuil').innerText = formatNum(Math.floor(res.Total/2)+1);
 
             scores.forEach((candidate, index) => {
-                const percentage = (candidate.val / res.Total) * 100;
+                const percentage = res.Total > 0 ? (candidate.val / res.Total) * 100 : 0;
                 document.getElementById(`bar-${candidate.id}`).style.width = percentage + '%';
                 document.getElementById(`percent-${candidate.id}`).innerText = percentage.toFixed(1) + '%';
                 document.getElementById(`wrapper-${candidate.id}`).style.order = index;
@@ -985,9 +1027,11 @@
                     <thead>
                         <tr class="bg-slate-700 text-gray-300 text-[10px] md:text-xs uppercase">
                             <th class="p-2 md:p-3 text-left rounded-tl-lg whitespace-nowrap">Candidat</th>
-                            <th class="p-2 md:p-3 text-right whitespace-nowrap">Socle Estimé</th>
+                            <th class="p-2 md:p-3 text-right whitespace-nowrap text-slate-400">Réel 2020</th>
+                            <th class="p-2 md:p-3 text-right whitespace-nowrap">Socle 2026</th>
                             <th class="p-2 md:p-3 text-right whitespace-nowrap">Apport (Pool)</th>
-                            <th class="p-2 md:p-3 text-right bg-indigo-900/40 text-indigo-300 rounded-tr-lg whitespace-nowrap">Total Projeté</th>
+                            <th class="p-2 md:p-3 text-right bg-indigo-900/40 text-indigo-300 whitespace-nowrap">Proj. 2026</th>
+                            <th class="p-2 md:p-3 text-right bg-indigo-900/40 text-indigo-300 rounded-tr-lg whitespace-nowrap">Écart</th>
                         </tr>
                     </thead>
                     <tbody class="text-xs md:text-sm text-gray-200 divide-y divide-slate-700">
@@ -997,12 +1041,18 @@
                 const det = res.details[cand.id];
                 const rowClass = index === 0 ? 'bg-slate-700/60' : 'hover:bg-slate-700/30';
                 const rankIcon = index === 0 ? '🏆 ' : `${index + 1}. `;
+                const ecart = cand.val - cand.reel2020;
+                const ecartFormatted = ecart > 0 ? `+${formatNum(ecart)}` : formatNum(ecart);
+                const ecartColor = ecart > 0 ? 'text-green-400' : (ecart < 0 ? 'text-red-400' : 'text-gray-500');
+
                 tableHtml += `
                     <tr class="${rowClass} transition-colors">
                         <td class="p-2 md:p-3 font-bold ${cand.colorClass} whitespace-nowrap">${rankIcon}${cand.name}</td>
-                        <td class="p-2 md:p-3 text-right text-gray-400 whitespace-nowrap">${formatNum(det.socle)} v.</td>
-                        <td class="p-2 md:p-3 text-right text-gray-500 whitespace-nowrap">${formatNum(det.pool)} v.</td>
+                        <td class="p-2 md:p-3 text-right text-gray-400 whitespace-nowrap">${cand.reel2020 > 0 ? formatNum(cand.reel2020) : '-'}</td>
+                        <td class="p-2 md:p-3 text-right text-gray-400 whitespace-nowrap">${formatNum(det.socle)}</td>
+                        <td class="p-2 md:p-3 text-right text-gray-500 whitespace-nowrap">${formatNum(det.pool)}</td>
                         <td class="p-2 md:p-3 text-right font-bold text-sm md:text-lg bg-indigo-900/20 ${cand.colorClass} whitespace-nowrap">${formatNum(cand.val)}</td>
+                        <td class="p-2 md:p-3 text-right font-bold bg-indigo-900/20 ${ecartColor} whitespace-nowrap">${cand.reel2020 > 0 || cand.val > 0 ? ecartFormatted : '-'}</td>
                     </tr>
                 `;
             });
