@@ -32,9 +32,8 @@
         .card:hover {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
-        .header-bg { 
-            background-color: #4f46e5; 
-        }
+        .header-bg { background-color: #4f46e5; }
+        
         .kpi-value {
             font-size: 2rem; 
             font-weight: 800;
@@ -108,13 +107,13 @@
 </head>
 <body class="p-2 md:p-8 min-h-screen flex items-start justify-center overflow-x-hidden">
 
-    <div class="w-full max-w-7xl container-bg p-4 md:p-10">
+    <div class="w-full max-w-7xl container-bg p-4 md:p-10 relative">
         
         <!-- HEADER -->
         <header class="header-bg text-white p-4 md:p-8 rounded-t-xl mb-6 shadow-lg flex flex-col items-center relative">
             <h1 class="text-2xl md:text-3xl font-extrabold mb-2 uppercase tracking-tighter text-center">Prédiction et Analyse V5 : Scrutin à 8 Candidats</h1>
-            <p class="text-xs md:text-md font-light opacity-90 text-center mb-1">Modèle Réaliste : Dynamique complète de l'électorat</p>
-            <p class="text-[10px] md:text-xs text-indigo-200 font-medium tracking-wide mb-2 md:mb-0">Version initiale : Novembre 2025 | Créé par <strong>Jonathan Kichenin</strong></p>
+            <p class="text-xs md:text-md font-light opacity-90 text-center mb-1">Modèle Réaliste : Dynamique complète de l'électorat (Saint-André)</p>
+            <p class="text-[10px] md:text-xs text-indigo-200 font-medium tracking-wide mb-2 md:mb-0">Version Exclusive | Créé par <strong>Jonathan Kichenin</strong></p>
             
             <div id="cloud-indicator" class="mt-2 md:mt-0 md:absolute md:top-4 md:right-4 bg-slate-800 text-xs px-3 py-1 rounded-full flex items-center justify-center gap-2 border border-slate-600 hidden w-max mx-auto md:w-auto">
                 <div class="w-2 h-2 rounded-full bg-green-500 cloud-active"></div>
@@ -127,6 +126,7 @@
             <button id="btn-tab-1" onclick="switchTab(1)" class="px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-indigo-600 text-white shadow-lg">1er Tour (Simulation)</button>
             <button id="btn-tab-2" onclick="switchTab(2)" class="px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600">2nd Tour (Scénarios 2026)</button>
             <button id="btn-tab-3" onclick="switchTab(3)" class="px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600">Backtesting 2020 (Validation)</button>
+            <button id="btn-tab-4" onclick="switchTab(4)" class="px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-900/50">Élection Partielle (Annulation)</button>
         </div>
 
         <!-- ========================================== -->
@@ -165,7 +165,6 @@
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 md:mb-8 bg-indigo-900/40 p-4 rounded-xl border border-indigo-900/60">
                         <div>
                             <label for="fidelityFactor" class="block text-xs md:text-sm font-bold text-red-400 mb-2">1. Fidélité au leader (J.M. Virapoullé)</label>
-                            <!-- Repère historique : 49% -> ((0.49 - 0.10) / 0.80) * 100 = 48.75% -->
                             <div class="relative pt-6 pb-1">
                                 <button onclick="resetSlider('fidelityFactor', 0.49)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 48.75%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer au Modèle 2020 (49%)">
                                     <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Réf. 2020</span>
@@ -181,7 +180,6 @@
                         </div>
                         <div>
                              <label for="transferFactor" class="block text-xs md:text-sm font-bold text-amber-500 mb-2">2. Attractivité de Laurent (Pool)</label>
-                             <!-- Repère historique : 6% -> (0.06 / 0.80) * 100 = 7.5% -->
                              <div class="relative pt-6 pb-1">
                                  <button onclick="resetSlider('transferFactor', 0.06)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 7.5%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer au Modèle (6%)">
                                      <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Réf. Modèle</span>
@@ -200,18 +198,16 @@
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 md:mb-8 px-0 md:px-4">
                         <div>
                             <label for="erosionFactor" class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Usure/Prime Sortant : <span class="font-bold text-green-400" id="displayEpsilon">1.05</span></label>
-                            <!-- Repère historique : 1.05 -> ((1.05 - 0.7) / 0.6) * 100 = 58.33% -->
                             <div class="relative pt-6 pb-1">
                                 <button onclick="resetSlider('erosionFactor', 1.05)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 58.33%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer au Modèle Base (1.05)">
                                     <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Modèle Initial</span>
                                     <div class="w-0.5 h-2 bg-amber-400 opacity-70 group-hover:opacity-100 group-hover:bg-amber-500 mt-0.5"></div>
-                                </button>
+                                 </button>
                                 <input type="range" id="erosionFactor" value="1.05" min="0.7" max="1.3" step="0.01" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="runSimulation()">
                             </div>
                         </div>
                         <div>
                             <label for="participationFactor" class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Participation Globale : <span class="font-bold text-blue-400" id="displayPi">1.05</span></label>
-                            <!-- Repère historique : 1.05 -> ((1.05 - 0.8) / 0.4) * 100 = 62.5% -->
                             <div class="relative pt-6 pb-1">
                                 <button onclick="resetSlider('participationFactor', 1.05)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 62.5%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer à la Base (1.05)">
                                     <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Base Votants</span>
@@ -350,9 +346,7 @@
         <!-- ========================================== -->
         <div id="tab-2" class="hidden space-y-6">
             
-            <!-- BOUTONS D'ACTION HAUT -->
             <div class="flex justify-center items-center mb-2">
-                <!-- SÉLECTEUR DE SCÉNARIO -->
                 <div class="flex flex-col md:flex-row justify-center items-center gap-3 md:gap-4 bg-slate-800 p-4 rounded-xl shadow-inner border border-slate-700 w-full md:w-auto">
                     <span class="text-gray-400 font-bold uppercase text-xs tracking-wider">Hypothèse :</span>
                     <button id="btn-scen-triangulaire" onclick="toggleScenario2ndTour('triangulaire')" class="w-full md:w-auto px-6 py-2 rounded-full bg-purple-600 text-white font-bold shadow-lg ring-2 ring-purple-400 text-xs md:text-sm transition-all">Scénario A : Triangulaire (Maintien JM)</button>
@@ -360,7 +354,7 @@
                 </div>
             </div>
 
-            <!-- RÉSERVE GLOBALE DE PARTICIPATION AU 2ND TOUR -->
+            <!-- Sursaut de Participation -->
             <div class="bg-slate-800 border border-slate-600 p-4 md:p-6 rounded-xl shadow-inner">
                 <div class="flex items-center gap-3 mb-2">
                     <span class="text-xl">📈</span>
@@ -532,7 +526,6 @@
                             <label for="frontRnSlider" class="block text-sm font-bold text-emerald-400 mb-2">
                                 Mobilisation Front anti-RN ciblée : <span id="frontRnValue" class="text-xl font-extrabold text-white ml-2">+0 voix</span>
                             </label>
-                            <!-- Repère historique Législatives 2024 : 1380 -> (1380 / 1500) * 100 = 92% -->
                             <div class="relative pt-6 pb-1">
                                 <button onclick="resetSlider('frontRnSlider', 1380)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 92%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer au sursaut des Législatives 2024 (+1380 voix)">
                                     <span class="text-[9px] font-bold text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-emerald-500/30 group-hover:bg-emerald-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Réf. Légis. 24</span>
@@ -596,19 +589,202 @@
                 </div>
             </div>
 
-            <!-- NOUVEAU BLOC : CONSEILS STRATÉGIQUES SCÉNARIO B (FUSION) -->
+            <!-- CONSEILS STRATÉGIQUES SCÉNARIO B (FUSION) -->
             <div class="mt-8 mb-6">
                 <h2 class="text-xl md:text-2xl font-bold text-gray-100 mb-6 flex items-center gap-2 border-b border-slate-700 pb-2">
                     <span>💡</span> Recommandations Opérationnelles (Duel / Fusion)
+                </h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-slate-800/80 rounded-xl border-t-4 border-green-500 p-6 shadow-lg">
+                        <h3 class="text-lg font-bold text-green-400 mb-4 flex items-center gap-2">🟢 Camp 1 : Majorité Sortante (J. Bédier)</h3>
+                        <div class="space-y-4 text-sm text-gray-300">
+                            <div><strong class="text-green-300">1. Le récit de l'alliance de circonstance :</strong> <span class="italic text-gray-400">Consigne :</span> Semer le doute chez les électeurs de l'opposition. Le discours doit attaquer la cohérence de la fusion pour faire baisser le taux de report naturel.</div>
+                            <div><strong class="text-green-300">2. Activer le "Bouclier" (Vote Barrage) :</strong> <span class="italic text-gray-400">Consigne :</span> Dramatiser l'enjeu du retour de la droite pour réveiller les abstentionnistes de gauche du 1er tour.</div>
+                            <div><strong class="text-green-300">3. Verrouiller le "Pool Fruteau" :</strong> <span class="italic text-gray-400">Consigne :</span> Donner des garanties claires (sociales, écologiques) à cet électorat juge de paix pour sécuriser un report de voix frôlant les 80-90% en votre faveur.</div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/80 rounded-xl border-t-4 border-blue-500 p-6 shadow-lg">
+                        <h3 class="text-lg font-bold text-blue-400 mb-4 flex items-center gap-2">🔵 Camp 2 : L'Opposition Unie (Virapoullé)</h3>
+                        <div class="space-y-4 text-sm text-gray-300">
+                            <div><strong class="text-blue-300">1. L'image de la "Réconciliation Sincère" :</strong> <span class="italic text-gray-400">Consigne :</span> La fusion administrative ne suffit pas. Les candidats et militants des deux camps doivent tracter ensemble sur le terrain pour rassurer les bases.</div>
+                            <div><strong class="text-blue-300">2. Rassurer pour endormir le camp adverse :</strong> <span class="italic text-gray-400">Consigne :</span> Campagne apaisée et modérée. Éviter toute déclaration clivante pour "casser" la dramatisation de Bédier et inciter la gauche déçue à l'abstention.</div>
+                            <div><strong class="text-blue-300">3. Traque aux abstentionnistes historiques :</strong> <span class="italic text-gray-400">Consigne :</span> Identifier via les listes d'émargement les électeurs de droite n'ayant pas voté au 1er tour et aller les chercher un par un avec le message d'une victoire possible.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ONGLET 3 : BACKTESTING 2020 (Validation) -->
+        <!-- ========================================== -->
+        <div id="tab-3" class="hidden space-y-6">
+            <section class="card border-t-4 border-emerald-500 bg-slate-800/50">
+                <h2 class="text-lg md:text-xl font-bold text-emerald-400 mb-3 flex items-center gap-2">
+                    <span>🔬</span> Backtesting : Validation du Modèle sur 2020
+                </h2>
+                <div class="text-xs md:text-sm text-gray-300 space-y-3 leading-relaxed">
+                    <p><strong class="text-gray-100">Le Principe du Backtesting :</strong> Pour s'assurer qu'un modèle mathématique est fiable pour prédire l'avenir (2026), on lui demande d'abord de "prédire" le passé en lui donnant les données d'entrée officielles. S'il retrouve le résultat connu, la formule est validée.</p>
+                    <p>Au 1er tour 2020, <strong>J.M. Virapoullé (5 722 voix)</strong> devançait <strong>Joé Bédier (4 524 voix)</strong>.<br>Les listes éliminées et les nouveaux votants du second tour ont constitué un "Pool" géant de <strong>10 270 voix</strong> à redistribuer.<br>Utilisez les curseurs ci-dessous pour voir comment l'élection a réellement basculé au second tour !</p>
+                </div>
+            </section>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div class="card">
+                        <h3 class="text-lg font-bold text-gray-100 mb-4 border-b border-slate-700 pb-2">Taux de Capture sur le Pool (10 270 voix)</h3>
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold text-cyan-400 mb-2">Part captée par Joé Bédier : <span id="bedierCaptureValue" class="text-white ml-2">60.2%</span></label>
+                            <div class="relative pt-6 pb-1">
+                                <button onclick="resetSlider('bedierCaptureSlider', 60.16)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 60.16%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer à la vraie valeur 2020 (60.16%)">
+                                    <span class="text-[9px] font-bold text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-emerald-500/30 group-hover:bg-emerald-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Modèle Exact</span>
+                                    <div class="w-0.5 h-2 bg-emerald-400 mt-0.5"></div>
+                                </button>
+                                <input type="range" id="bedierCaptureSlider" min="0" max="100" value="60.16" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="updateBacktesting2020()">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-blue-400 mb-2">Part captée par J.M. Virapoullé : <span id="jmvCaptureValue" class="text-white ml-2">39.8%</span></label>
+                            <div class="relative pt-6 pb-1">
+                                <button onclick="resetSlider('jmvCaptureSlider', 39.84)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 39.84%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer à la vraie valeur 2020 (39.84%)">
+                                    <span class="text-[9px] font-bold text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-emerald-500/30 group-hover:bg-emerald-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Modèle Exact</span>
+                                    <div class="w-0.5 h-2 bg-emerald-400 mt-0.5"></div>
+                                </button>
+                                <input type="range" id="jmvCaptureSlider" min="0" max="100" value="39.84" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="updateBacktesting2020()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card overflow-hidden p-0">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-slate-800 text-gray-400 text-xs uppercase">
+                                <tr><th class="p-3 border-b border-slate-700">Candidat</th><th class="p-3 border-b border-slate-700 text-center">Score Officiel 2020</th><th class="p-3 border-b border-slate-700 text-center text-emerald-400">Modèle (Calculé)</th><th class="p-3 border-b border-slate-700 text-center">Marge d'Erreur</th></tr>
+                            </thead>
+                            <tbody class="text-sm text-gray-200 divide-y divide-slate-700">
+                                <tr class="hover:bg-slate-700/50"><td class="p-3 font-bold text-cyan-400">Joé Bédier</td><td class="p-3 text-center">10 703 voix</td><td class="p-3 text-center font-bold text-emerald-400" id="bt-bedier-proj">--</td><td class="p-3 text-center text-gray-400" id="bt-bedier-err">--</td></tr>
+                                <tr class="hover:bg-slate-700/50"><td class="p-3 font-bold text-blue-400">J.M. Virapoullé</td><td class="p-3 text-center">9 813 voix</td><td class="p-3 text-center font-bold text-emerald-400" id="bt-jmv-proj">--</td><td class="p-3 text-center text-gray-400" id="bt-jmv-err">--</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card flex flex-col">
+                    <h3 class="text-lg font-bold text-gray-100 mb-2 border-b border-slate-700 pb-2">Comparatif Visuel</h3>
+                    <div class="relative w-full h-64 md:h-full flex-grow bg-slate-800 rounded-lg p-2">
+                        <canvas id="backtestingChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ONGLET 4 : ÉLECTION PARTIELLE (CRISIS) -->
+        <!-- ========================================== -->
+        <div id="tab-4" class="hidden space-y-6">
+            
+            <section class="bg-gradient-to-r from-rose-900 to-red-800 rounded-xl shadow-lg p-6 md:p-8 border-l-4 border-rose-500">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-3 flex items-center gap-2">
+                    <span>🚨</span> Modélisation d'une Élection Partielle (Suite au Recours)
+                </h2>
+                <div class="text-sm md:text-base text-rose-100 space-y-3 leading-relaxed">
+                    <p>
+                        <strong>Attention :</strong> Ce "Bac à Sable" simule un scénario d'annulation du scrutin qui paralyse la ville (le fameux "3ème tour"). 
+                        Dans ce contexte précis, la théorie classique de l'érosion s'effondre face à <strong>l'Apathie Démocratique</strong>.
+                    </p>
+                    <p>
+                        La stratégie du camp Virapoullé (analysée dans vos notes stratégiques) ne repose plus sur la persuasion, mais sur une campagne asymétrique ("Le Sous-Marin") : faire chuter la participation globale tout en sur-mobilisant son propre socle. Testez ci-dessous la viabilité de cette stratégie.
+                    </p>
+                </div>
+            </section>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+                <!-- Paramètres de l'élection partielle -->
+                <div class="card lg:col-span-1 flex flex-col space-y-6">
+                    <h3 class="text-lg font-bold text-rose-400 border-b border-slate-700 pb-2 uppercase">1. Variables de Crise</h3>
+                    
+                    <div>
+                        <label for="partielleParticipationSlider" class="block text-sm font-bold text-white mb-2">Chute de la Participation <span id="partielleParticipationValue" class="text-rose-400 ml-2">45%</span></label>
+                        <p class="text-xs text-gray-400 mb-2">L'annulation entraîne une forte désertion des urnes.</p>
+                        <input type="range" id="partielleParticipationSlider" min="30" max="60" value="45" step="1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="runPartielle()">
+                        <div class="flex justify-between text-[10px] text-gray-500 mt-1"><span>Massive (30%)</span><span>Modérée (60%)</span></div>
+                    </div>
+
+                    <div>
+                        <label for="partiellePrimeBedierSlider" class="block text-sm font-bold text-white mb-2">Prime "Victime" (Bédier) <span id="partiellePrimeBedierValue" class="text-green-400 ml-2">1.10x</span></label>
+                        <p class="text-xs text-gray-400 mb-2">Capacité du sortant à sur-mobiliser par agacement face au recours.</p>
+                        <input type="range" id="partiellePrimeBedierSlider" min="0.8" max="1.3" value="1.1" step="0.05" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="runPartielle()">
+                        <div class="flex justify-between text-[10px] text-gray-500 mt-1"><span>Démobilisé</span><span>Sur-motivé</span></div>
+                    </div>
+
+                    <div>
+                        <label for="partielleUnionOppSlider" class="block text-sm font-bold text-white mb-2">Solidité "Union Sacrée" <span id="partielleUnionOppValue" class="text-amber-500 ml-2">80%</span></label>
+                        <p class="text-xs text-gray-400 mb-2">Taux d'union immédiate entre L. et J.M. Virapoullé au nouveau 1er tour.</p>
+                        <input type="range" id="partielleUnionOppSlider" min="0" max="100" value="80" step="5" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="runPartielle()">
+                        <div class="flex justify-between text-[10px] text-gray-500 mt-1"><span>Guerre fratricide</span><span>Union Totale</span></div>
+                    </div>
+                </div>
+
+                <!-- Résultats du Nouveau 1er Tour -->
+                <div class="card lg:col-span-2">
+                    <h3 class="text-lg font-bold text-gray-100 border-b border-slate-700 pb-2 uppercase mb-4">2. Projection Nouveau 1er Tour (Élection Partielle)</h3>
+                    <div class="grid grid-cols-2 gap-4 text-center mb-6">
+                        <div class="p-3 bg-rose-900/20 border border-rose-800 rounded-lg">
+                            <p class="text-xs text-rose-300 uppercase font-semibold">Total Votants Estimés</p>
+                            <div id="partielleTotalVoters" class="text-2xl font-bold text-white mt-1">--</div>
+                        </div>
+                        <div class="p-3 bg-slate-800 border border-slate-700 rounded-lg">
+                            <p class="text-xs text-gray-400 uppercase font-semibold">Tête vs Second</p>
+                            <div id="partielleGap" class="text-2xl font-bold text-white mt-1">--</div>
+                        </div>
+                    </div>
+
+                    <div class="relative w-full h-64 md:h-[250px] bg-slate-800 rounded-lg p-2 mb-4">
+                        <canvas id="partielleChart1"></canvas>
+                    </div>
+                    
+                    <p id="partielleT1Diagnostic" class="text-sm text-gray-300 italic text-center">Diagnostic en cours...</p>
+                </div>
+            </div>
+
+            <!-- Projection Finale (Duel Direct) -->
+            <div class="card border-t-4 border-emerald-500 mt-6">
+                <h3 class="text-xl font-bold text-emerald-400 border-b border-slate-700 pb-2 uppercase mb-4">3. Nouveau Duel Implicite (Bédier vs Opposition Unie)</h3>
+                <p class="text-sm text-gray-400 mb-6">
+                    Dans une élection avec très faible participation, les "petits candidats" (Le Pool) disparaissent ou s'abstiennent massivement. Le scrutin se résume rapidement à un duel frontal. Nous appliquons un malus de 50% sur la mobilisation de l'électorat "Autre" pour simuler ce désintérêt.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="relative w-full h-64 md:h-[300px] bg-slate-800 rounded-lg p-2">
+                        <canvas id="partielleChart2"></canvas>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-slate-800 rounded-lg border-l-4 border-green-500">
+                            <h4 class="font-bold text-green-400">Joé Bédier</h4>
+                            <p id="partielleScoreBedier" class="text-3xl font-extrabold text-white">--</p>
+                        </div>
+                        <div class="p-4 bg-slate-800 rounded-lg border-l-4 border-amber-500">
+                            <h4 class="font-bold text-amber-500">Virapoullé (Opposition Unifiée)</h4>
+                            <p id="partielleScoreOpp" class="text-3xl font-extrabold text-white">--</p>
+                        </div>
+                        <div class="mt-6 p-4 rounded-lg bg-gray-900 border border-gray-700">
+                            <p id="partielleVerdict" class="text-lg font-bold text-center text-white">--</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NOUVEAU BLOC : CONSEILS STRATÉGIQUES 3ÈME TOUR (PARTIELLE) -->
+            <div class="mt-8 mb-6">
+                <h2 class="text-xl md:text-2xl font-bold text-gray-100 mb-6 flex items-center gap-2 border-b border-slate-700 pb-2">
+                    <span>💡</span> Stratégie de Campagne (Le 3ème Tour / Partielle)
                 </h2>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Camp Majorité -->
                     <div class="bg-slate-800/80 rounded-xl border-t-4 border-green-500 p-6 shadow-lg">
                         <h3 class="text-lg font-bold text-green-400 mb-4 flex items-center gap-2">🟢 Camp 1 : Majorité Sortante (J. Bédier)</h3>
                         <div class="space-y-4 text-sm text-gray-300">
-                            <div><strong class="text-green-300">1. Le récit de l'alliance de circonstance :</strong> <span class="italic text-gray-400">Consigne :</span> Semer le doute chez les électeurs de l'opposition. Le discours doit attaquer la cohérence de la fusion ("Une alliance politicienne pour le pouvoir") pour faire baisser le taux de report naturel.</div>
-                            <div><strong class="text-green-300">2. Activer le "Bouclier" (Vote Barrage) :</strong> <span class="italic text-gray-400">Consigne :</span> Dramatiser l'enjeu du retour de la droite pour réveiller les abstentionnistes de gauche du 1er tour et faire grimper la réglette "Front anti-RN".</div>
-                            <div><strong class="text-green-300">3. Verrouiller le "Pool Fruteau" :</strong> <span class="italic text-gray-400">Consigne :</span> Donner des garanties claires (sociales, écologiques) à cet électorat juge de paix pour sécuriser un report de voix frôlant les 80-90% en votre faveur.</div>
+                            <div><strong class="text-green-300">1. Le Narratif d'Entrave :</strong> <span class="italic text-gray-400">Consigne :</span> Dénoncer l'acharnement juridique de l'opposition qui "bloque la ville". Cela crée une prime de victimisation qui fidélise la base.</div>
+                            <div><strong class="text-green-300">2. Maintenir le Front Barrage :</strong> <span class="italic text-gray-400">Consigne :</span> Continuer de polariser le scrutin contre la droite pour forcer le vote utile des électeurs de gauche, même sans l'étiquette RN en face.</div>
+                            <div><strong class="text-green-300">3. Ignorer les "Arbitres" :</strong> <span class="italic text-gray-400">Consigne :</span> Ne pas négocier avec les petites listes (ex: Fruteau) qui n'ont plus de pouvoir de consigne. S'adresser directement à leurs électeurs.</div>
                         </div>
                     </div>
                     
@@ -616,112 +792,14 @@
                     <div class="bg-slate-800/80 rounded-xl border-t-4 border-blue-500 p-6 shadow-lg">
                         <h3 class="text-lg font-bold text-blue-400 mb-4 flex items-center gap-2">🔵 Camp 2 : L'Opposition Unie (Virapoullé)</h3>
                         <div class="space-y-4 text-sm text-gray-300">
-                            <div><strong class="text-blue-300">1. L'image de la "Réconciliation Sincère" :</strong> <span class="italic text-gray-400">Consigne :</span> La fusion administrative ne suffit pas. Les candidats et militants des deux camps doivent tracter ensemble sur le terrain pour rassurer les bases et assurer un report à 100%.</div>
-                            <div><strong class="text-blue-300">2. Rassurer pour endormir le camp adverse :</strong> <span class="italic text-gray-400">Consigne :</span> Campagne apaisée et modérée. Éviter toute déclaration clivante pour "casser" la dramatisation de Bédier et inciter la gauche déçue à l'abstention.</div>
-                            <div><strong class="text-blue-300">3. Traque aux abstentionnistes historiques :</strong> <span class="italic text-gray-400">Consigne :</span> Identifier via les listes d'émargement les électeurs de droite n'ayant pas voté au 1er tour et aller les chercher un par un avec le message d'une victoire possible.</div>
+                            <div><strong class="text-blue-300">1. Désamorcer le Vote Barrage (Le Leurre) :</strong> <span class="italic text-gray-400">Consigne :</span> Mener une "campagne froide" (juridique et factuelle) et abandonner l'étiquette RN. Sans ennemi effrayant, l'électeur de gauche modérée s'abstiendra.</div>
+                            <div><strong class="text-blue-300">2. Contourner les "Petits Candidats" :</strong> <span class="italic text-gray-400">Consigne :</span> Refuser les alliances avec les listes à 5-10% qui brouilleraient votre image. Siphonner directement leurs électeurs en appelant au "vote de justice".</div>
+                            <div><strong class="text-blue-300">3. Porte-à-Porte Invisible :</strong> <span class="italic text-gray-400">Consigne :</span> Pas de grands meetings qui réveilleraient le camp adverse. Traquer chirurgicalement les abstentionnistes de vos propres quartiers sur les listes d'émargement.</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-        </div>
-
-        <!-- ========================================== -->
-        <!-- ONGLET 3 : BACKTESTING 2020 (Validation) -->
-        <!-- ========================================== -->
-        <div id="tab-3" class="hidden space-y-6">
-            
-            <section class="card border-t-4 border-emerald-500 bg-slate-800/50">
-                <h2 class="text-lg md:text-xl font-bold text-emerald-400 mb-3 flex items-center gap-2">
-                    <span>🔬</span> Backtesting : Validation du Modèle sur 2020
-                </h2>
-                <div class="text-xs md:text-sm text-gray-300 space-y-3 leading-relaxed">
-                    <p>
-                        <strong class="text-gray-100">Le Principe du Backtesting :</strong> Pour s'assurer qu'un modèle mathématique est fiable pour prédire l'avenir (2026), on lui demande d'abord de "prédire" le passé en lui donnant les données d'entrée officielles. S'il retrouve le résultat connu, la formule est validée.
-                    </p>
-                    <p>
-                        <strong class="text-gray-100">Données Officielles de l'État (Mars & Juin 2020) :</strong><br>
-                        Au 1er tour, <strong>J.M. Virapoullé (5 722 voix)</strong> devançait <strong>Joé Bédier (4 524 voix)</strong>.<br>
-                        Les listes éliminées et les nouveaux votants du second tour ont constitué un "Pool" géant de <strong>10 270 voix</strong> à redistribuer.<br>
-                        Utilisez les curseurs ci-dessous pour voir comment l'élection a réellement basculé au second tour !
-                    </p>
-                </div>
-            </section>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Contrôles du Backtesting -->
-                <div class="space-y-6">
-                    <div class="card">
-                        <h3 class="text-lg font-bold text-gray-100 mb-4 border-b border-slate-700 pb-2">Taux de Capture sur le Pool (10 270 voix)</h3>
-                        
-                        <div class="mb-6">
-                            <label class="block text-sm font-bold text-cyan-400 mb-2">
-                                Part captée par Joé Bédier : <span id="bedierCaptureValue" class="text-xl font-extrabold text-white ml-2">60.2%</span>
-                            </label>
-                            <!-- Repère historique : 60.16% -->
-                            <div class="relative pt-6 pb-1">
-                                <button onclick="resetSlider('bedierCaptureSlider', 60.16)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 60.16%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer à la vraie valeur 2020 (60.16%)">
-                                    <span class="text-[9px] font-bold text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-emerald-500/30 group-hover:bg-emerald-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Modèle Exact</span>
-                                    <div class="w-0.5 h-2 bg-emerald-400 opacity-70 group-hover:opacity-100 group-hover:bg-emerald-500 mt-0.5"></div>
-                                </button>
-                                <input type="range" id="bedierCaptureSlider" min="0" max="100" value="60.16" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="updateBacktesting2020()">
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-bold text-blue-400 mb-2">
-                                Part captée par J.M. Virapoullé : <span id="jmvCaptureValue" class="text-xl font-extrabold text-white ml-2">39.8%</span>
-                            </label>
-                            <!-- Repère historique : 39.84% -->
-                            <div class="relative pt-6 pb-1">
-                                <button onclick="resetSlider('jmvCaptureSlider', 39.84)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 39.84%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer à la vraie valeur 2020 (39.84%)">
-                                    <span class="text-[9px] font-bold text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-emerald-500/30 group-hover:bg-emerald-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Modèle Exact</span>
-                                    <div class="w-0.5 h-2 bg-emerald-400 opacity-70 group-hover:opacity-100 group-hover:bg-emerald-500 mt-0.5"></div>
-                                </button>
-                                <input type="range" id="jmvCaptureSlider" min="0" max="100" value="39.84" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="updateBacktesting2020()">
-                            </div>
-                        </div>
-                        <p class="text-[10px] text-gray-500 mt-4 italic">*Les punaises vertes indiquent le comportement mathématique exact et validé des électeurs en 2020.</p>
-                    </div>
-
-                    <!-- Tableau Comparatif -->
-                    <div class="card overflow-hidden p-0">
-                        <table class="w-full text-left border-collapse">
-                            <thead class="bg-slate-800 text-gray-400 text-xs uppercase">
-                                <tr>
-                                    <th class="p-3 border-b border-slate-700">Candidat</th>
-                                    <th class="p-3 border-b border-slate-700 text-center">Score Officiel 2020</th>
-                                    <th class="p-3 border-b border-slate-700 text-center text-emerald-400">Modèle (Calculé)</th>
-                                    <th class="p-3 border-b border-slate-700 text-center">Marge d'Erreur</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-sm text-gray-200 divide-y divide-slate-700">
-                                <tr class="hover:bg-slate-700/50">
-                                    <td class="p-3 font-bold text-cyan-400">Joé Bédier</td>
-                                    <td class="p-3 text-center">10 703 voix</td>
-                                    <td class="p-3 text-center font-bold text-emerald-400" id="bt-bedier-proj">--</td>
-                                    <td class="p-3 text-center text-gray-400" id="bt-bedier-err">--</td>
-                                </tr>
-                                <tr class="hover:bg-slate-700/50">
-                                    <td class="p-3 font-bold text-blue-400">J.M. Virapoullé</td>
-                                    <td class="p-3 text-center">9 813 voix</td>
-                                    <td class="p-3 text-center font-bold text-emerald-400" id="bt-jmv-proj">--</td>
-                                    <td class="p-3 text-center text-gray-400" id="bt-jmv-err">--</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Graphique Backtesting -->
-                <div class="card flex flex-col">
-                    <h3 class="text-lg font-bold text-gray-100 mb-2 border-b border-slate-700 pb-2">Preuve de Fiabilité du Modèle</h3>
-                    <p class="text-xs text-gray-400 mb-4">Comparaison entre la réalité des urnes et la prédiction de la formule mathématique.</p>
-                    <div class="relative w-full h-64 md:h-full flex-grow bg-slate-800 rounded-lg p-2">
-                        <canvas id="backtestingChart"></canvas>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- ========================================== -->
@@ -770,15 +848,27 @@
         // GESTION DES ONGLETS
         // ==========================================
         window.switchTab = function(tabIndex) {
-            [1, 2, 3].forEach(i => {
+            [1, 2, 3, 4].forEach(i => {
                 const tab = document.getElementById(`tab-${i}`);
                 const btn = document.getElementById(`btn-tab-${i}`);
+                if (!tab || !btn) return;
+
                 if (i === tabIndex) {
                     tab.classList.remove('hidden');
-                    btn.className = "px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-indigo-600 text-white shadow-lg";
+                    if (i === 4) {
+                        btn.className = "px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-900/50";
+                        if(partielleChart1) partielleChart1.update();
+                        if(partielleChart2) partielleChart2.update();
+                    } else {
+                        btn.className = "px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-indigo-600 text-white shadow-lg";
+                    }
                 } else {
                     tab.classList.add('hidden');
-                    btn.className = "px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600";
+                    if (i === 4) {
+                        btn.className = "px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-rose-900";
+                    } else {
+                        btn.className = "px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600";
+                    }
                 }
             });
         };
@@ -1213,7 +1303,7 @@
 
         document.querySelectorAll('.range-slider').forEach(slider => {
             slider.addEventListener('input', () => {
-                if(radarChart && slider.id !== 'frontRnSlider' && slider.id !== 'globalSursautSlider' && slider.id !== 'bedierCaptureSlider' && slider.id !== 'jmvCaptureSlider') {
+                if(radarChart && slider.id !== 'frontRnSlider' && slider.id !== 'globalSursautSlider' && slider.id !== 'bedierCaptureSlider' && slider.id !== 'jmvCaptureSlider' && slider.id !== 'partielleParticipationSlider' && slider.id !== 'partiellePrimeBedierSlider' && slider.id !== 'partielleUnionOppSlider') {
                     radarChart.data.datasets[0].data = [
                         document.getElementById('fidelityFactor').value,
                         document.getElementById('transferFactor').value,
@@ -1651,6 +1741,121 @@
             updateBacktesting2020();
         }
 
+        // ==========================================
+        // NOUVEAU MOTEUR : ÉLECTION PARTIELLE (CRISIS)
+        // ==========================================
+        
+        let partielleChart1 = null;
+        let partielleChart2 = null;
+
+        function initPartielleCharts() {
+            const FONT_COLOR = '#e0e0e0';
+            const GRID_COLOR = 'rgba(224, 224, 224, 0.1)';
+            const isMobile = window.innerWidth < 768;
+
+            const ctxP1 = document.getElementById('partielleChart1').getContext('2d');
+            partielleChart1 = new Chart(ctxP1, {
+                type: 'bar',
+                data: {
+                    labels: ['J. Bédier', 'Opp. Virapoullé', 'Autres (Pool)'],
+                    datasets: [{
+                        label: 'Voix (1er Tour Partiel)',
+                        data: [0, 0, 0],
+                        backgroundColor: ['#10b981', '#f59e0b', '#64748b'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { 
+                        x: { ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } }, 
+                        y: { beginAtZero: true, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } } 
+                    }
+                }
+            });
+
+            const ctxP2 = document.getElementById('partielleChart2').getContext('2d');
+            partielleChart2 = new Chart(ctxP2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['J. Bédier', 'Opposition Unie', 'Abstention Réserve'],
+                    datasets: [{
+                        data: [0, 0, 0],
+                        backgroundColor: ['#10b981', '#f59e0b', '#334155'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { color: FONT_COLOR } } }
+                }
+            });
+        }
+
+        window.runPartielle = function() {
+            // Lecture des curseurs de crise
+            const partChute = parseFloat(document.getElementById('partielleParticipationSlider').value) / 100; 
+            const primeBedier = parseFloat(document.getElementById('partiellePrimeBedierSlider').value); 
+            const unionOpp = parseFloat(document.getElementById('partielleUnionOppSlider').value) / 100; 
+
+            // Affichage UI
+            document.getElementById('partielleParticipationValue').innerText = (partChute * 100).toFixed(0) + '%';
+            document.getElementById('partiellePrimeBedierValue').innerText = primeBedier.toFixed(2) + 'x';
+            document.getElementById('partielleUnionOppValue').innerText = (unionOpp * 100).toFixed(0) + '%';
+
+            // 1. Démographie de crise
+            const inscrits = 42680; 
+            const votantsEstim = Math.round(inscrits * partChute);
+            document.getElementById('partielleTotalVoters').innerText = votantsEstim.toLocaleString('fr-FR');
+
+            // 2. Comportement des Bases 
+            let rawBedier = 5500 * primeBedier;
+            let rawOpp = 8500 * (0.5 + (unionOpp * 0.5)); 
+            let rawAutres = 2500 * 0.5;
+
+            const rawTotal = rawBedier + rawOpp + rawAutres;
+            const scale = votantsEstim / rawTotal;
+
+            const t1Bedier = Math.round(rawBedier * scale);
+            const t1Opp = Math.round(rawOpp * scale);
+            const t1Autres = Math.round(rawAutres * scale);
+
+            const gap = Math.abs(t1Bedier - t1Opp);
+            document.getElementById('partielleGap').innerText = gap.toLocaleString('fr-FR');
+            
+            if(t1Bedier > t1Opp) {
+                document.getElementById('partielleT1Diagnostic').innerHTML = `<span class="text-green-400 font-bold">Bédier mène.</span> La prime au sortant résiste à l'abstention.`;
+            } else {
+                document.getElementById('partielleT1Diagnostic').innerHTML = `<span class="text-amber-500 font-bold">L'Opposition mène.</span> L'union au 1er tour étouffe le maire.`;
+            }
+
+            if(partielleChart1) {
+                partielleChart1.data.datasets[0].data = [t1Bedier, t1Opp, t1Autres];
+                partielleChart1.update();
+            }
+
+            // 3. Projection du Duel Final
+            const t2Bedier = t1Bedier + Math.round(t1Autres * 0.40);
+            const t2Opp = t1Opp + Math.round(t1Autres * 0.20);
+            const t2Abst = Math.round(t1Autres * 0.40);
+
+            document.getElementById('partielleScoreBedier').innerText = t2Bedier.toLocaleString('fr-FR') + ' voix';
+            document.getElementById('partielleScoreOpp').innerText = t2Opp.toLocaleString('fr-FR') + ' voix';
+
+            if(t2Bedier > t2Opp) {
+                document.getElementById('partielleVerdict').innerHTML = `<span class="text-green-400">MAINTIEN DU MAIRE SORTANT</span><br><span class="text-sm text-gray-400 font-normal">L'opposition n'a pas réussi à faire bloc assez tôt.</span>`;
+            } else {
+                document.getElementById('partielleVerdict').innerHTML = `<span class="text-amber-500">BASCULE DE L'OPPOSITION</span><br><span class="text-sm text-gray-400 font-normal">La stratégie asymétrique a fonctionné : Bédier s'est heurté à l'abstention.</span>`;
+            }
+
+            if(partielleChart2) {
+                partielleChart2.data.datasets[0].data = [t2Bedier, t2Opp, t2Abst];
+                partielleChart2.update();
+            }
+        };
+
         // Démarrage Global
         window.onload = () => {
             initChart();
@@ -1658,6 +1863,8 @@
             initCloudDatabase();
             initSecondTourCharts();
             initBacktestingChart();
+            initPartielleCharts();
+            runPartielle();
         };
     </script>
 </body>
