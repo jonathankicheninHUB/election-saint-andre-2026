@@ -103,6 +103,13 @@
         .cloud-active {
             animation: pulse-green 2s infinite;
         }
+
+        /* Animation Onglet Juridique */
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
     </style>
 </head>
 <body class="p-2 md:p-8 min-h-screen flex items-start justify-center overflow-x-hidden">
@@ -166,7 +173,6 @@
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 md:mb-8 bg-indigo-900/40 p-4 rounded-xl border border-indigo-900/60">
                         <div>
                             <label for="fidelityFactor" class="block text-xs md:text-sm font-bold text-red-400 mb-2">1. Fidélité au leader (J.M. Virapoullé)</label>
-                            <!-- Repère historique : 49% -> ((0.49 - 0.10) / 0.80) * 100 = 48.75% -->
                             <div class="relative pt-6 pb-1">
                                 <button onclick="resetSlider('fidelityFactor', 0.49)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 48.75%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer au Modèle 2020 (49%)">
                                     <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 cursor-pointer whitespace-nowrap">📍 Réf. 2020</span>
@@ -182,7 +188,6 @@
                         </div>
                         <div>
                              <label for="transferFactor" class="block text-xs md:text-sm font-bold text-amber-500 mb-2">2. Attractivité de Laurent (Pool)</label>
-                             <!-- Repère historique : 6% -> (0.06 / 0.80) * 100 = 7.5% -->
                              <div class="relative pt-6 pb-1">
                                  <button onclick="resetSlider('transferFactor', 0.06)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 7.5%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer au Modèle (6%)">
                                      <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 cursor-pointer whitespace-nowrap">📍 Réf. Modèle</span>
@@ -201,7 +206,6 @@
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 md:mb-8 px-0 md:px-4">
                         <div>
                             <label for="erosionFactor" class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Usure/Prime Sortant : <span class="font-bold text-green-400" id="displayEpsilon">1.05</span></label>
-                            <!-- Repère historique : 1.05 -> ((1.05 - 0.7) / 0.6) * 100 = 58.33% -->
                             <div class="relative pt-6 pb-1">
                                 <button onclick="resetSlider('erosionFactor', 1.05)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 58.33%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer au Modèle Base (1.05)">
                                     <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 cursor-pointer whitespace-nowrap">📍 Modèle Initial</span>
@@ -212,7 +216,6 @@
                         </div>
                         <div>
                             <label for="participationFactor" class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Participation Globale : <span class="font-bold text-blue-400" id="displayPi">1.05</span></label>
-                            <!-- Repère historique : 1.05 -> ((1.05 - 0.8) / 0.4) * 100 = 62.5% -->
                             <div class="relative pt-6 pb-1">
                                 <button onclick="resetSlider('participationFactor', 1.05)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 62.5%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer à la Base (1.05)">
                                     <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 cursor-pointer whitespace-nowrap">📍 Base Votants</span>
@@ -373,10 +376,9 @@
                     <label for="globalSursautSlider" class="block text-sm font-bold text-blue-400 mb-2">
                         Nouveaux Votants : <span id="globalSursautValue" class="text-xl font-extrabold text-white ml-2">+1 500 voix</span>
                     </label>
-                    <!-- Repère historique : 1500 -> (1500 / 3000) * 100 = 50% -->
                     <div class="relative pt-6 pb-1">
                         <button onclick="resetSlider('globalSursautSlider', 1500)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 50%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer à la Moyenne Historique (+1500 voix)">
-                            <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Moyenne Hist.</span>
+                            <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 cursor-pointer whitespace-nowrap">📍 Moyenne Hist.</span>
                             <div class="w-0.5 h-2 bg-amber-400 opacity-70 mt-0.5"></div>
                         </button>
                         <input type="range" id="globalSursautSlider" min="0" max="3000" value="1500" step="50" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider" oninput="updateAllSecondTour()">
@@ -390,14 +392,12 @@
 
             <!-- CONTENU : SCÉNARIO TRIANGULAIRE -->
             <div id="content-triangulaire" class="space-y-6">
-                <!-- Hypotheses Section -->
                 <div class="card border-t-4 border-purple-500">
                     <h2 class="text-lg md:text-xl font-bold mb-4 flex items-center text-purple-400">
                         <svg class="w-5 h-5 md:w-6 md:h-6 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                         Les hypothèses de report (Scénario de Triangulaire)
                     </h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs md:text-sm">
-                        <!-- JM Virapoullé -->
                         <div class="bg-red-900/20 p-4 rounded-lg border border-red-800">
                             <strong class="block text-red-400 mb-1">JM. Virapoullé (4 516)</strong>
                             <p class="text-gray-300 mb-2">Maintien au 2nd Tour (Triangulaire).</p>
@@ -405,7 +405,6 @@
                                 <li>Conserve sa base électorale du 1er tour.</li>
                             </ul>
                         </div>
-                        <!-- Fruteau -->
                         <div class="bg-purple-900/20 p-4 rounded-lg border border-purple-800">
                             <strong class="block text-purple-400 mb-1">E. Fruteau (3 580)</strong>
                             <p class="text-gray-300 mb-2">Se retire, dispersion des voix.</p>
@@ -415,7 +414,6 @@
                                 <li>5% vers JM. Virapoullé</li>
                             </ul>
                         </div>
-                        <!-- Soupramanien -->
                         <div class="bg-teal-900/20 p-4 rounded-lg border border-teal-800">
                             <strong class="block text-teal-400 mb-1">S. Soupramanien (909)</strong>
                             <p class="text-gray-300 mb-2">Se retire, sans consigne.</p>
@@ -429,9 +427,7 @@
                     <p class="text-[10px] md:text-xs text-gray-500 mt-4 italic">* Autres petites listes (1474 voix) estimées à 30% Bédier, 20% Laurent, 10% JM, 40% Abstention. Le Sursaut de participation est réparti : 35% Bédier, 45% Laurent, 20% JMV.</p>
                 </div>
 
-                <!-- Projected Results Section -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                    <!-- Final Score Chart -->
                     <div class="card">
                         <h2 class="text-lg md:text-xl font-bold mb-1 flex items-center text-gray-100">
                             <span class="w-1.5 h-5 bg-green-500 rounded mr-2"></span> Résultat Projeté
@@ -441,8 +437,6 @@
                             <canvas id="projectedResultsChartTri"></canvas>
                         </div>
                     </div>
-
-                    <!-- Composition Chart -->
                     <div class="card">
                         <h2 class="text-lg md:text-xl font-bold mb-1 flex items-center text-gray-100">
                             <span class="w-1.5 h-5 bg-purple-500 rounded mr-2"></span> Composition des votes
@@ -454,7 +448,6 @@
                     </div>
                 </div>
 
-                <!-- Detailed Calculation Table -->
                 <div class="card p-0 overflow-hidden border-t-4 border-slate-600">
                     <div class="p-4 md:p-6 border-b border-slate-700 bg-slate-800/50">
                         <h2 class="text-lg md:text-xl font-bold text-gray-100">Détail des reports (Triangulaire)</h2>
@@ -471,23 +464,20 @@
                                 </tr>
                             </thead>
                             <tbody id="table-body-triangulaire" class="divide-y divide-slate-700 text-xs md:text-sm text-gray-200">
-                                <!-- Contenu généré dynamiquement -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- CONTENU : SCÉNARIO FUSION (DUEL) + FRONT ANTI-RN -->
+            <!-- CONTENU : SCÉNARIO FUSION (DUEL) -->
             <div id="content-fusion" class="hidden space-y-6">
-                <!-- Hypotheses Section -->
                 <div class="card border-t-4 border-blue-500">
                     <h2 class="text-lg md:text-xl font-bold mb-4 flex items-center text-blue-400">
                         <svg class="w-5 h-5 md:w-6 md:h-6 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                         Les hypothèses de report (Scénario de Duel Unifié)
                     </h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs md:text-sm">
-                        <!-- JM Virapoullé -->
                         <div class="bg-blue-900/20 p-4 rounded-lg border border-blue-800">
                             <strong class="block text-blue-400 mb-1">JM. Virapoullé (4 516)</strong>
                             <p class="text-gray-300 mb-2">Rejoint L. Virapoullé.</p>
@@ -496,7 +486,6 @@
                                 <li>15% vers Abstention</li>
                             </ul>
                         </div>
-                        <!-- Fruteau -->
                         <div class="bg-purple-900/20 p-4 rounded-lg border border-purple-800">
                             <strong class="block text-purple-400 mb-1">E. Fruteau (3 580)</strong>
                             <p class="text-gray-300 mb-2">Se retire, sans consigne.</p>
@@ -506,7 +495,6 @@
                                 <li>45% vers Abstention</li>
                             </ul>
                         </div>
-                        <!-- Soupramanien -->
                         <div class="bg-teal-900/20 p-4 rounded-lg border border-teal-800">
                             <strong class="block text-teal-400 mb-1">S. Soupramanien (909)</strong>
                             <p class="text-gray-300 mb-2">Se retire, sans consigne.</p>
@@ -518,8 +506,7 @@
                     </div>
                     <p class="text-[10px] md:text-xs text-gray-500 mt-4 italic">* Autres petites listes (1474 voix) estimées à 30% Bédier, 30% Laurent, 40% Abstention. Le Sursaut de participation est réparti : 45% Bédier, 55% Laurent.</p>
                     
-                    <!-- FRONT ANTI-RN (Spécifique au Duel) -->
-                    <div class="mt-6 bg-slate-800 border border-slate-600 p-4 md:p-6 rounded-xl">
+                    <div id="bloc-anti-rn" class="mt-6 bg-slate-800 border border-slate-600 p-4 md:p-6 rounded-xl">
                         <div class="flex items-center gap-3 mb-2">
                             <span class="text-xl">🛡️</span>
                             <h3 class="text-base md:text-lg font-bold text-gray-100">Le Facteur Polarisant : "Front anti-RN"</h3>
@@ -547,9 +534,7 @@
                     </div>
                 </div>
 
-                <!-- Projected Results Section -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                    <!-- Final Score Chart -->
                     <div class="card">
                         <h2 class="text-lg md:text-xl font-bold mb-1 flex items-center text-gray-100">
                             <span class="w-1.5 h-5 bg-green-500 rounded mr-2"></span> Résultat Projeté
@@ -559,8 +544,6 @@
                             <canvas id="projectedResultsChartFus"></canvas>
                         </div>
                     </div>
-
-                    <!-- Composition Chart -->
                     <div class="card">
                         <h2 class="text-lg md:text-xl font-bold mb-1 flex items-center text-gray-100">
                             <span class="w-1.5 h-5 bg-purple-500 rounded mr-2"></span> Composition des votes
@@ -572,7 +555,6 @@
                     </div>
                 </div>
 
-                <!-- Detailed Calculation Table -->
                 <div class="card p-0 overflow-hidden border-t-4 border-slate-600">
                     <div class="p-4 md:p-6 border-b border-slate-700 bg-slate-800/50">
                         <h2 class="text-lg md:text-xl font-bold text-gray-100">Détail des reports (Fusion)</h2>
@@ -588,7 +570,6 @@
                                 </tr>
                             </thead>
                             <tbody id="table-body-fusion" class="divide-y divide-slate-700 text-xs md:text-sm text-gray-200">
-                                <!-- Contenu généré dynamiquement -->
                             </tbody>
                         </table>
                     </div>
@@ -601,7 +582,6 @@
                     <span>💡</span> Recommandations Opérationnelles (Duel / Fusion)
                 </h2>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Camp Majorité -->
                     <div class="bg-slate-800/80 rounded-xl border-t-4 border-green-500 p-6 shadow-lg">
                         <h3 class="text-lg font-bold text-green-400 mb-4 flex items-center gap-2">🟢 Camp 1 : Majorité Sortante (J. Bédier)</h3>
                         <div class="space-y-4 text-sm text-gray-300">
@@ -610,8 +590,6 @@
                             <div><strong class="text-green-300">3. Verrouiller le "Pool Fruteau" :</strong> <span class="italic text-gray-400">Consigne :</span> Donner des garanties claires (sociales, écologiques) à cet électorat juge de paix pour sécuriser un report de voix frôlant les 80-90% en votre faveur.</div>
                         </div>
                     </div>
-                    
-                    <!-- Camp Opposition -->
                     <div class="bg-slate-800/80 rounded-xl border-t-4 border-blue-500 p-6 shadow-lg">
                         <h3 class="text-lg font-bold text-blue-400 mb-4 flex items-center gap-2">🔵 Camp 2 : L'Opposition Unie (Virapoullé)</h3>
                         <div class="space-y-4 text-sm text-gray-300">
@@ -622,97 +600,63 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
         <!-- ========================================== -->
         <!-- ONGLET 3 : BACKTESTING 2020 (Validation) -->
         <!-- ========================================== -->
         <div id="tab-3" class="hidden space-y-6">
-            
             <section class="card border-t-4 border-emerald-500 bg-slate-800/50">
                 <h2 class="text-lg md:text-xl font-bold text-emerald-400 mb-3 flex items-center gap-2">
                     <span>🔬</span> Backtesting : Validation du Modèle sur 2020
                 </h2>
                 <div class="text-xs md:text-sm text-gray-300 space-y-3 leading-relaxed">
-                    <p>
-                        <strong class="text-gray-100">Le Principe du Backtesting :</strong> Pour s'assurer qu'un modèle mathématique est fiable pour prédire l'avenir (2026), on lui demande d'abord de "prédire" le passé en lui donnant les données d'entrée officielles. S'il retrouve le résultat connu, la formule est validée.
-                    </p>
-                    <p>
-                        <strong class="text-gray-100">Données Officielles de l'État (Mars & Juin 2020) :</strong><br>
-                        Au 1er tour, <strong>J.M. Virapoullé (5 722 voix)</strong> devançait <strong>Joé Bédier (4 524 voix)</strong>.<br>
-                        Les listes éliminées et les nouveaux votants du second tour ont constitué un "Pool" géant de <strong>10 270 voix</strong> à redistribuer.<br>
-                        Utilisez les curseurs ci-dessous pour voir comment l'élection a réellement basculé au second tour !
-                    </p>
+                    <p><strong class="text-gray-100">Le Principe du Backtesting :</strong> Pour s'assurer qu'un modèle mathématique est fiable pour prédire l'avenir (2026), on lui demande d'abord de "prédire" le passé en lui donnant les données d'entrée officielles. S'il retrouve le résultat connu, la formule est validée.</p>
+                    <p>Au 1er tour 2020, <strong>J.M. Virapoullé (5 722 voix)</strong> devançait <strong>Joé Bédier (4 524 voix)</strong>.<br>Les listes éliminées et les nouveaux votants du second tour ont constitué un "Pool" géant de <strong>10 270 voix</strong> à redistribuer.<br>Utilisez les curseurs ci-dessous pour voir comment l'élection a réellement basculé au second tour !</p>
                 </div>
             </section>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Contrôles du Backtesting -->
                 <div class="space-y-6">
                     <div class="card">
                         <h3 class="text-lg font-bold text-gray-100 mb-4 border-b border-slate-700 pb-2">Taux de Capture sur le Pool (10 270 voix)</h3>
-                        
                         <div class="mb-6">
-                            <label class="block text-sm font-bold text-cyan-400 mb-2">
-                                Part captée par Joé Bédier : <span id="bedierCaptureValue" class="text-xl font-extrabold text-white ml-2">60.2%</span>
-                            </label>
+                            <label class="block text-sm font-bold text-cyan-400 mb-2">Part captée par Joé Bédier : <span id="bedierCaptureValue" class="text-white ml-2">60.2%</span></label>
                             <div class="relative pt-6 pb-1">
                                 <button onclick="resetSlider('bedierCaptureSlider', 60.16)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 60.16%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer à la vraie valeur 2020 (60.16%)">
                                     <span class="text-[9px] font-bold text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-emerald-500/30 cursor-pointer whitespace-nowrap">📍 Modèle Exact</span>
-                                    <div class="w-0.5 h-2 bg-emerald-400 opacity-70 mt-0.5"></div>
+                                    <div class="w-0.5 h-2 bg-emerald-400 mt-0.5"></div>
                                 </button>
                                 <input type="range" id="bedierCaptureSlider" min="0" max="100" value="60.16" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider" oninput="updateBacktesting2020()">
                             </div>
                         </div>
-                        
                         <div>
-                            <label class="block text-sm font-bold text-blue-400 mb-2">
-                                Part captée par J.M. Virapoullé : <span id="jmvCaptureValue" class="text-xl font-extrabold text-white ml-2">39.8%</span>
-                            </label>
+                            <label class="block text-sm font-bold text-blue-400 mb-2">Part captée par J.M. Virapoullé : <span id="jmvCaptureValue" class="text-white ml-2">39.8%</span></label>
                             <div class="relative pt-6 pb-1">
                                 <button onclick="resetSlider('jmvCaptureSlider', 39.84)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 39.84%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer à la vraie valeur 2020 (39.84%)">
                                     <span class="text-[9px] font-bold text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-emerald-500/30 cursor-pointer whitespace-nowrap">📍 Modèle Exact</span>
-                                    <div class="w-0.5 h-2 bg-emerald-400 opacity-70 mt-0.5"></div>
+                                    <div class="w-0.5 h-2 bg-emerald-400 mt-0.5"></div>
                                 </button>
                                 <input type="range" id="jmvCaptureSlider" min="0" max="100" value="39.84" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider" oninput="updateBacktesting2020()">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Tableau Comparatif -->
                     <div class="card overflow-hidden p-0">
                         <table class="w-full text-left border-collapse">
                             <thead class="bg-slate-800 text-gray-400 text-xs uppercase">
-                                <tr>
-                                    <th class="p-3 border-b border-slate-700">Candidat</th>
-                                    <th class="p-3 border-b border-slate-700 text-center">Score Officiel 2020</th>
-                                    <th class="p-3 border-b border-slate-700 text-center text-emerald-400">Modèle (Calculé)</th>
-                                    <th class="p-3 border-b border-slate-700 text-center">Marge d'Erreur</th>
-                                </tr>
+                                <tr><th class="p-3 border-b border-slate-700">Candidat</th><th class="p-3 border-b border-slate-700 text-center">Score Officiel 2020</th><th class="p-3 border-b border-slate-700 text-center text-emerald-400">Modèle (Calculé)</th><th class="p-3 border-b border-slate-700 text-center">Marge d'Erreur</th></tr>
                             </thead>
                             <tbody class="text-sm text-gray-200 divide-y divide-slate-700">
-                                <tr class="hover:bg-slate-700/50">
-                                    <td class="p-3 font-bold text-cyan-400">Joé Bédier</td>
-                                    <td class="p-3 text-center">10 703 voix</td>
-                                    <td class="p-3 text-center font-bold text-emerald-400" id="bt-bedier-proj">--</td>
-                                    <td class="p-3 text-center text-gray-400" id="bt-bedier-err">--</td>
-                                </tr>
-                                <tr class="hover:bg-slate-700/50">
-                                    <td class="p-3 font-bold text-blue-400">J.M. Virapoullé</td>
-                                    <td class="p-3 text-center">9 813 voix</td>
-                                    <td class="p-3 text-center font-bold text-emerald-400" id="bt-jmv-proj">--</td>
-                                    <td class="p-3 text-center text-gray-400" id="bt-jmv-err">--</td>
-                                </tr>
+                                <tr class="hover:bg-slate-700/50"><td class="p-3 font-bold text-cyan-400">Joé Bédier</td><td class="p-3 text-center">10 703 voix</td><td class="p-3 text-center font-bold text-emerald-400" id="bt-bedier-proj">--</td><td class="p-3 text-center text-gray-400" id="bt-bedier-err">--</td></tr>
+                                <tr class="hover:bg-slate-700/50"><td class="p-3 font-bold text-blue-400">J.M. Virapoullé</td><td class="p-3 text-center">9 813 voix</td><td class="p-3 text-center font-bold text-emerald-400" id="bt-jmv-proj">--</td><td class="p-3 text-center text-gray-400" id="bt-jmv-err">--</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Graphique Backtesting -->
                 <div class="card flex flex-col">
-                    <h3 class="text-lg font-bold text-gray-100 mb-2 border-b border-slate-700 pb-2">Preuve de Fiabilité du Modèle</h3>
-                    <p class="text-xs text-gray-400 mb-4">Comparaison entre la réalité des urnes et la prédiction de la formule mathématique.</p>
+                    <h3 class="text-lg font-bold text-gray-100 mb-2 border-b border-slate-700 pb-2">Comparatif Visuel</h3>
                     <div class="relative w-full h-64 md:h-full flex-grow bg-slate-800 rounded-lg p-2">
                         <canvas id="backtestingChart"></canvas>
                     </div>
@@ -863,65 +807,51 @@
                 </div>
             </section>
 
-            <!-- 1. OBJET DES RECOURS -->
-            <div class="card border-t-4 border-slate-500">
-                <h3 class="text-xl font-bold text-gray-100 mb-4">1. Objet des Recours</h3>
-                <p class="text-sm text-gray-300 leading-relaxed">
-                    Le Tribunal Administratif (TA) est saisi de trois recours distincts visant l'annulation globale des opérations électorales du second tour des élections municipales de Saint-André.<br><br>
-                    L'objet de ces recours n'est pas de recompter les voix pour déclarer un autre vainqueur (réformation), mais bien d'obtenir l'<strong>annulation pure et simple du scrutin</strong> afin de provoquer de nouvelles élections (élection partielle), au motif que la sincérité du vote a été altérée.
-                </p>
-            </div>
+            <!-- INTERFACE INTERACTIVE JURIDIQUE -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-6">
+                <!-- Colonne Gauche : Menu des Griefs -->
+                <div class="col-span-1 space-y-4">
+                    <h3 class="text-xl font-bold text-gray-100 mb-4 border-b border-slate-700 pb-2">Sélectionnez un grief :</h3>
+                    
+                    <button onclick="window.afficherDetails(1)" class="w-full text-left bg-slate-800 p-4 rounded-xl shadow-sm hover:bg-slate-700 transition-colors border border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-white">1. Signatures</span>
+                            <span class="px-2 py-1 bg-yellow-900/50 text-yellow-400 text-[10px] uppercase font-bold rounded-full border border-yellow-700/50">Risque Moyen</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Listes d'émargement et procurations</p>
+                    </button>
 
-            <!-- 2. LE CADRE PROCÉDURAL ET LES DÉLAIS -->
-            <div class="card border-t-4 border-slate-500">
-                <h3 class="text-xl font-bold text-gray-100 mb-4">2. Le Cadre Procédural et les Délais</h3>
-                <ul class="space-y-4 text-sm text-gray-300">
-                    <li class="flex gap-3"><span class="text-indigo-400">⏱️</span> <div><strong class="text-white">Le dépôt (Phase achevée) :</strong> Les recours doivent être déposés au greffe du TA au plus tard à 18 heures le cinquième jour qui suit l'élection (Art. R. 119 du Code électoral).</div></li>
-                    <li class="flex gap-3"><span class="text-indigo-400">⚖️</span> <div><strong class="text-white">L'instruction et le jugement au TA :</strong> Le Tribunal dispose d'un délai strict pour statuer, généralement fixé à deux ou trois mois en matière municipale.</div></li>
-                    <li class="flex gap-3"><span class="text-indigo-400">🛡️</span> <div><strong class="text-white">L'absence d'effet suspensif :</strong> Les recours ne suspendent pas les résultats. Le maire proclamé élu reste pleinement dans ses fonctions.</div></li>
-                    <li class="flex gap-3"><span class="text-indigo-400">🏛️</span> <div><strong class="text-white">L'appel devant le Conseil d'État :</strong> Si le TA annule l'élection ou rejette les recours, les parties auront un mois pour faire appel. Le Conseil d'État dispose alors de six mois pour rendre sa décision.</div></li>
-                </ul>
-            </div>
+                    <button onclick="window.afficherDetails(2)" class="w-full text-left bg-slate-800 p-4 rounded-xl shadow-sm hover:bg-slate-700 transition-colors border border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-white">2. Moyens Commune</span>
+                            <span class="px-2 py-1 bg-orange-900/50 text-orange-400 text-[10px] uppercase font-bold rounded-full border border-orange-700/50">Risque Élevé</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Financement et logistique (Art. L. 52-8)</p>
+                    </button>
 
-            <!-- 3. LES ARMES JURIDIQUES -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Accusation -->
-                <div class="bg-slate-800/80 rounded-xl border-t-4 border-blue-500 p-6 shadow-lg">
-                    <h3 class="text-lg font-bold text-blue-400 mb-4">🔵 Les Armes de l'Accusation (Requérants)</h3>
-                    <p class="text-xs text-gray-400 mb-4">Objectif : Démontrer une irrégularité déplaçant au moins 18 voix.</p>
-                    <div class="space-y-4 text-sm text-gray-300">
-                        <div><strong class="text-blue-300">1. Le grief arithmétique (Art. L. 62 et L. 64) :</strong> Démontrer des discordances manifestes de signatures entre les deux tours pour un même électeur.</div>
-                        <div><strong class="text-blue-300">2. Le grief financier (Art. L. 52-8) :</strong> Prouver que les moyens de la mairie ont été utilisés pour la campagne du sortant, rompant l'égalité des armes.</div>
-                        <div class="p-3 bg-blue-900/30 rounded border border-blue-800/50"><strong class="text-white">3. L'arme fatale - Propagande tardive (Art. L. 49) :</strong> Le communiqué de presse diffusé le matin du vote. Démontrer que ce message constituait un tract électoral de dernière minute, violant le Code électoral.</div>
+                    <button onclick="window.afficherDetails(3)" class="w-full text-left bg-slate-800 p-4 rounded-xl shadow-sm hover:bg-slate-700 transition-colors border border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-white">3. Communiqué Mairie</span>
+                            <span class="px-2 py-1 bg-red-900/50 text-red-400 text-[10px] uppercase font-bold rounded-full border border-red-700/50">Risque Critique</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Propagande tardive (Art. L. 49)</p>
+                    </button>
+
+                    <div class="mt-8 bg-slate-900 border border-slate-700 text-white p-6 rounded-xl shadow-lg">
+                        <h3 class="font-bold text-lg mb-2 text-indigo-400">Verdict Doctrinal</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed">Application de la théorie du <strong>faisceau d'indices</strong>. Le cumul de ces trois griefs, couplé à la très faible marge de victoire (34 voix), rend la probabilité d'annulation globale par le juge administratif extrêmement forte.</p>
                     </div>
                 </div>
-                <!-- Défense -->
-                <div class="bg-slate-800/80 rounded-xl border-t-4 border-green-500 p-6 shadow-lg">
-                    <h3 class="text-lg font-bold text-green-400 mb-4">🟢 Les Armes de la Défense (Maire sortant)</h3>
-                    <p class="text-xs text-gray-400 mb-4">Objectif : Minimiser l'impact des faits et justifier par les prérogatives légales.</p>
-                    <div class="space-y-4 text-sm text-gray-300">
-                        <div><strong class="text-green-300">1. Le bouclier du Pouvoir de Police :</strong> Argumenter que le communiqué n'était pas un acte de propagande, mais une prévention de trouble à l'ordre public (CGCT).</div>
-                        <div><strong class="text-green-300">2. Le bouclier Probatoire :</strong> Exiger des requérants des preuves irréfutables (constats d'huissier, attestations probantes), souvent complexes à réunir.</div>
-                        <div><strong class="text-green-300">3. Le bouclier de l'Inopérance :</strong> Affirmer que l'impact réel du communiqué sur les électeurs a été nul ou insuffisant pour modifier le résultat.</div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- 4. PRONOSTIC DOCTRINAL -->
-            <div class="card border-t-4 border-rose-500 bg-rose-950/10">
-                <h3 class="text-xl font-bold text-rose-400 mb-4">4. Évaluation Technique des Risques (Pronostic Doctrinal)</h3>
-                <p class="text-sm text-gray-300 mb-4">
-                    Le juge électoral statue selon la théorie du "faisceau d'indices". L'élément central qui fragilise la défense est <strong>l'écart résiduel critique de 34 voix</strong>.
-                </p>
-                <ul class="space-y-3 text-sm text-gray-300 mb-6">
-                    <li><strong class="text-white">Signatures et moyens de la commune :</strong> Risque modéré. Nécessite des preuves matérielles lourdes.</li>
-                    <li><strong class="text-white">Communiqué du jour du scrutin :</strong> <span class="text-rose-400 font-bold">Risque CRITIQUE</span>. La jurisprudence du Conseil d'État est d'une extrême sévérité sur la période de "gel" électoral. Utiliser l'appareil institutionnel d'une mairie pour publier un communiqué le matin même du vote est presque systématiquement sanctionné.</li>
-                </ul>
-                <div class="p-4 bg-slate-900 rounded-lg border-l-4 border-rose-500">
-                    <h4 class="font-bold text-white mb-2">Conclusion</h4>
-                    <p class="text-sm text-gray-400">
-                        Si le droit n'est pas une science exacte, la conjugaison d'une violation de l'article L. 49 du Code électoral le jour même du vote avec une marge de victoire aussi infime (17 électeurs ayant potentiellement changé d'avis) expose la liste de la majorité actuelle à un <strong>risque maximal d'annulation de l'élection</strong> par le juge administratif.
-                    </p>
+                <!-- Colonne Droite : Affichage des Détails -->
+                <div class="col-span-1 md:col-span-2">
+                    <div id="panneau-details" class="bg-slate-800 p-6 md:p-8 rounded-xl shadow-sm border border-slate-600 h-full min-h-[400px]">
+                        <div class="text-center text-slate-500 mt-20 fade-in">
+                            <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <p class="text-xl font-medium text-slate-400">Sélectionnez un recours dans le menu</p>
+                            <p class="text-sm mt-2">L'analyse détaillée du grief s'affichera ici.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -1859,7 +1789,7 @@
                     datasets: [
                         {
                             label: 'Modèle (Calculé)',
-                            data: [0, 0], // Sera mis à jour
+                            data: [0, 0], 
                             backgroundColor: ['#10b981', '#3b82f6'],
                             borderRadius: 8,
                             order: 1
@@ -1962,13 +1892,13 @@
             const primeBedier = parseFloat(document.getElementById('partiellePrimeBedierSlider').value); 
             const unionOpp = parseFloat(document.getElementById('partielleUnionOppSlider').value) / 100; 
 
-            document.getElementById('partielleParticipationValue').innerText = (partChute * 100).toFixed(0) + '%';
-            document.getElementById('partiellePrimeBedierValue').innerText = primeBedier.toFixed(2) + 'x';
-            document.getElementById('partielleUnionOppValue').innerText = (unionOpp * 100).toFixed(0) + '%';
+            if(document.getElementById('partielleParticipationValue')) document.getElementById('partielleParticipationValue').innerText = (partChute * 100).toFixed(0) + '%';
+            if(document.getElementById('partiellePrimeBedierValue')) document.getElementById('partiellePrimeBedierValue').innerText = primeBedier.toFixed(2) + 'x';
+            if(document.getElementById('partielleUnionOppValue')) document.getElementById('partielleUnionOppValue').innerText = (unionOpp * 100).toFixed(0) + '%';
 
             const inscrits = 42680; 
             const votantsEstim = Math.round(inscrits * partChute);
-            document.getElementById('partielleTotalVoters').innerText = votantsEstim.toLocaleString('fr-FR');
+            if(document.getElementById('partielleTotalVoters')) document.getElementById('partielleTotalVoters').innerText = votantsEstim.toLocaleString('fr-FR');
 
             let rawBedier = 5500 * primeBedier;
             let rawOpp = 8500 * (0.5 + (unionOpp * 0.5)); 
@@ -1982,7 +1912,7 @@
             const t1Autres = Math.round(rawAutres * scale);
 
             const gap = Math.abs(t1Bedier - t1Opp);
-            document.getElementById('partielleGap').innerText = gap.toLocaleString('fr-FR');
+            if(document.getElementById('partielleGap')) document.getElementById('partielleGap').innerText = gap.toLocaleString('fr-FR');
             
             const diagEl = document.getElementById('partielleT1Diagnostic');
             if(t1Bedier > t1Opp) {
@@ -2000,8 +1930,8 @@
             const t2Opp = t1Opp + Math.round(t1Autres * 0.20);
             const t2Abst = Math.round(t1Autres * 0.40);
 
-            document.getElementById('partielleScoreBedier').innerText = t2Bedier.toLocaleString('fr-FR') + ' voix';
-            document.getElementById('partielleScoreOpp').innerText = t2Opp.toLocaleString('fr-FR') + ' voix';
+            if(document.getElementById('partielleScoreBedier')) document.getElementById('partielleScoreBedier').innerText = t2Bedier.toLocaleString('fr-FR') + ' voix';
+            if(document.getElementById('partielleScoreOpp')) document.getElementById('partielleScoreOpp').innerText = t2Opp.toLocaleString('fr-FR') + ' voix';
 
             const verdictEl = document.getElementById('partielleVerdict');
             if(t2Bedier > t2Opp) {
@@ -2014,6 +1944,85 @@
                 partielleChart2.data.datasets[0].data = [t2Bedier, t2Opp, t2Abst];
                 partielleChart2.update();
             }
+        };
+
+        // ==========================================
+        // BASE DE DONNÉES JURIDIQUE (ONGLET 5)
+        // ==========================================
+        window.tablesBaseDeDonnees = {
+            1: {
+                titre: "Conformité des signatures",
+                loi: "Articles L. 62 et L. 64 du Code électoral",
+                niveauRisque: "Moyen",
+                couleurRisque: "text-yellow-400 bg-yellow-900/50 border-yellow-700/50",
+                accusation: "Des discordances manifestes existent entre les signatures du premier et du second tour pour certains électeurs, ou des procurations sont jugées irrégulières, suggérant une fraude matérielle.",
+                defense: "La défense conteste ces allégations. Il appartient aux requérants d'apporter la preuve matérielle, formelle et irréfutable de ces fausses signatures, ce qui est extrêmement complexe à établir en pratique.",
+                analyseJuge: "Le juge administratif effectue ici une opération purement arithmétique. S'il constate des irrégularités avérées en vérifiant les listes d'émargement, il déduit systématiquement ces voix du total de la liste gagnante. Le risque dépend donc uniquement du volume de preuves matérielles sourcées."
+            },
+            2: {
+                titre: "Utilisation des moyens de la commune",
+                loi: "Article L. 52-8 du Code électoral",
+                niveauRisque: "Élevé",
+                couleurRisque: "text-orange-400 bg-orange-900/50 border-orange-700/50",
+                accusation: "Le maire sortant a délibérément utilisé les ressources logistiques, financières et humaines de la mairie (véhicules, communication, personnel) pour favoriser sa propre campagne. Ceci constitue un financement illicite de campagne par une personne morale.",
+                defense: "L'équipe du maire affirme que ces actes relèvent de la gestion courante de la municipalité et du rôle d'information normal d'une mairie. De plus, les faits allégués ne sont pas établis avec une ampleur suffisante pour avoir influencé le vote.",
+                analyseJuge: "Le juge sanctionne très sévèrement la rupture d'égalité financière. Cependant, il exige des requérants des preuves tangibles de l'utilisation frauduleuse (photos, témoignages, plannings). Néanmoins, avec seulement 34 voix d'écart, la moindre utilisation avérée et chiffrée des moyens publics est potentiellement fatale pour le compte de campagne."
+            },
+            3: {
+                titre: "Communiqué de presse le jour du scrutin",
+                loi: "Article L. 49 du Code électoral",
+                niveauRisque: "Critique",
+                couleurRisque: "text-red-400 bg-red-900/50 border-red-700/50 shadow-sm",
+                accusation: "La diffusion par les canaux institutionnels de la mairie, le matin même du vote, d'un communiqué alertant sur des dérives et des transports organisés (taxis). C'est une propagande de dernière minute violant la période de réserve, ne laissant aucun temps à l'opposition pour y répondre.",
+                defense: "Le maire justifie ce communiqué par son pouvoir de police administrative. Il se doit de garantir la sécurité, l'ordre public et le bon déroulement du scrutin face à des signalements de transports illégaux d'électeurs.",
+                analyseJuge: "C'est le point de rupture juridique de cette élection. La jurisprudence du Conseil d'État est inflexible : il est interdit de publier des messages polémiques le jour J. L'utilisation d'un canal institutionnel pour évoquer des fraudes le jour du vote possède une forte autorité sur les électeurs indécis. Pour un scrutin joué à 34 voix près, ce communiqué est un motif direct et suffisant d'annulation."
+            }
+        };
+
+        window.afficherDetails = function(idGrief) {
+            const donnees = window.tablesBaseDeDonnees[idGrief];
+            const panneau = document.getElementById('panneau-details');
+            if(!panneau || !donnees) return;
+            
+            panneau.innerHTML = `
+                <div class="fade-in h-full flex flex-col">
+                    <div class="flex flex-col md:flex-row justify-between items-start mb-8 gap-4 border-b border-slate-700 pb-6">
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">${donnees.titre}</h2>
+                            <p class="text-sm text-slate-300 font-mono bg-slate-700 p-1.5 px-3 rounded-md inline-block border border-slate-600">${donnees.loi}</p>
+                        </div>
+                        <span class="px-4 py-2 ${donnees.couleurRisque} font-bold rounded-lg whitespace-nowrap border text-xs uppercase tracking-wide">
+                            Niveau de Risque : ${donnees.niveauRisque}
+                        </span>
+                    </div>
+
+                    <div class="space-y-6 flex-grow">
+                        <div class="bg-blue-900/20 p-6 rounded-xl border border-blue-800/50 border-l-4 border-l-blue-500">
+                            <h3 class="font-bold text-blue-400 mb-2 flex items-center text-lg">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
+                                L'Argument de l'Accusation
+                            </h3>
+                            <p class="text-slate-300 leading-relaxed">${donnees.accusation}</p>
+                        </div>
+
+                        <div class="bg-emerald-900/20 p-6 rounded-xl border border-emerald-800/50 border-l-4 border-l-emerald-500">
+                            <h3 class="font-bold text-emerald-400 mb-2 flex items-center text-lg">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                                La Ligne de Défense
+                            </h3>
+                            <p class="text-slate-300 leading-relaxed">${donnees.defense}</p>
+                        </div>
+
+                        <div class="bg-purple-900/20 p-6 rounded-xl border border-purple-800/50 border-l-4 border-l-purple-500 mt-auto">
+                            <h3 class="font-bold text-purple-400 mb-2 flex items-center text-lg">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
+                                L'Analyse du Juge (Impact sur 34 voix)
+                            </h3>
+                            <p class="text-white font-medium leading-relaxed">${donnees.analyseJuge}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
         };
 
         // Démarrage Global
