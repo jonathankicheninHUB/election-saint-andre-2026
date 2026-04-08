@@ -127,6 +127,7 @@
             <button id="btn-tab-2" onclick="switchTab(2)" class="px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600">2nd Tour (Scénarios 2026)</button>
             <button id="btn-tab-3" onclick="switchTab(3)" class="px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600">Backtesting 2020 (Validation)</button>
             <button id="btn-tab-4" onclick="switchTab(4)" class="px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-900/50">Élection Partielle (Annulation)</button>
+            <button id="btn-tab-5" onclick="switchTab(5)" class="px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-indigo-300 hover:bg-indigo-900 shadow-lg border border-indigo-700/50">Dossier Juridique (Recours)</button>
         </div>
 
         <!-- ========================================== -->
@@ -165,10 +166,11 @@
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 md:mb-8 bg-indigo-900/40 p-4 rounded-xl border border-indigo-900/60">
                         <div>
                             <label for="fidelityFactor" class="block text-xs md:text-sm font-bold text-red-400 mb-2">1. Fidélité au leader (J.M. Virapoullé)</label>
+                            <!-- Repère historique : 49% -> ((0.49 - 0.10) / 0.80) * 100 = 48.75% -->
                             <div class="relative pt-6 pb-1">
                                 <button onclick="resetSlider('fidelityFactor', 0.49)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 48.75%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer au Modèle 2020 (49%)">
-                                    <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Réf. 2020</span>
-                                    <div class="w-0.5 h-2 bg-amber-400 opacity-70 group-hover:opacity-100 group-hover:bg-amber-500 mt-0.5"></div>
+                                    <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 cursor-pointer whitespace-nowrap">📍 Réf. 2020</span>
+                                    <div class="w-0.5 h-2 bg-amber-400 opacity-70 mt-0.5"></div>
                                 </button>
                                 <input type="range" id="fidelityFactor" value="0.49" min="0.10" max="0.90" step="0.01" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="runSimulation()">
                             </div>
@@ -180,10 +182,11 @@
                         </div>
                         <div>
                              <label for="transferFactor" class="block text-xs md:text-sm font-bold text-amber-500 mb-2">2. Attractivité de Laurent (Pool)</label>
+                             <!-- Repère historique : 6% -> (0.06 / 0.80) * 100 = 7.5% -->
                              <div class="relative pt-6 pb-1">
                                  <button onclick="resetSlider('transferFactor', 0.06)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 7.5%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer au Modèle (6%)">
-                                     <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Réf. Modèle</span>
-                                     <div class="w-0.5 h-2 bg-amber-400 opacity-70 group-hover:opacity-100 group-hover:bg-amber-500 mt-0.5"></div>
+                                     <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 cursor-pointer whitespace-nowrap">📍 Réf. Modèle</span>
+                                     <div class="w-0.5 h-2 bg-amber-400 opacity-70 mt-0.5"></div>
                                  </button>
                                  <input type="range" id="transferFactor" value="0.06" min="0" max="0.80" step="0.01" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="runSimulation()">
                              </div>
@@ -198,20 +201,22 @@
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 md:mb-8 px-0 md:px-4">
                         <div>
                             <label for="erosionFactor" class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Usure/Prime Sortant : <span class="font-bold text-green-400" id="displayEpsilon">1.05</span></label>
+                            <!-- Repère historique : 1.05 -> ((1.05 - 0.7) / 0.6) * 100 = 58.33% -->
                             <div class="relative pt-6 pb-1">
                                 <button onclick="resetSlider('erosionFactor', 1.05)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 58.33%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer au Modèle Base (1.05)">
-                                    <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Modèle Initial</span>
-                                    <div class="w-0.5 h-2 bg-amber-400 opacity-70 group-hover:opacity-100 group-hover:bg-amber-500 mt-0.5"></div>
-                                 </button>
+                                    <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 cursor-pointer whitespace-nowrap">📍 Modèle Initial</span>
+                                    <div class="w-0.5 h-2 bg-amber-400 opacity-70 mt-0.5"></div>
+                                </button>
                                 <input type="range" id="erosionFactor" value="1.05" min="0.7" max="1.3" step="0.01" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="runSimulation()">
                             </div>
                         </div>
                         <div>
                             <label for="participationFactor" class="block text-xs md:text-sm font-medium text-gray-300 mb-2">Participation Globale : <span class="font-bold text-blue-400" id="displayPi">1.05</span></label>
+                            <!-- Repère historique : 1.05 -> ((1.05 - 0.8) / 0.4) * 100 = 62.5% -->
                             <div class="relative pt-6 pb-1">
                                 <button onclick="resetSlider('participationFactor', 1.05)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 62.5%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer à la Base (1.05)">
-                                    <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Base Votants</span>
-                                    <div class="w-0.5 h-2 bg-amber-400 opacity-70 group-hover:opacity-100 group-hover:bg-amber-500 mt-0.5"></div>
+                                    <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 cursor-pointer whitespace-nowrap">📍 Base Votants</span>
+                                    <div class="w-0.5 h-2 bg-amber-400 opacity-70 mt-0.5"></div>
                                 </button>
                                 <input type="range" id="participationFactor" value="1.05" min="0.8" max="1.2" step="0.01" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="runSimulation()">
                             </div>
@@ -220,7 +225,7 @@
 
                      <div class="flex justify-center mb-6 md:mb-8 w-full">
                          <button onclick="saveCurrentScenario()" class="w-full md:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 md:py-2 px-4 md:px-6 rounded-xl md:rounded-full shadow-lg transition-transform transform hover:scale-105 border border-indigo-400 flex items-center justify-center gap-2 text-sm md:text-base">
-                             <span>💾</span> Enregistrer et Partager le Scénario
+                             <span>💾</span> Enregistrer l'analyse
                          </button>
                      </div>
                      
@@ -346,6 +351,7 @@
         <!-- ========================================== -->
         <div id="tab-2" class="hidden space-y-6">
             
+            <!-- BOUTONS D'ACTION HAUT -->
             <div class="flex justify-center items-center mb-2">
                 <div class="flex flex-col md:flex-row justify-center items-center gap-3 md:gap-4 bg-slate-800 p-4 rounded-xl shadow-inner border border-slate-700 w-full md:w-auto">
                     <span class="text-gray-400 font-bold uppercase text-xs tracking-wider">Hypothèse :</span>
@@ -354,7 +360,7 @@
                 </div>
             </div>
 
-            <!-- Sursaut de Participation -->
+            <!-- RÉSERVE GLOBALE DE PARTICIPATION AU 2ND TOUR -->
             <div class="bg-slate-800 border border-slate-600 p-4 md:p-6 rounded-xl shadow-inner">
                 <div class="flex items-center gap-3 mb-2">
                     <span class="text-xl">📈</span>
@@ -371,9 +377,9 @@
                     <div class="relative pt-6 pb-1">
                         <button onclick="resetSlider('globalSursautSlider', 1500)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 50%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer à la Moyenne Historique (+1500 voix)">
                             <span class="text-[9px] font-bold text-amber-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-amber-500/30 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Moyenne Hist.</span>
-                            <div class="w-0.5 h-2 bg-amber-400 opacity-70 group-hover:opacity-100 group-hover:bg-amber-500 mt-0.5"></div>
+                            <div class="w-0.5 h-2 bg-amber-400 opacity-70 mt-0.5"></div>
                         </button>
-                        <input type="range" id="globalSursautSlider" min="0" max="3000" value="1500" step="50" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="updateAllSecondTour()">
+                        <input type="range" id="globalSursautSlider" min="0" max="3000" value="1500" step="50" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider" oninput="updateAllSecondTour()">
                     </div>
                     <div class="flex justify-between text-[10px] md:text-xs text-gray-500 mt-1">
                         <span>Stabilité (+0)</span>
@@ -519,7 +525,7 @@
                             <h3 class="text-base md:text-lg font-bold text-gray-100">Le Facteur Polarisant : "Front anti-RN"</h3>
                         </div>
                         <p class="text-xs md:text-sm text-gray-400 mb-4 leading-relaxed">
-                            Dans un scénario de duel très polarisé (Gauche sortante vs Droite unie), le sortant pourrait déclencher un "vote barrage". Ce paramètre simule une **réserve d'abstentionnistes supplémentaires** qui se déplaceraient *uniquement* pour bloquer la droite, s'ajoutant au sursaut global.
+                            Dans un scénario de duel très polarisé (Gauche sortante vs Droite unie), le sortant pourrait déclencher un "vote barrage". Ce paramètre simule une **réserve d'abstentionnistes supplémentaires** qui se déplaceraient *uniquement* pour bloquer la droite.
                         </p>
                         
                         <div>
@@ -528,10 +534,10 @@
                             </label>
                             <div class="relative pt-6 pb-1">
                                 <button onclick="resetSlider('frontRnSlider', 1380)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 92%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer au sursaut des Législatives 2024 (+1380 voix)">
-                                    <span class="text-[9px] font-bold text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-emerald-500/30 group-hover:bg-emerald-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Réf. Légis. 24</span>
-                                    <div class="w-0.5 h-2 bg-emerald-400 opacity-70 group-hover:opacity-100 group-hover:bg-emerald-500 mt-0.5"></div>
+                                    <span class="text-[9px] font-bold text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-emerald-500/30 cursor-pointer whitespace-nowrap">📍 Réf. Légis. 24</span>
+                                    <div class="w-0.5 h-2 bg-emerald-400 mt-0.5"></div>
                                 </button>
-                                <input type="range" id="frontRnSlider" min="0" max="1500" value="0" step="10" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="updateAllSecondTour()">
+                                <input type="range" id="frontRnSlider" min="0" max="1500" value="0" step="10" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider" oninput="updateAllSecondTour()">
                             </div>
                             <div class="flex justify-between text-[10px] md:text-xs text-gray-500 mt-1">
                                 <span>Aucun Barrage (+0 voix)</span>
@@ -595,6 +601,7 @@
                     <span>💡</span> Recommandations Opérationnelles (Duel / Fusion)
                 </h2>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Camp Majorité -->
                     <div class="bg-slate-800/80 rounded-xl border-t-4 border-green-500 p-6 shadow-lg">
                         <h3 class="text-lg font-bold text-green-400 mb-4 flex items-center gap-2">🟢 Camp 1 : Majorité Sortante (J. Bédier)</h3>
                         <div class="space-y-4 text-sm text-gray-300">
@@ -603,73 +610,109 @@
                             <div><strong class="text-green-300">3. Verrouiller le "Pool Fruteau" :</strong> <span class="italic text-gray-400">Consigne :</span> Donner des garanties claires (sociales, écologiques) à cet électorat juge de paix pour sécuriser un report de voix frôlant les 80-90% en votre faveur.</div>
                         </div>
                     </div>
+                    
+                    <!-- Camp Opposition -->
                     <div class="bg-slate-800/80 rounded-xl border-t-4 border-blue-500 p-6 shadow-lg">
                         <h3 class="text-lg font-bold text-blue-400 mb-4 flex items-center gap-2">🔵 Camp 2 : L'Opposition Unie (Virapoullé)</h3>
                         <div class="space-y-4 text-sm text-gray-300">
-                            <div><strong class="text-blue-300">1. L'image de la "Réconciliation Sincère" :</strong> <span class="italic text-gray-400">Consigne :</span> La fusion administrative ne suffit pas. Les candidats et militants des deux camps doivent tracter ensemble sur le terrain pour rassurer les bases.</div>
-                            <div><strong class="text-blue-300">2. Rassurer pour endormir le camp adverse :</strong> <span class="italic text-gray-400">Consigne :</span> Campagne apaisée et modérée. Éviter toute déclaration clivante pour "casser" la dramatisation de Bédier et inciter la gauche déçue à l'abstention.</div>
-                            <div><strong class="text-blue-300">3. Traque aux abstentionnistes historiques :</strong> <span class="italic text-gray-400">Consigne :</span> Identifier via les listes d'émargement les électeurs de droite n'ayant pas voté au 1er tour et aller les chercher un par un avec le message d'une victoire possible.</div>
+                            <div><strong class="text-blue-300">1. Désamorcer le « Front Républicain » (Stratégie d'Anesthésie) :</strong> <span class="italic text-gray-400">Directives :</span> Adopter une communication strictement institutionnelle et froide. Le retrait de l'étiquette nationale (RN) est impératif pour priver l'adversaire de son levier de mobilisation émotionnel et favoriser l'abstention de la gauche modérée.</div>
+                            <div><strong class="text-blue-300">2. Neutraliser les listes intermédiaires (Contournement) :</strong> <span class="italic text-gray-400">Directives :</span> Rejeter toute négociation d'appareil avec les têtes de listes à 5-10% pour préserver une image de clarté. Opérer un siphonage direct de leurs électeurs en appelant au "vote de justice".</div>
+                            <div><strong class="text-blue-300">3. Micro-Ciblage et Opérations Furtives :</strong> <span class="italic text-gray-400">Directives :</span> Proscrire les grands rassemblements publics qui stimuleraient le camp adverse. Concentrer l'effort à 100% sur un porte-à-porte chirurgical (via les listes d'émargement) pour extraire nos abstentionnistes.</div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
         <!-- ========================================== -->
         <!-- ONGLET 3 : BACKTESTING 2020 (Validation) -->
         <!-- ========================================== -->
         <div id="tab-3" class="hidden space-y-6">
+            
             <section class="card border-t-4 border-emerald-500 bg-slate-800/50">
                 <h2 class="text-lg md:text-xl font-bold text-emerald-400 mb-3 flex items-center gap-2">
                     <span>🔬</span> Backtesting : Validation du Modèle sur 2020
                 </h2>
                 <div class="text-xs md:text-sm text-gray-300 space-y-3 leading-relaxed">
-                    <p><strong class="text-gray-100">Le Principe du Backtesting :</strong> Pour s'assurer qu'un modèle mathématique est fiable pour prédire l'avenir (2026), on lui demande d'abord de "prédire" le passé en lui donnant les données d'entrée officielles. S'il retrouve le résultat connu, la formule est validée.</p>
-                    <p>Au 1er tour 2020, <strong>J.M. Virapoullé (5 722 voix)</strong> devançait <strong>Joé Bédier (4 524 voix)</strong>.<br>Les listes éliminées et les nouveaux votants du second tour ont constitué un "Pool" géant de <strong>10 270 voix</strong> à redistribuer.<br>Utilisez les curseurs ci-dessous pour voir comment l'élection a réellement basculé au second tour !</p>
+                    <p>
+                        <strong class="text-gray-100">Le Principe du Backtesting :</strong> Pour s'assurer qu'un modèle mathématique est fiable pour prédire l'avenir (2026), on lui demande d'abord de "prédire" le passé en lui donnant les données d'entrée officielles. S'il retrouve le résultat connu, la formule est validée.
+                    </p>
+                    <p>
+                        <strong class="text-gray-100">Données Officielles de l'État (Mars & Juin 2020) :</strong><br>
+                        Au 1er tour, <strong>J.M. Virapoullé (5 722 voix)</strong> devançait <strong>Joé Bédier (4 524 voix)</strong>.<br>
+                        Les listes éliminées et les nouveaux votants du second tour ont constitué un "Pool" géant de <strong>10 270 voix</strong> à redistribuer.<br>
+                        Utilisez les curseurs ci-dessous pour voir comment l'élection a réellement basculé au second tour !
+                    </p>
                 </div>
             </section>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Contrôles du Backtesting -->
                 <div class="space-y-6">
                     <div class="card">
                         <h3 class="text-lg font-bold text-gray-100 mb-4 border-b border-slate-700 pb-2">Taux de Capture sur le Pool (10 270 voix)</h3>
+                        
                         <div class="mb-6">
-                            <label class="block text-sm font-bold text-cyan-400 mb-2">Part captée par Joé Bédier : <span id="bedierCaptureValue" class="text-white ml-2">60.2%</span></label>
+                            <label class="block text-sm font-bold text-cyan-400 mb-2">
+                                Part captée par Joé Bédier : <span id="bedierCaptureValue" class="text-xl font-extrabold text-white ml-2">60.2%</span>
+                            </label>
                             <div class="relative pt-6 pb-1">
                                 <button onclick="resetSlider('bedierCaptureSlider', 60.16)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 60.16%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer à la vraie valeur 2020 (60.16%)">
-                                    <span class="text-[9px] font-bold text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-emerald-500/30 group-hover:bg-emerald-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Modèle Exact</span>
-                                    <div class="w-0.5 h-2 bg-emerald-400 mt-0.5"></div>
+                                    <span class="text-[9px] font-bold text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-emerald-500/30 cursor-pointer whitespace-nowrap">📍 Modèle Exact</span>
+                                    <div class="w-0.5 h-2 bg-emerald-400 opacity-70 mt-0.5"></div>
                                 </button>
-                                <input type="range" id="bedierCaptureSlider" min="0" max="100" value="60.16" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="updateBacktesting2020()">
+                                <input type="range" id="bedierCaptureSlider" min="0" max="100" value="60.16" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider" oninput="updateBacktesting2020()">
                             </div>
                         </div>
+                        
                         <div>
-                            <label class="block text-sm font-bold text-blue-400 mb-2">Part captée par J.M. Virapoullé : <span id="jmvCaptureValue" class="text-white ml-2">39.8%</span></label>
+                            <label class="block text-sm font-bold text-blue-400 mb-2">
+                                Part captée par J.M. Virapoullé : <span id="jmvCaptureValue" class="text-xl font-extrabold text-white ml-2">39.8%</span>
+                            </label>
                             <div class="relative pt-6 pb-1">
                                 <button onclick="resetSlider('jmvCaptureSlider', 39.84)" class="absolute flex flex-col items-center group z-20 focus:outline-none" style="left: 39.84%; top: -2px; transform: translateX(-50%);" title="Cliquer pour fixer à la vraie valeur 2020 (39.84%)">
-                                    <span class="text-[9px] font-bold text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-emerald-500/30 group-hover:bg-emerald-500 group-hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap">📍 Modèle Exact</span>
-                                    <div class="w-0.5 h-2 bg-emerald-400 mt-0.5"></div>
+                                    <span class="text-[9px] font-bold text-emerald-400 bg-slate-800 px-1.5 py-0.5 rounded shadow-sm border border-emerald-500/30 cursor-pointer whitespace-nowrap">📍 Modèle Exact</span>
+                                    <div class="w-0.5 h-2 bg-emerald-400 opacity-70 mt-0.5"></div>
                                 </button>
-                                <input type="range" id="jmvCaptureSlider" min="0" max="100" value="39.84" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="updateBacktesting2020()">
+                                <input type="range" id="jmvCaptureSlider" min="0" max="100" value="39.84" step="0.1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider" oninput="updateBacktesting2020()">
                             </div>
                         </div>
                     </div>
 
+                    <!-- Tableau Comparatif -->
                     <div class="card overflow-hidden p-0">
                         <table class="w-full text-left border-collapse">
                             <thead class="bg-slate-800 text-gray-400 text-xs uppercase">
-                                <tr><th class="p-3 border-b border-slate-700">Candidat</th><th class="p-3 border-b border-slate-700 text-center">Score Officiel 2020</th><th class="p-3 border-b border-slate-700 text-center text-emerald-400">Modèle (Calculé)</th><th class="p-3 border-b border-slate-700 text-center">Marge d'Erreur</th></tr>
+                                <tr>
+                                    <th class="p-3 border-b border-slate-700">Candidat</th>
+                                    <th class="p-3 border-b border-slate-700 text-center">Score Officiel 2020</th>
+                                    <th class="p-3 border-b border-slate-700 text-center text-emerald-400">Modèle (Calculé)</th>
+                                    <th class="p-3 border-b border-slate-700 text-center">Marge d'Erreur</th>
+                                </tr>
                             </thead>
                             <tbody class="text-sm text-gray-200 divide-y divide-slate-700">
-                                <tr class="hover:bg-slate-700/50"><td class="p-3 font-bold text-cyan-400">Joé Bédier</td><td class="p-3 text-center">10 703 voix</td><td class="p-3 text-center font-bold text-emerald-400" id="bt-bedier-proj">--</td><td class="p-3 text-center text-gray-400" id="bt-bedier-err">--</td></tr>
-                                <tr class="hover:bg-slate-700/50"><td class="p-3 font-bold text-blue-400">J.M. Virapoullé</td><td class="p-3 text-center">9 813 voix</td><td class="p-3 text-center font-bold text-emerald-400" id="bt-jmv-proj">--</td><td class="p-3 text-center text-gray-400" id="bt-jmv-err">--</td></tr>
+                                <tr class="hover:bg-slate-700/50">
+                                    <td class="p-3 font-bold text-cyan-400">Joé Bédier</td>
+                                    <td class="p-3 text-center">10 703 voix</td>
+                                    <td class="p-3 text-center font-bold text-emerald-400" id="bt-bedier-proj">--</td>
+                                    <td class="p-3 text-center text-gray-400" id="bt-bedier-err">--</td>
+                                </tr>
+                                <tr class="hover:bg-slate-700/50">
+                                    <td class="p-3 font-bold text-blue-400">J.M. Virapoullé</td>
+                                    <td class="p-3 text-center">9 813 voix</td>
+                                    <td class="p-3 text-center font-bold text-emerald-400" id="bt-jmv-proj">--</td>
+                                    <td class="p-3 text-center text-gray-400" id="bt-jmv-err">--</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
+                <!-- Graphique Backtesting -->
                 <div class="card flex flex-col">
-                    <h3 class="text-lg font-bold text-gray-100 mb-2 border-b border-slate-700 pb-2">Comparatif Visuel</h3>
+                    <h3 class="text-lg font-bold text-gray-100 mb-2 border-b border-slate-700 pb-2">Preuve de Fiabilité du Modèle</h3>
+                    <p class="text-xs text-gray-400 mb-4">Comparaison entre la réalité des urnes et la prédiction de la formule mathématique.</p>
                     <div class="relative w-full h-64 md:h-full flex-grow bg-slate-800 rounded-lg p-2">
                         <canvas id="backtestingChart"></canvas>
                     </div>
@@ -705,21 +748,21 @@
                     <div>
                         <label for="partielleParticipationSlider" class="block text-sm font-bold text-white mb-2">Chute de la Participation <span id="partielleParticipationValue" class="text-rose-400 ml-2">45%</span></label>
                         <p class="text-xs text-gray-400 mb-2">L'annulation entraîne une forte désertion des urnes.</p>
-                        <input type="range" id="partielleParticipationSlider" min="30" max="60" value="45" step="1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="runPartielle()">
+                        <input type="range" id="partielleParticipationSlider" min="30" max="60" value="45" step="1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider" oninput="runPartielle()">
                         <div class="flex justify-between text-[10px] text-gray-500 mt-1"><span>Massive (30%)</span><span>Modérée (60%)</span></div>
                     </div>
 
                     <div>
                         <label for="partiellePrimeBedierSlider" class="block text-sm font-bold text-white mb-2">Prime "Victime" (Bédier) <span id="partiellePrimeBedierValue" class="text-green-400 ml-2">1.10x</span></label>
                         <p class="text-xs text-gray-400 mb-2">Capacité du sortant à sur-mobiliser par agacement face au recours.</p>
-                        <input type="range" id="partiellePrimeBedierSlider" min="0.8" max="1.3" value="1.1" step="0.05" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="runPartielle()">
+                        <input type="range" id="partiellePrimeBedierSlider" min="0.8" max="1.3" value="1.1" step="0.05" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider" oninput="runPartielle()">
                         <div class="flex justify-between text-[10px] text-gray-500 mt-1"><span>Démobilisé</span><span>Sur-motivé</span></div>
                     </div>
 
                     <div>
                         <label for="partielleUnionOppSlider" class="block text-sm font-bold text-white mb-2">Solidité "Union Sacrée" <span id="partielleUnionOppValue" class="text-amber-500 ml-2">80%</span></label>
                         <p class="text-xs text-gray-400 mb-2">Taux d'union immédiate entre L. et J.M. Virapoullé au nouveau 1er tour.</p>
-                        <input type="range" id="partielleUnionOppSlider" min="0" max="100" value="80" step="5" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10" oninput="runPartielle()">
+                        <input type="range" id="partielleUnionOppSlider" min="0" max="100" value="80" step="5" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer relative z-10 range-slider" oninput="runPartielle()">
                         <div class="flex justify-between text-[10px] text-gray-500 mt-1"><span>Guerre fratricide</span><span>Union Totale</span></div>
                     </div>
                 </div>
@@ -772,7 +815,7 @@
                 </div>
             </div>
 
-            <!-- NOUVEAU BLOC : CONSEILS STRATÉGIQUES 3ÈME TOUR (PARTIELLE) -->
+            <!-- CONSEILS STRATÉGIQUES 3ÈME TOUR (PARTIELLE) -->
             <div class="mt-8 mb-6">
                 <h2 class="text-xl md:text-2xl font-bold text-gray-100 mb-6 flex items-center gap-2 border-b border-slate-700 pb-2">
                     <span>💡</span> Stratégie de Campagne (Le 3ème Tour / Partielle)
@@ -792,14 +835,96 @@
                     <div class="bg-slate-800/80 rounded-xl border-t-4 border-blue-500 p-6 shadow-lg">
                         <h3 class="text-lg font-bold text-blue-400 mb-4 flex items-center gap-2">🔵 Camp 2 : L'Opposition Unie (Virapoullé)</h3>
                         <div class="space-y-4 text-sm text-gray-300">
-                            <div><strong class="text-blue-300">1. Désamorcer le Vote Barrage (Le Leurre) :</strong> <span class="italic text-gray-400">Consigne :</span> Mener une "campagne froide" (juridique et factuelle) et abandonner l'étiquette RN. Sans ennemi effrayant, l'électeur de gauche modérée s'abstiendra.</div>
-                            <div><strong class="text-blue-300">2. Contourner les "Petits Candidats" :</strong> <span class="italic text-gray-400">Consigne :</span> Refuser les alliances avec les listes à 5-10% qui brouilleraient votre image. Siphonner directement leurs électeurs en appelant au "vote de justice".</div>
-                            <div><strong class="text-blue-300">3. Porte-à-Porte Invisible :</strong> <span class="italic text-gray-400">Consigne :</span> Pas de grands meetings qui réveilleraient le camp adverse. Traquer chirurgicalement les abstentionnistes de vos propres quartiers sur les listes d'émargement.</div>
+                            <div><strong class="text-blue-300">1. Désamorcer le « Front Républicain » (Stratégie d'Anesthésie) :</strong> <span class="italic text-gray-400">Directives :</span> Adopter une communication strictement institutionnelle et froide. Le retrait de l'étiquette nationale (RN) est impératif pour priver l'adversaire de son levier de mobilisation émotionnel et favoriser l'abstention de la gauche modérée.</div>
+                            <div><strong class="text-blue-300">2. Neutraliser les listes intermédiaires (Contournement) :</strong> <span class="italic text-gray-400">Directives :</span> Rejeter toute négociation d'appareil avec les têtes de listes à 5-10% pour préserver une image de clarté. Opérer un siphonage direct de leurs électeurs en appelant au "vote de justice".</div>
+                            <div><strong class="text-blue-300">3. Micro-Ciblage et Opérations Furtives :</strong> <span class="italic text-gray-400">Directives :</span> Proscrire les grands rassemblements publics qui stimuleraient le camp adverse. Concentrer l'effort à 100% sur un porte-à-porte chirurgical (via les listes d'émargement) pour extraire nos abstentionnistes.</div>
                         </div>
                     </div>
                 </div>
             </div>
 
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ONGLET 5 : DOSSIER JURIDIQUE (RECOURS)     -->
+        <!-- ========================================== -->
+        <div id="tab-5" class="hidden space-y-6">
+            
+            <section class="bg-gradient-to-r from-slate-800 to-indigo-900 rounded-xl shadow-lg p-6 md:p-8 border-l-4 border-indigo-400">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-3 flex items-center gap-2">
+                    <span>⚖️</span> Synthèse Juridique : Contentieux Électoral
+                </h2>
+                <div class="text-sm md:text-base text-indigo-100 space-y-3 leading-relaxed">
+                    <p><strong>Rédacteur :</strong> Pôle Stratégie & Analyse Juridique</p>
+                    <p><strong>Contexte :</strong> Victoire de la liste sortante (J. Bédier) avec un écart résiduel critique de 34 voix.</p>
+                    <div class="bg-red-900/60 border border-red-500/50 p-4 rounded-lg text-red-100 text-sm mt-4">
+                        <strong>Avertissement :</strong> Ce document constitue une analyse doctrinale et technique basée sur la jurisprudence administrative applicable. Il ne se substitue en aucun cas aux écritures des avocats constitués dans ce dossier.
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1. OBJET DES RECOURS -->
+            <div class="card border-t-4 border-slate-500">
+                <h3 class="text-xl font-bold text-gray-100 mb-4">1. Objet des Recours</h3>
+                <p class="text-sm text-gray-300 leading-relaxed">
+                    Le Tribunal Administratif (TA) est saisi de trois recours distincts visant l'annulation globale des opérations électorales du second tour des élections municipales de Saint-André.<br><br>
+                    L'objet de ces recours n'est pas de recompter les voix pour déclarer un autre vainqueur (réformation), mais bien d'obtenir l'<strong>annulation pure et simple du scrutin</strong> afin de provoquer de nouvelles élections (élection partielle), au motif que la sincérité du vote a été altérée.
+                </p>
+            </div>
+
+            <!-- 2. LE CADRE PROCÉDURAL ET LES DÉLAIS -->
+            <div class="card border-t-4 border-slate-500">
+                <h3 class="text-xl font-bold text-gray-100 mb-4">2. Le Cadre Procédural et les Délais</h3>
+                <ul class="space-y-4 text-sm text-gray-300">
+                    <li class="flex gap-3"><span class="text-indigo-400">⏱️</span> <div><strong class="text-white">Le dépôt (Phase achevée) :</strong> Les recours doivent être déposés au greffe du TA au plus tard à 18 heures le cinquième jour qui suit l'élection (Art. R. 119 du Code électoral).</div></li>
+                    <li class="flex gap-3"><span class="text-indigo-400">⚖️</span> <div><strong class="text-white">L'instruction et le jugement au TA :</strong> Le Tribunal dispose d'un délai strict pour statuer, généralement fixé à deux ou trois mois en matière municipale.</div></li>
+                    <li class="flex gap-3"><span class="text-indigo-400">🛡️</span> <div><strong class="text-white">L'absence d'effet suspensif :</strong> Les recours ne suspendent pas les résultats. Le maire proclamé élu reste pleinement dans ses fonctions.</div></li>
+                    <li class="flex gap-3"><span class="text-indigo-400">🏛️</span> <div><strong class="text-white">L'appel devant le Conseil d'État :</strong> Si le TA annule l'élection ou rejette les recours, les parties auront un mois pour faire appel. Le Conseil d'État dispose alors de six mois pour rendre sa décision.</div></li>
+                </ul>
+            </div>
+
+            <!-- 3. LES ARMES JURIDIQUES -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Accusation -->
+                <div class="bg-slate-800/80 rounded-xl border-t-4 border-blue-500 p-6 shadow-lg">
+                    <h3 class="text-lg font-bold text-blue-400 mb-4">🔵 Les Armes de l'Accusation (Requérants)</h3>
+                    <p class="text-xs text-gray-400 mb-4">Objectif : Démontrer une irrégularité déplaçant au moins 18 voix.</p>
+                    <div class="space-y-4 text-sm text-gray-300">
+                        <div><strong class="text-blue-300">1. Le grief arithmétique (Art. L. 62 et L. 64) :</strong> Démontrer des discordances manifestes de signatures entre les deux tours pour un même électeur.</div>
+                        <div><strong class="text-blue-300">2. Le grief financier (Art. L. 52-8) :</strong> Prouver que les moyens de la mairie ont été utilisés pour la campagne du sortant, rompant l'égalité des armes.</div>
+                        <div class="p-3 bg-blue-900/30 rounded border border-blue-800/50"><strong class="text-white">3. L'arme fatale - Propagande tardive (Art. L. 49) :</strong> Le communiqué de presse diffusé le matin du vote. Démontrer que ce message constituait un tract électoral de dernière minute, violant le Code électoral.</div>
+                    </div>
+                </div>
+                <!-- Défense -->
+                <div class="bg-slate-800/80 rounded-xl border-t-4 border-green-500 p-6 shadow-lg">
+                    <h3 class="text-lg font-bold text-green-400 mb-4">🟢 Les Armes de la Défense (Maire sortant)</h3>
+                    <p class="text-xs text-gray-400 mb-4">Objectif : Minimiser l'impact des faits et justifier par les prérogatives légales.</p>
+                    <div class="space-y-4 text-sm text-gray-300">
+                        <div><strong class="text-green-300">1. Le bouclier du Pouvoir de Police :</strong> Argumenter que le communiqué n'était pas un acte de propagande, mais une prévention de trouble à l'ordre public (CGCT).</div>
+                        <div><strong class="text-green-300">2. Le bouclier Probatoire :</strong> Exiger des requérants des preuves irréfutables (constats d'huissier, attestations probantes), souvent complexes à réunir.</div>
+                        <div><strong class="text-green-300">3. Le bouclier de l'Inopérance :</strong> Affirmer que l'impact réel du communiqué sur les électeurs a été nul ou insuffisant pour modifier le résultat.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. PRONOSTIC DOCTRINAL -->
+            <div class="card border-t-4 border-rose-500 bg-rose-950/10">
+                <h3 class="text-xl font-bold text-rose-400 mb-4">4. Évaluation Technique des Risques (Pronostic Doctrinal)</h3>
+                <p class="text-sm text-gray-300 mb-4">
+                    Le juge électoral statue selon la théorie du "faisceau d'indices". L'élément central qui fragilise la défense est <strong>l'écart résiduel critique de 34 voix</strong>.
+                </p>
+                <ul class="space-y-3 text-sm text-gray-300 mb-6">
+                    <li><strong class="text-white">Signatures et moyens de la commune :</strong> Risque modéré. Nécessite des preuves matérielles lourdes.</li>
+                    <li><strong class="text-white">Communiqué du jour du scrutin :</strong> <span class="text-rose-400 font-bold">Risque CRITIQUE</span>. La jurisprudence du Conseil d'État est d'une extrême sévérité sur la période de "gel" électoral. Utiliser l'appareil institutionnel d'une mairie pour publier un communiqué le matin même du vote est presque systématiquement sanctionné.</li>
+                </ul>
+                <div class="p-4 bg-slate-900 rounded-lg border-l-4 border-rose-500">
+                    <h4 class="font-bold text-white mb-2">Conclusion</h4>
+                    <p class="text-sm text-gray-400">
+                        Si le droit n'est pas une science exacte, la conjugaison d'une violation de l'article L. 49 du Code électoral le jour même du vote avec une marge de victoire aussi infime (17 électeurs ayant potentiellement changé d'avis) expose la liste de la majorité actuelle à un <strong>risque maximal d'annulation de l'élection</strong> par le juge administratif.
+                    </p>
+                </div>
+            </div>
+            
         </div>
 
         <!-- ========================================== -->
@@ -848,7 +973,7 @@
         // GESTION DES ONGLETS
         // ==========================================
         window.switchTab = function(tabIndex) {
-            [1, 2, 3, 4].forEach(i => {
+            [1, 2, 3, 4, 5].forEach(i => {
                 const tab = document.getElementById(`tab-${i}`);
                 const btn = document.getElementById(`btn-tab-${i}`);
                 if (!tab || !btn) return;
@@ -859,6 +984,8 @@
                         btn.className = "px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-900/50";
                         if(partielleChart1) partielleChart1.update();
                         if(partielleChart2) partielleChart2.update();
+                    } else if (i === 5) {
+                        btn.className = "px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-indigo-600 text-white shadow-lg shadow-indigo-900/50";
                     } else {
                         btn.className = "px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-indigo-600 text-white shadow-lg";
                     }
@@ -866,6 +993,8 @@
                     tab.classList.add('hidden');
                     if (i === 4) {
                         btn.className = "px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-rose-900";
+                    } else if (i === 5) {
+                        btn.className = "px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-indigo-300 hover:bg-indigo-900 border border-indigo-700/50";
                     } else {
                         btn.className = "px-4 py-2 md:px-6 md:py-3 rounded-full font-bold text-xs md:text-sm transition-colors bg-slate-700 text-gray-300 hover:bg-slate-600";
                     }
@@ -879,6 +1008,8 @@
             const contTri = document.getElementById('content-triangulaire');
             const contFus = document.getElementById('content-fusion');
 
+            if (!btnTri || !btnFus || !contTri || !contFus) return;
+
             if (type === 'triangulaire') {
                 contTri.classList.remove('hidden');
                 contFus.classList.add('hidden');
@@ -890,11 +1021,9 @@
                 btnFus.className = "w-full md:w-auto px-6 py-2 rounded-full bg-blue-600 text-white font-bold shadow-lg ring-2 ring-blue-400 text-xs md:text-sm transition-all";
                 btnTri.className = "w-full md:w-auto px-6 py-2 rounded-full bg-slate-700 text-gray-300 font-bold hover:bg-slate-600 text-xs md:text-sm transition-all";
             }
+            window.updateAllSecondTour();
         };
 
-        // ==========================================
-        // FONCTION DE RÉINITIALISATION DES RÉGLETTES
-        // ==========================================
         window.resetSlider = function(sliderId, value) {
             const slider = document.getElementById(sliderId);
             if(slider) {
@@ -952,7 +1081,7 @@
                     auth = getAuth(app);
                     db = getFirestore(app);
                     isCloudActive = true;
-                    document.getElementById('cloud-indicator').classList.remove('hidden');
+                    if(document.getElementById('cloud-indicator')) document.getElementById('cloud-indicator').classList.remove('hidden');
 
                     if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                         await signInWithCustomToken(auth, __initial_auth_token);
@@ -967,12 +1096,12 @@
                         }
                     });
                 } else {
-                    document.getElementById('btn-clear-local').classList.remove('hidden');
+                    if(document.getElementById('btn-clear-local')) document.getElementById('btn-clear-local').classList.remove('hidden');
                     renderScenariosTable();
                 }
             } catch (e) {
                 console.error("Le Cloud n'est pas disponible.", e);
-                document.getElementById('btn-clear-local').classList.remove('hidden');
+                if(document.getElementById('btn-clear-local')) document.getElementById('btn-clear-local').classList.remove('hidden');
                 renderScenariosTable(); 
             }
         }
@@ -993,10 +1122,17 @@
         }
 
         function project2026() {
-            const fideliteJMV = parseFloat(document.getElementById('fidelityFactor').value);
-            const attractiviteLaurent = parseFloat(document.getElementById('transferFactor').value);
-            const usureBedier = parseFloat(document.getElementById('erosionFactor').value);
-            const participation = parseFloat(document.getElementById('participationFactor').value);
+            const fidelityEl = document.getElementById('fidelityFactor');
+            const transferEl = document.getElementById('transferFactor');
+            const erosionEl = document.getElementById('erosionFactor');
+            const partEl = document.getElementById('participationFactor');
+
+            if(!fidelityEl || !transferEl || !erosionEl || !partEl) return;
+
+            const fideliteJMV = parseFloat(fidelityEl.value);
+            const attractiviteLaurent = parseFloat(transferEl.value);
+            const usureBedier = parseFloat(erosionEl.value);
+            const participation = parseFloat(partEl.value);
 
             let voixJMV_socle = POTENTIEL_CLAN_VIRAPOULLE * fideliteJMV;
             let voixLaurent_socle = POTENTIEL_CLAN_VIRAPOULLE * (1 - fideliteJMV);
@@ -1057,11 +1193,11 @@
         function formatNum(n) { return Math.round(n).toLocaleString('fr-FR'); }
 
         function updateUI(res, fideliteJMV, attractiviteLaurent, usureBedier, participation) {
-            document.getElementById('displayLambda').innerText = Math.round(fideliteJMV * 100) + '%';
-            document.getElementById('displayTau').innerText = Math.round(attractiviteLaurent * 100) + '%';
-            document.getElementById('displayEpsilon').innerText = usureBedier.toFixed(2);
-            document.getElementById('displayPi').innerText = participation.toFixed(2);
-            document.getElementById('kpi-total-votes').innerText = formatNum(res.Total);
+            if(document.getElementById('displayLambda')) document.getElementById('displayLambda').innerText = Math.round(fideliteJMV * 100) + '%';
+            if(document.getElementById('displayTau')) document.getElementById('displayTau').innerText = Math.round(attractiviteLaurent * 100) + '%';
+            if(document.getElementById('displayEpsilon')) document.getElementById('displayEpsilon').innerText = usureBedier.toFixed(2);
+            if(document.getElementById('displayPi')) document.getElementById('displayPi').innerText = participation.toFixed(2);
+            if(document.getElementById('kpi-total-votes')) document.getElementById('kpi-total-votes').innerText = formatNum(res.Total);
             
             const scores = CANDIDATS.map(c => ({
                 name: c.name,
@@ -1072,14 +1208,17 @@
             })).sort((a, b) => b.val - a.val); 
             
             const gap = scores[0].val - scores[1].val;
-            document.getElementById('kpi-vote-gap').innerText = formatNum(gap);
-            document.getElementById('kpi-seuil').innerText = formatNum(Math.floor(res.Total/2)+1);
+            if(document.getElementById('kpi-vote-gap')) document.getElementById('kpi-vote-gap').innerText = formatNum(gap);
+            if(document.getElementById('kpi-seuil')) document.getElementById('kpi-seuil').innerText = formatNum(Math.floor(res.Total/2)+1);
 
             scores.forEach((candidate, index) => {
                 const percentage = res.Total > 0 ? (candidate.val / res.Total) * 100 : 0;
-                document.getElementById(`bar-${candidate.id}`).style.width = percentage + '%';
-                document.getElementById(`percent-${candidate.id}`).innerText = percentage.toFixed(1) + '%';
-                document.getElementById(`wrapper-${candidate.id}`).style.order = index;
+                const barEl = document.getElementById(`bar-${candidate.id}`);
+                const pctEl = document.getElementById(`percent-${candidate.id}`);
+                const wrapEl = document.getElementById(`wrapper-${candidate.id}`);
+                if(barEl) barEl.style.width = percentage + '%';
+                if(pctEl) pctEl.innerText = percentage.toFixed(1) + '%';
+                if(wrapEl) wrapEl.style.order = index;
             });
 
             currentStateData = {
@@ -1110,7 +1249,7 @@
             } else {
                 message += `Surprise politique : ${premier.name} prend la tête !`;
             }
-            analysisBox.innerHTML = message;
+            if(analysisBox) analysisBox.innerHTML = message;
 
             let tableHtml = `
                 <table class="w-full text-left border-collapse">
@@ -1147,7 +1286,9 @@
                 `;
             });
             tableHtml += `</tbody></table>`;
-            document.getElementById('recalculated-base-table').innerHTML = tableHtml;
+            if(document.getElementById('recalculated-base-table')) document.getElementById('recalculated-base-table').innerHTML = tableHtml;
+            
+            window.updateAllSecondTour();
         }
 
         window.runSimulation = function() {
@@ -1192,10 +1333,10 @@
 
             if (scenario) {
                 const s = scenario.data.sliders;
-                document.getElementById('fidelityFactor').value = s.fidelity;
-                document.getElementById('transferFactor').value = s.transfer;
-                document.getElementById('erosionFactor').value = s.erosion;
-                document.getElementById('participationFactor').value = s.participation;
+                if(document.getElementById('fidelityFactor')) document.getElementById('fidelityFactor').value = s.fidelity;
+                if(document.getElementById('transferFactor')) document.getElementById('transferFactor').value = s.transfer;
+                if(document.getElementById('erosionFactor')) document.getElementById('erosionFactor').value = s.erosion;
+                if(document.getElementById('participationFactor')) document.getElementById('participationFactor').value = s.participation;
                 
                 if(radarChart) {
                     radarChart.data.datasets[0].data = [s.fidelity, s.transfer, s.erosion - 0.2, s.participation - 0.2];
@@ -1234,6 +1375,7 @@
 
         function renderScenariosTable() {
             const tbody = document.getElementById('scenario-list-body');
+            if(!tbody) return;
             let history = isCloudActive ? globalScenarios : (JSON.parse(localStorage.getItem('electionScenariosV5')) || []);
 
             if (history.length === 0) {
@@ -1271,7 +1413,9 @@
         }
 
         function initChart() {
-            const ctx = document.getElementById('factorImpactChart').getContext('2d');
+            const ctxEl = document.getElementById('factorImpactChart');
+            if(!ctxEl) return;
+            const ctx = ctxEl.getContext('2d');
             const initialFidelity = 0.49;
             const initialTransfer = 0.06;
             const initialErosion = 1.05;
@@ -1320,8 +1464,12 @@
         // ==========================================
         
         window.updateAllSecondTour = function() {
-            const sursautGlobal = parseInt(document.getElementById('globalSursautSlider').value, 10);
-            document.getElementById('globalSursautValue').textContent = '+' + sursautGlobal.toLocaleString('fr-FR') + ' voix';
+            // Sécurité
+            if (!currentStateData || !currentStateData.sliders) return;
+
+            const sliderSursaut = document.getElementById('globalSursautSlider');
+            const sursautGlobal = sliderSursaut ? parseInt(sliderSursaut.value, 10) : 1500;
+            if(document.getElementById('globalSursautValue')) document.getElementById('globalSursautValue').textContent = '+' + sursautGlobal.toLocaleString('fr-FR') + ' voix';
 
             // --- MISE A JOUR DU SCÉNARIO A (TRIANGULAIRE) ---
             const bedierBaseTri = 6516;
@@ -1358,7 +1506,6 @@
                 ctxResultsTriChart.update();
             }
             if(ctxCompositionTriChart) {
-                // Dataset 4 est le Sursaut
                 ctxCompositionTriChart.data.datasets[4].data = [bedierSursautTri, laurentSursautTri, jmSursautTri];
                 ctxCompositionTriChart.update();
             }
@@ -1371,7 +1518,7 @@
                 {name: 'JM. Virapoullé', votes: jmTotalTri, color: 'text-red-500'}
             ].sort((a,b) => b.votes - a.votes);
             
-            resTextTri.innerHTML = `<span class="${scoresTri[0].color} font-bold">${scoresTri[0].name} l'emporte</span> d'une courte tête (+${(scoresTri[0].votes - scoresTri[1].votes).toLocaleString('fr-FR')} voix d'avance).`;
+            if(resTextTri) resTextTri.innerHTML = `<span class="${scoresTri[0].color} font-bold">${scoresTri[0].name} l'emporte</span> d'une courte tête (+${(scoresTri[0].votes - scoresTri[1].votes).toLocaleString('fr-FR')} voix d'avance).`;
 
             let tableHtmlTri = `
                 <tr class="hover:bg-slate-700/50 transition-colors">
@@ -1437,12 +1584,13 @@
                     <td class="px-3 py-4 md:px-6 md:py-4 text-center text-gray-500 whitespace-nowrap">Reste abs.</td>
                 </tr>
             `;
-            document.getElementById('table-body-triangulaire').innerHTML = tableHtmlTri;
+            if(document.getElementById('table-body-triangulaire')) document.getElementById('table-body-triangulaire').innerHTML = tableHtmlTri;
 
 
             // --- MISE A JOUR DU SCÉNARIO B (FUSION) ---
-            const sursautRN = parseInt(document.getElementById('frontRnSlider').value, 10);
-            document.getElementById('frontRnValue').textContent = '+' + sursautRN + ' voix';
+            const frontRnSlider = document.getElementById('frontRnSlider');
+            const sursautRN = frontRnSlider ? parseInt(frontRnSlider.value, 10) : 0;
+            if(document.getElementById('frontRnValue')) document.getElementById('frontRnValue').textContent = '+' + sursautRN + ' voix';
 
             const bedierBaseFus = 6516;
             const bedierRepFruteauFus = 1611;
@@ -1480,10 +1628,12 @@
 
             // Fusion : Tableau et Résultat
             const resTextFus = document.getElementById('fusion-result-text');
-            if(bedierTotalFus > laurentTotalFus) {
-                resTextFus.innerHTML = `<span class="text-green-400 font-bold">Joé Bédier l'emporte</span> avec +${(bedierTotalFus - laurentTotalFus).toLocaleString('fr-FR')} voix.`;
-            } else {
-                resTextFus.innerHTML = `<span class="text-amber-500 font-bold">Laurent Virapoullé l'emporte</span> avec +${(laurentTotalFus - bedierTotalFus).toLocaleString('fr-FR')} voix.`;
+            if(resTextFus) {
+                if(bedierTotalFus > laurentTotalFus) {
+                    resTextFus.innerHTML = `<span class="text-green-400 font-bold">Joé Bédier l'emporte</span> avec +${(bedierTotalFus - laurentTotalFus).toLocaleString('fr-FR')} voix.`;
+                } else {
+                    resTextFus.innerHTML = `<span class="text-amber-500 font-bold">Laurent Virapoullé l'emporte</span> avec +${(laurentTotalFus - bedierTotalFus).toLocaleString('fr-FR')} voix.`;
+                }
             }
 
             let tableHtmlFus = `
@@ -1556,7 +1706,7 @@
                 </tr>
             `;
             
-            document.getElementById('table-body-fusion').innerHTML = tableHtmlFus;
+            if(document.getElementById('table-body-fusion')) document.getElementById('table-body-fusion').innerHTML = tableHtmlFus;
         };
 
 
@@ -1565,80 +1715,85 @@
             const FONT_COLOR = '#e0e0e0';
             const GRID_COLOR = 'rgba(224, 224, 224, 0.1)';
 
-            // --- 1. Initialisation Vides Triangulaire ---
-            const ctxResultsTri = document.getElementById('projectedResultsChartTri').getContext('2d');
-            ctxResultsTriChart = new Chart(ctxResultsTri, {
-                type: 'bar',
-                data: {
-                    labels: ['J. Bédier', 'L. Virapoullé', 'J.M. Virapoullé'],
-                    datasets: [{ label: '% des voix', data: [0, 0, 0], backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], borderRadius: 8 }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { return context.raw + '%'; } } } },
-                    scales: { x: { ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } }, y: { beginAtZero: true, max: 60, title: { display: !isMobile, text: 'Pourcentage (%)', color: FONT_COLOR }, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } } }
-                }
-            });
+            const ctxTriEl = document.getElementById('projectedResultsChartTri');
+            if(ctxTriEl) {
+                ctxResultsTriChart = new Chart(ctxTriEl.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['J. Bédier', 'L. Virapoullé', 'J.M. Virapoullé'],
+                        datasets: [{ label: '% des voix', data: [0, 0, 0], backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], borderRadius: 8 }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { return context.raw + '%'; } } } },
+                        scales: { x: { ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } }, y: { beginAtZero: true, max: 60, title: { display: !isMobile, text: 'Pourcentage (%)', color: FONT_COLOR }, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } } }
+                    }
+                });
+            }
 
-            const ctxCompositionTri = document.getElementById('compositionChartTri').getContext('2d');
-            ctxCompositionTriChart = new Chart(ctxCompositionTri, {
-                type: 'bar',
-                data: {
-                    labels: ['J. Bédier', 'L. Virapoullé', 'J.M. Virapoullé'],
-                    datasets: [
-                        { label: 'Base 1er tour', data: [6516, 4712, 4516], backgroundColor: '#1e40af' },
-                        { label: 'Report E. Fruteau', data: [1611, 358, 179], backgroundColor: '#a855f7' },
-                        { label: 'Report S. Soupramanien', data: [0, 364, 91], backgroundColor: '#14b8a6' },
-                        { label: 'Report Autres', data: [442, 295, 147], backgroundColor: '#64748b' },
-                        { label: '📈 Sursaut Particip.', data: [0, 0, 0], backgroundColor: '#3b82f6' } // Sursaut Tri
-                    ]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { position: isMobile ? 'bottom' : 'right', labels: { boxWidth: 10, font: { size: 10 }, color: FONT_COLOR } }, tooltip: { mode: 'index', intersect: false } },
-                    scales: { x: { stacked: true, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } }, y: { stacked: true, title: { display: !isMobile, text: 'Nombre de voix', color: FONT_COLOR }, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } } }
-                }
-            });
+            const ctxCompTriEl = document.getElementById('compositionChartTri');
+            if(ctxCompTriEl) {
+                ctxCompositionTriChart = new Chart(ctxCompTriEl.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['J. Bédier', 'L. Virapoullé', 'J.M. Virapoullé'],
+                        datasets: [
+                            { label: 'Base 1er tour', data: [6516, 4712, 4516], backgroundColor: '#1e40af' },
+                            { label: 'Report E. Fruteau', data: [1611, 358, 179], backgroundColor: '#a855f7' },
+                            { label: 'Report S. Soupramanien', data: [0, 364, 91], backgroundColor: '#14b8a6' },
+                            { label: 'Report Autres', data: [442, 295, 147], backgroundColor: '#64748b' },
+                            { label: '📈 Sursaut Particip.', data: [0, 0, 0], backgroundColor: '#3b82f6' }
+                        ]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { position: isMobile ? 'bottom' : 'right', labels: { boxWidth: 10, font: { size: 10 }, color: FONT_COLOR } }, tooltip: { mode: 'index', intersect: false } },
+                        scales: { x: { stacked: true, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } }, y: { stacked: true, title: { display: !isMobile, text: 'Nombre de voix', color: FONT_COLOR }, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } } }
+                    }
+                });
+            }
 
-            // --- 2. Initialisation Vides Fusion ---
-            const ctxResultsFus = document.getElementById('projectedResultsChartFus').getContext('2d');
-            ctxResultsFusChart = new Chart(ctxResultsFus, {
-                type: 'bar',
-                data: {
-                    labels: ['J. Bédier', 'L. Virapoullé'],
-                    datasets: [{ label: '% des voix', data: [0, 0], backgroundColor: ['#10b981', '#f59e0b'], borderRadius: 8 }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { return context.raw + '%'; } } } },
-                    scales: { x: { ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } }, y: { beginAtZero: true, max: 60, title: { display: !isMobile, text: 'Pourcentage (%)', color: FONT_COLOR }, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } } }
-                }
-            });
+            const ctxFusEl = document.getElementById('projectedResultsChartFus');
+            if(ctxFusEl) {
+                ctxResultsFusChart = new Chart(ctxFusEl.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['J. Bédier', 'L. Virapoullé'],
+                        datasets: [{ label: '% des voix', data: [0, 0], backgroundColor: ['#10b981', '#f59e0b'], borderRadius: 8 }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { return context.raw + '%'; } } } },
+                        scales: { x: { ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } }, y: { beginAtZero: true, max: 60, title: { display: !isMobile, text: 'Pourcentage (%)', color: FONT_COLOR }, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } } }
+                    }
+                });
+            }
 
-            const ctxCompositionFus = document.getElementById('compositionChartFus').getContext('2d');
-            ctxCompositionFusChart = new Chart(ctxCompositionFus, {
-                type: 'bar',
-                data: {
-                    labels: ['J. Bédier', 'L. Virapoullé'],
-                    datasets: [
-                        { label: 'Base 1er tour', data: [6516, 4712], backgroundColor: '#1e40af' }, // 0
-                        { label: 'Report JM Virapoullé', data: [0, 3838], backgroundColor: '#ef4444' }, // 1
-                        { label: 'Report E. Fruteau', data: [1611, 358], backgroundColor: '#a855f7' }, // 2
-                        { label: 'Report S. Soupramanien', data: [0, 454], backgroundColor: '#14b8a6' }, // 3
-                        { label: 'Report Autres', data: [442, 442], backgroundColor: '#64748b' }, // 4
-                        { label: '📈 Sursaut Particip.', data: [0, 0], backgroundColor: '#3b82f6' }, // 5 
-                        { label: '🛡️ Front Anti-RN', data: [0, 0], backgroundColor: '#10b981' } // 6 
-                    ]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { position: isMobile ? 'bottom' : 'right', labels: { boxWidth: 10, font: { size: 10 }, color: FONT_COLOR } }, tooltip: { mode: 'index', intersect: false } },
-                    scales: { x: { stacked: true, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } }, y: { stacked: true, title: { display: !isMobile, text: 'Nombre de voix', color: FONT_COLOR }, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } } }
-                }
-            });
+            const ctxCompFusEl = document.getElementById('compositionChartFus');
+            if(ctxCompFusEl) {
+                ctxCompositionFusChart = new Chart(ctxCompFusEl.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['J. Bédier', 'L. Virapoullé'],
+                        datasets: [
+                            { label: 'Base 1er tour', data: [6516, 4712], backgroundColor: '#1e40af' }, // 0
+                            { label: 'Report JM Virapoullé', data: [0, 3838], backgroundColor: '#ef4444' }, // 1
+                            { label: 'Report E. Fruteau', data: [1611, 358], backgroundColor: '#a855f7' }, // 2
+                            { label: 'Report S. Soupramanien', data: [0, 454], backgroundColor: '#14b8a6' }, // 3
+                            { label: 'Report Autres', data: [442, 442], backgroundColor: '#64748b' }, // 4
+                            { label: '📈 Sursaut Particip.', data: [0, 0], backgroundColor: '#3b82f6' }, // 5 
+                            { label: '🛡️ Front Anti-RN', data: [0, 0], backgroundColor: '#10b981' } // 6 
+                        ]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { position: isMobile ? 'bottom' : 'right', labels: { boxWidth: 10, font: { size: 10 }, color: FONT_COLOR } }, tooltip: { mode: 'index', intersect: false } },
+                        scales: { x: { stacked: true, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } }, y: { stacked: true, title: { display: !isMobile, text: 'Nombre de voix', color: FONT_COLOR }, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } } }
+                    }
+                });
+            }
 
-            // Lancer le calcul global dynamique
-            updateAllSecondTour();
+            window.updateAllSecondTour();
         }
 
         // ==========================================
@@ -1646,55 +1801,58 @@
         // ==========================================
         
         window.updateBacktesting2020 = function() {
-            // Chiffres officiels de 2020
             const bedierBase2020 = 4524;
             const jmvBase2020 = 5722;
-            const pool2020 = 10270; // Eliminés (7934) + Nouveaux votants au 2nd tour (2336)
+            const pool2020 = 10270; 
             
             const bedierReal2020 = 10703;
             const jmvReal2020 = 9813;
 
-            // Récupérer les taux depuis les curseurs
-            const bedierRate = parseFloat(document.getElementById('bedierCaptureSlider').value) / 100;
-            const jmvRate = parseFloat(document.getElementById('jmvCaptureSlider').value) / 100;
+            const sliderB = document.getElementById('bedierCaptureSlider');
+            const sliderJ = document.getElementById('jmvCaptureSlider');
+            if(!sliderB || !sliderJ) return;
+
+            const bedierRate = parseFloat(sliderB.value) / 100;
+            const jmvRate = parseFloat(sliderJ.value) / 100;
             
-            // Afficher les valeurs des curseurs
-            document.getElementById('bedierCaptureValue').textContent = (bedierRate * 100).toFixed(1) + '%';
-            document.getElementById('jmvCaptureValue').textContent = (jmvRate * 100).toFixed(1) + '%';
+            if(document.getElementById('bedierCaptureValue')) document.getElementById('bedierCaptureValue').textContent = (bedierRate * 100).toFixed(1) + '%';
+            if(document.getElementById('jmvCaptureValue')) document.getElementById('jmvCaptureValue').textContent = (jmvRate * 100).toFixed(1) + '%';
             
-            // Calculer la projection
             const bedierProj = bedierBase2020 + Math.round(pool2020 * bedierRate);
             const jmvProj = jmvBase2020 + Math.round(pool2020 * jmvRate);
             
-            // Mettre à jour le graphique s'il existe
             if(backtestChart) {
                 backtestChart.data.datasets[0].data = [bedierProj, jmvProj];
                 backtestChart.update();
             }
             
-            // Mettre à jour le tableau HTML
-            document.getElementById('bt-bedier-proj').textContent = bedierProj.toLocaleString('fr-FR') + ' voix';
-            document.getElementById('bt-jmv-proj').textContent = jmvProj.toLocaleString('fr-FR') + ' voix';
+            if(document.getElementById('bt-bedier-proj')) document.getElementById('bt-bedier-proj').textContent = bedierProj.toLocaleString('fr-FR') + ' voix';
+            if(document.getElementById('bt-jmv-proj')) document.getElementById('bt-jmv-proj').textContent = jmvProj.toLocaleString('fr-FR') + ' voix';
             
-            // Mettre à jour la marge d'erreur
             const bedierErr = bedierProj - bedierReal2020;
             const jmvErr = jmvProj - jmvReal2020;
             
-            const bedierErrEl = document.getElementById('bt-bedier-err');
-            bedierErrEl.textContent = (bedierErr > 0 ? '+' : '') + bedierErr + ' voix';
-            bedierErrEl.className = Math.abs(bedierErr) < 50 ? "p-3 text-center text-emerald-400 font-bold" : "p-3 text-center text-red-400 font-bold";
+            if(document.getElementById('bt-bedier-err')) {
+                const bErrEl = document.getElementById('bt-bedier-err');
+                bErrEl.textContent = (bedierErr > 0 ? '+' : '') + bedierErr + ' voix';
+                bErrEl.className = Math.abs(bedierErr) < 50 ? "p-3 text-center text-emerald-400 font-bold" : "p-3 text-center text-red-400 font-bold";
+            }
 
-            const jmvErrEl = document.getElementById('bt-jmv-err');
-            jmvErrEl.textContent = (jmvErr > 0 ? '+' : '') + jmvErr + ' voix';
-            jmvErrEl.className = Math.abs(jmvErr) < 50 ? "p-3 text-center text-emerald-400 font-bold" : "p-3 text-center text-red-400 font-bold";
+            if(document.getElementById('bt-jmv-err')) {
+                const jErrEl = document.getElementById('bt-jmv-err');
+                jErrEl.textContent = (jmvErr > 0 ? '+' : '') + jmvErr + ' voix';
+                jErrEl.className = Math.abs(jmvErr) < 50 ? "p-3 text-center text-emerald-400 font-bold" : "p-3 text-center text-red-400 font-bold";
+            }
         }
 
         function initBacktestingChart() {
-            const ctxBT = document.getElementById('backtestingChart').getContext('2d');
+            const ctxBTEl = document.getElementById('backtestingChart');
+            if(!ctxBTEl) return;
+            
             const FONT_COLOR = '#e0e0e0';
             const GRID_COLOR = 'rgba(224, 224, 224, 0.1)';
 
-            backtestChart = new Chart(ctxBT, {
+            backtestChart = new Chart(ctxBTEl.getContext('2d'), {
                 type: 'bar',
                 data: {
                     labels: ['Joé Bédier', 'J.M. Virapoullé'],
@@ -1709,7 +1867,7 @@
                         {
                             label: 'Score Officiel (Urnes)',
                             data: [10703, 9813],
-                            backgroundColor: 'rgba(148, 163, 184, 0.3)', // Gris transparent
+                            backgroundColor: 'rgba(148, 163, 184, 0.3)',
                             borderColor: '#94a3b8',
                             borderWidth: 2,
                             borderRadius: 8,
@@ -1737,8 +1895,7 @@
                 }
             });
 
-            // Initialiser le premier calcul
-            updateBacktesting2020();
+            window.updateBacktesting2020();
         }
 
         // ==========================================
@@ -1751,66 +1908,68 @@
         function initPartielleCharts() {
             const FONT_COLOR = '#e0e0e0';
             const GRID_COLOR = 'rgba(224, 224, 224, 0.1)';
-            const isMobile = window.innerWidth < 768;
-
-            const ctxP1 = document.getElementById('partielleChart1').getContext('2d');
-            partielleChart1 = new Chart(ctxP1, {
-                type: 'bar',
-                data: {
-                    labels: ['J. Bédier', 'Opp. Virapoullé', 'Autres (Pool)'],
-                    datasets: [{
-                        label: 'Voix (1er Tour Partiel)',
-                        data: [0, 0, 0],
-                        backgroundColor: ['#10b981', '#f59e0b', '#64748b'],
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { 
-                        x: { ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } }, 
-                        y: { beginAtZero: true, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } } 
+            
+            const ctxP1 = document.getElementById('partielleChart1');
+            if(ctxP1) {
+                partielleChart1 = new Chart(ctxP1.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['J. Bédier', 'Opp. Virapoullé', 'Autres (Pool)'],
+                        datasets: [{
+                            label: 'Voix (1er Tour Partiel)',
+                            data: [0, 0, 0],
+                            backgroundColor: ['#10b981', '#f59e0b', '#64748b'],
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { 
+                            x: { ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } }, 
+                            y: { beginAtZero: true, ticks: { color: FONT_COLOR }, grid: { color: GRID_COLOR } } 
+                        }
                     }
-                }
-            });
+                });
+            }
 
-            const ctxP2 = document.getElementById('partielleChart2').getContext('2d');
-            partielleChart2 = new Chart(ctxP2, {
-                type: 'doughnut',
-                data: {
-                    labels: ['J. Bédier', 'Opposition Unie', 'Abstention Réserve'],
-                    datasets: [{
-                        data: [0, 0, 0],
-                        backgroundColor: ['#10b981', '#f59e0b', '#334155'],
-                        borderWidth: 0,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom', labels: { color: FONT_COLOR } } }
-                }
-            });
+            const ctxP2 = document.getElementById('partielleChart2');
+            if(ctxP2) {
+                partielleChart2 = new Chart(ctxP2.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['J. Bédier', 'Opposition Unie', 'Abstention Réserve'],
+                        datasets: [{
+                            data: [0, 0, 0],
+                            backgroundColor: ['#10b981', '#f59e0b', '#334155'],
+                            borderWidth: 0,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom', labels: { color: FONT_COLOR } } }
+                    }
+                });
+            }
         }
 
         window.runPartielle = function() {
-            // Lecture des curseurs de crise
-            const partChute = parseFloat(document.getElementById('partielleParticipationSlider').value) / 100; 
+            const partSlider = document.getElementById('partielleParticipationSlider');
+            if(!partSlider) return;
+
+            const partChute = parseFloat(partSlider.value) / 100; 
             const primeBedier = parseFloat(document.getElementById('partiellePrimeBedierSlider').value); 
             const unionOpp = parseFloat(document.getElementById('partielleUnionOppSlider').value) / 100; 
 
-            // Affichage UI
             document.getElementById('partielleParticipationValue').innerText = (partChute * 100).toFixed(0) + '%';
             document.getElementById('partiellePrimeBedierValue').innerText = primeBedier.toFixed(2) + 'x';
             document.getElementById('partielleUnionOppValue').innerText = (unionOpp * 100).toFixed(0) + '%';
 
-            // 1. Démographie de crise
             const inscrits = 42680; 
             const votantsEstim = Math.round(inscrits * partChute);
             document.getElementById('partielleTotalVoters').innerText = votantsEstim.toLocaleString('fr-FR');
 
-            // 2. Comportement des Bases 
             let rawBedier = 5500 * primeBedier;
             let rawOpp = 8500 * (0.5 + (unionOpp * 0.5)); 
             let rawAutres = 2500 * 0.5;
@@ -1825,10 +1984,11 @@
             const gap = Math.abs(t1Bedier - t1Opp);
             document.getElementById('partielleGap').innerText = gap.toLocaleString('fr-FR');
             
+            const diagEl = document.getElementById('partielleT1Diagnostic');
             if(t1Bedier > t1Opp) {
-                document.getElementById('partielleT1Diagnostic').innerHTML = `<span class="text-green-400 font-bold">Bédier mène.</span> La prime au sortant résiste à l'abstention.`;
+                if(diagEl) diagEl.innerHTML = `<span class="text-green-400 font-bold">Bédier mène.</span> La prime au sortant résiste à l'abstention.`;
             } else {
-                document.getElementById('partielleT1Diagnostic').innerHTML = `<span class="text-amber-500 font-bold">L'Opposition mène.</span> L'union au 1er tour étouffe le maire.`;
+                if(diagEl) diagEl.innerHTML = `<span class="text-amber-500 font-bold">L'Opposition mène.</span> L'union au 1er tour étouffe le maire.`;
             }
 
             if(partielleChart1) {
@@ -1836,7 +1996,6 @@
                 partielleChart1.update();
             }
 
-            // 3. Projection du Duel Final
             const t2Bedier = t1Bedier + Math.round(t1Autres * 0.40);
             const t2Opp = t1Opp + Math.round(t1Autres * 0.20);
             const t2Abst = Math.round(t1Autres * 0.40);
@@ -1844,10 +2003,11 @@
             document.getElementById('partielleScoreBedier').innerText = t2Bedier.toLocaleString('fr-FR') + ' voix';
             document.getElementById('partielleScoreOpp').innerText = t2Opp.toLocaleString('fr-FR') + ' voix';
 
+            const verdictEl = document.getElementById('partielleVerdict');
             if(t2Bedier > t2Opp) {
-                document.getElementById('partielleVerdict').innerHTML = `<span class="text-green-400">MAINTIEN DU MAIRE SORTANT</span><br><span class="text-sm text-gray-400 font-normal">L'opposition n'a pas réussi à faire bloc assez tôt.</span>`;
+                if(verdictEl) verdictEl.innerHTML = `<span class="text-green-400">MAINTIEN DU MAIRE SORTANT</span><br><span class="text-sm text-gray-400 font-normal">L'opposition n'a pas réussi à faire bloc assez tôt.</span>`;
             } else {
-                document.getElementById('partielleVerdict').innerHTML = `<span class="text-amber-500">BASCULE DE L'OPPOSITION</span><br><span class="text-sm text-gray-400 font-normal">La stratégie asymétrique a fonctionné : Bédier s'est heurté à l'abstention.</span>`;
+                if(verdictEl) verdictEl.innerHTML = `<span class="text-amber-500">BASCULE DE L'OPPOSITION</span><br><span class="text-sm text-gray-400 font-normal">La stratégie asymétrique a fonctionné : Bédier s'est heurté à l'abstention.</span>`;
             }
 
             if(partielleChart2) {
